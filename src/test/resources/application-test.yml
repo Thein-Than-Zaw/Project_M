@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${TEST_DB_URL}
+server:
+  port: 18080
