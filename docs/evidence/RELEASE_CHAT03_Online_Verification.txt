@@ -1,0 +1,27 @@
+CHAT-03 main deployment — final online verification
+App commit: b2c051d76ebbdc9474b4505efd60bc714b381b25
+Render service: srv-dbjisdqjnfac7384lr50
+Render deploy: dep-dbjp036tlv9c73dsnrh0
+Branch main; autoDeploy no; free plan preserved.
+Status live; finishedAt 2026-11-01T19:19:44.973097Z = 2026-11-02 01:49:44 +06:30.
+Cloud Maven: BUILD SUCCESS. Runtime Java21.0.13.
+Flyway: Successfully applied 5 migrations to schema "couple_private_space", now at version v26.
+Read-only aggregate account/chat/memory row counts unchanged; no real user content exported, no fixture added.
+Owner explicitly chose deployment without a production backup.
+
+PASS /actuator/health/readiness HTTP 200
+PASS HTTPS HSTS header
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS HTTPS session cookie Secure/HttpOnly/SameSite=Lax
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)
+
+PASS HTTP200 and source equality: chat.js, chat.css, home.js, home.css, memories.js, profile-ui.js, call-widget.js, calls.css, notification-inbox.js, notification-sounds.js, notifications.css, browser-notifications.js.
+PASS anonymous /api/presence, /api/notifications and /api/profiles/{synthetic-id}/photo each HTTP401.
+Actual online account/chat/call/phone UAT NOT_TESTED; previous local synthetic browser evidence remains separate.
+Full native suite 98 PASS; JavaScript 48 PASS; no skips.
+Secret-free source archive prepared/verified locally; Drive sync pending.
