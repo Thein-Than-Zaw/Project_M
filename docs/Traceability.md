@@ -100,3 +100,6 @@ CHAT-02B owner interaction correction → chat.js bindMessageInteractions/showHo
 # CHAT-03 trace update (2 November 2026)
 
 F03/Home/Profile and F04/Chat → owner-requested C01–C21 clauses → [CHAT-03 source coverage/evidence](CHAT-03_Mobile_Chat_UX.md) → `chat.*`, `home.*`, `profile-ui.js`, `ProfileMediaController`, `PairingService`, V26 → HomeIntegrationTest, Chat/Pairing regressions, JavaScript UX tests and synthetic browser journeys. Actual-device touch/keyboard and human acceptance remain separate, pending gates. No deployment.
+# CHAT-04 notification/layout correction
+
+Owner's 2 November UI/deploy request → C1–C3 in [CHAT-04 record](CHAT-04_Notification_Layout_Fix.md) → notification-inbox.js, chat.css → notification-inbox-ui.test.mjs + existing NotificationIntegrationTest. Browser visual checks unavailable; source/API tests and deployment checks are distinct.
