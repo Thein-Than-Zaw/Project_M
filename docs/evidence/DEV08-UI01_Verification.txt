@@ -1,0 +1,30 @@
+DEV08-UI01 verification; 2026-11-01 Asia/Yangon
+COMMAND: node --test src/test/javascript/notification-sounds.test.mjs src/test/javascript/call-media.test.mjs
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 378.1938
+COMMAND: mvn -B -ntp -Dtest=CallIntegrationTest,ChatIntegrationTest,RtcConfigurationTest test (local isolated *_test database schema)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 53.71 s -- in com.couple.privatespace.CallIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.911 s -- in com.couple.privatespace.ChatIntegrationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in com.couple.privatespace.RtcConfigurationTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+COMMAND: mvn -B -ntp -Dtest=ChatNotificationsTest test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.829 s -- in com.couple.privatespace.ChatNotificationsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+COMMAND: npm.cmd run build
+[INFO] Replacing main artifact C:\Projects\Project_M\target\private-space-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Projects\Project_M\target\private-space-0.1.0-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.233 s
+[INFO] Finished at: 2026-11-01T21:41:11+06:30
+[INFO] ------------------------------------------------------------------------
+Browser: Local browser use is disabled in Work settings. Actual graphical/audio/mobile verification NOT_TESTED.

@@ -1,3 +1,4 @@
+import {notificationSounds} from '/notification-sounds.js';
 import {chatSocket} from '/chat-socket.js';
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 const records=new Map(),pending=new Map();
@@ -132,6 +133,7 @@ function onEvent(event){
   if(!started)return;
   if(event.type==='memory.published'&&event.notification){$('#memory-notice').textContent=event.notification;$('#memory-notice').hidden=false;return;}
   let changed=false;
+  if(event.message&&event.message.senderId!==selfId&&!records.has(event.message.id))notificationSounds.message(event.message.id);
   if(event.notification&&event.message&&!records.has(event.message.id))$('#gift-notice').textContent=event.notification;
   if(event.message)changed=merge(event.message);
   for(const value of event.receipts||[])changed=receipt(value)||changed;

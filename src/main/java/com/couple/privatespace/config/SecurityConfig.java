@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/api/space").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/spaces","/api/invitations","/api/invitations/preview","/api/invitations/join").authenticated()
                 .requestMatchers(HttpMethod.GET,"/home.css","/chat.css","/chat.js","/chat-socket.js","/memories.css","/memories.js").permitAll()
-                .requestMatchers(HttpMethod.GET,"/call-widget.js","/call-socket.js","/call-media.js","/calls.css").permitAll()
+                .requestMatchers(HttpMethod.GET,"/notification-sounds.js","/call-widget.js","/call-socket.js","/call-media.js","/calls.css").permitAll()
                 .requestMatchers("/api/calls/**","/api/rtc/config").access((identity,context)->new AuthorizationDecision(
                     identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers("/memories.html","/api/memories","/api/memories/**","/api/memory-uploads","/api/memory-uploads/**","/api/memory-assets/*").access((identity,context)->new AuthorizationDecision(

@@ -1,3 +1,4 @@
+import {notificationSounds} from '/notification-sounds.js';
 import {watchPairing} from '/pairing-socket.js';
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 let home,dates,page=0,editing=null,loading=false,refreshAgain=false,midnightTimer,poll,stopSocket,epoch=0,renderedDates='';
@@ -100,6 +101,6 @@ $('#edit-profile').addEventListener('click',()=>openEditor('profile'));$('#edit-
 $('#previous').addEventListener('click',()=>{page=Math.max(0,page-1);load(false);});$('#next').addEventListener('click',()=>{page++;load(false);});$('#retry').addEventListener('click',()=>load(!home));
 $('#logout').addEventListener('click',async()=>{$('#logout').disabled=true;try{await api('/api/auth/logout','POST');location.replace('/?signedout=1');}catch{$('#error').textContent='Could not confirm sign out. Check your connection and try again.';$('#error').hidden=false;$('#logout').disabled=false;}});
 window.addEventListener('hashchange',route);
-window.addEventListener('pageshow',()=>{route();load(true);stopSocket?.();stopSocket=watchPairing(()=>load(false),status=>$('#connection').textContent=status);clearInterval(poll);poll=setInterval(()=>{if(!document.hidden)load(false);},15000);});
+window.addEventListener('pageshow',()=>{route();load(true);stopSocket?.();stopSocket=watchPairing(update=>{if(update?.incomingMessageId)notificationSounds.message(update.incomingMessageId);load(false);},status=>$('#connection').textContent=status);clearInterval(poll);poll=setInterval(()=>{if(!document.hidden)load(false);},15000);});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(false);});
 window.addEventListener('pagehide',()=>{epoch++;stopSocket?.();clearInterval(poll);clearTimeout(midnightTimer);$('#content').hidden=true;$('#editor').close();home=null;dates=null;$('#couple-names').textContent='';$('#initials').replaceChildren();});
