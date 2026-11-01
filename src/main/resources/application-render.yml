@@ -1,0 +1,28 @@
+# HOST-01: Render terminates HTTPS; this profile is for its trusted proxy only.
+server:
+  address: 0.0.0.0
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        secure: true
+spring:
+  config:
+    # Render mounts secret files at runtime; nothing is baked into the image.
+    import: optional:file:/etc/secrets/private-space.properties
+  datasource:
+    hikari:
+      schema: couple_private_space
+      connection-timeout: 30000
+      maximum-pool-size: 5
+      minimum-idle: 1
+  flyway:
+    default-schema: couple_private_space
+app:
+  websocket:
+    allowed-origins: ${APP_PUBLIC_ORIGIN:${RENDER_EXTERNAL_URL}}
+  memories:
+    backend: s3
+    storage-root: /tmp/couple-media
+    ffprobe: /usr/bin/ffprobe
+    ffmpeg: /usr/bin/ffmpeg

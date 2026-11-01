@@ -1,0 +1,7 @@
+[INFO] BUILD SUCCESS
+[INFO] Total time:  11.131 s
+[INFO] Finished at: 2026-11-01T18:19:29+06:30
+PASS private bucket upload (owned random probe)
+PASS private bucket Unicode download/readback
+PASS anonymous object access denied HTTP 403
+PASS probe deletion confirmed

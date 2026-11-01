@@ -1,0 +1,9 @@
+{
+  "plan": {
+    "services": [
+      "couple-private-space"
+    ],
+    "totalActions": 1
+  },
+  "valid": true
+}

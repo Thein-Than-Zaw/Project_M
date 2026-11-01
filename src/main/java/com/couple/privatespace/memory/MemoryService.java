@@ -24,7 +24,7 @@ public class MemoryService {
     public record Favorite(boolean favorite) { }
     public record TrashPreview(String snapshot,int count,int pending) { }
     public record EmptyTrash(String snapshot,boolean confirmed) { }
-    public record Download(Path path,String mime,String name,long size,boolean attachment) { }
+    public record Download(org.springframework.core.io.Resource resource,String mime,String name,long size,boolean attachment) { }
     public record Published(UUID space,UUID actor,UUID memoryId) { }
     private final JdbcTemplate jdbc;private final PairingService pairing;private final MemoryFiles files;private final ApplicationEventPublisher events;
     public MemoryService(JdbcTemplate jdbc,PairingService pairing,MemoryFiles files,ApplicationEventPublisher events){this.jdbc=jdbc;this.pairing=pairing;this.files=files;this.events=events;}
@@ -70,7 +70,7 @@ public class MemoryService {
         attach(id,body.assetIds());saveReceipt(actor,key,"CREATE",hash,id);changed(space.id());events.publishEvent(new Published(space.id(),actor,id));return entry(space.id(),actor,id,false);
     }
     private void checkAssets(UUID space,UUID actor,UUID memory,List<UUID> ids){
-        for(UUID id:ids){Integer count=jdbc.queryForObject("SELECT count(*) FROM memory_asset WHERE id=? AND space_id=? AND state='READY' AND (memory_id=? OR (memory_id IS NULL AND uploaded_by=? AND created_at>clock_timestamp()-INTERVAL '24 hours'))",Integer.class,id,space,memory,actor);if(count!=1)throw new ApiFailure(400,"ASSET_UNAVAILABLE","A selected file is unavailable or belongs to another draft. Re-upload it.");if(!Files.isRegularFile(files.path(id,false),LinkOption.NOFOLLOW_LINKS))throw new ApiFailure(503,"ASSET_UNAVAILABLE","A stored file is unavailable. Your memory was not changed.");}
+        for(UUID id:ids){Integer count=jdbc.queryForObject("SELECT count(*) FROM memory_asset WHERE id=? AND space_id=? AND state='READY' AND (memory_id=? OR (memory_id IS NULL AND uploaded_by=? AND created_at>clock_timestamp()-INTERVAL '24 hours'))",Integer.class,id,space,memory,actor);if(count!=1)throw new ApiFailure(400,"ASSET_UNAVAILABLE","A selected file is unavailable or belongs to another draft. Re-upload it.");try{if(!files.available(id))throw new IOException("Missing object");}catch(IOException error){throw new ApiFailure(503,"ASSET_UNAVAILABLE","A stored file is unavailable. Your memory was not changed.");}}
     }
     private void attach(UUID memory,List<UUID> ids){for(int i=0;i<ids.size();i++)jdbc.update("UPDATE memory_asset SET memory_id=?,position=? WHERE id=?",memory,i,ids.get(i));}
     @Transactional
@@ -120,8 +120,8 @@ public class MemoryService {
     @Transactional(readOnly=true)
     public Download download(UUID actor,UUID id,boolean thumbnail,boolean attachment){
         var space=active(actor);var rows=jdbc.queryForList("SELECT a.* FROM memory_asset a LEFT JOIN memory m ON m.id=a.memory_id WHERE a.id=? AND a.space_id=? AND a.state='READY' AND ((a.memory_id IS NULL AND a.uploaded_by=? AND a.created_at>clock_timestamp()-INTERVAL '24 hours') OR m.state='ACTIVE')",id,space.id(),actor);
-        if(rows.isEmpty())throw new ApiFailure(404,"ASSET_NOT_FOUND","This file is not available.");var row=rows.getFirst();boolean doc=row.get("kind").equals("DOCUMENT");if(thumbnail&&doc)throw new ApiFailure(404,"ASSET_NOT_FOUND","Documents do not have a thumbnail.");Path path=files.path(id,thumbnail);if(!Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS))throw new ApiFailure(503,"ASSET_UNAVAILABLE","This file is temporarily unavailable.");
-        try{return new Download(path,thumbnail?"image/jpeg":(String)row.get("mime"),thumbnail?"thumbnail.jpg":(String)row.get("original_name"),Files.size(path),doc||attachment);}catch(IOException error){throw new ApiFailure(503,"ASSET_UNAVAILABLE","This file is temporarily unavailable.");}
+        if(rows.isEmpty())throw new ApiFailure(404,"ASSET_NOT_FOUND","This file is not available.");var row=rows.getFirst();boolean doc=row.get("kind").equals("DOCUMENT");if(thumbnail&&doc)throw new ApiFailure(404,"ASSET_NOT_FOUND","Documents do not have a thumbnail.");
+        try{var resource=files.resource(id,thumbnail);return new Download(resource,thumbnail?"image/jpeg":(String)row.get("mime"),thumbnail?"thumbnail.jpg":(String)row.get("original_name"),resource.contentLength(),doc||attachment);}catch(IOException error){throw new ApiFailure(503,"ASSET_UNAVAILABLE","This file is temporarily unavailable.");}
     }
     private Asset assetById(UUID id){return jdbc.queryForObject("SELECT * FROM memory_asset WHERE id=?",(r,n)->asset(r),id);}
     private Asset asset(java.sql.ResultSet r)throws java.sql.SQLException{UUID id=r.getObject("id",UUID.class);String kind=r.getString("kind");return new Asset(id,r.getString("original_name"),kind,r.getString("mime"),r.getLong("byte_size"),r.getString("sha256"),(Double)r.getObject("duration"),(Integer)r.getObject("width"),(Integer)r.getObject("height"),"/api/memory-assets/"+id,kind.equals("DOCUMENT")?null:"/api/memory-assets/"+id+"?thumbnail=true");}

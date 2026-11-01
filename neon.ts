@@ -1,8 +1,11 @@
 import { defineConfig } from "@neon/config/v1";
 
 export default defineConfig({
+  // HOST-01: private Memory originals/thumbnails; no anonymous reads.
+  buckets: { "couple-memories": {} },
   // Declare your Neon services here
-  auth: false,
+  // PostgreSQL is built into every branch. Existing Spring Security owns auth;
+  // leave other Neon service settings unspecified rather than disabling them.
   // Branch policy: per-branch tuning
   branch: (branch) => {
     if (branch.isDefault) {

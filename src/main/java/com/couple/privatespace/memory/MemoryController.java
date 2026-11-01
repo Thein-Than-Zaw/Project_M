@@ -35,7 +35,7 @@ public class MemoryController {
     @GetMapping("/api/memory-assets/{id}") public ResponseEntity<Resource> download(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id,@RequestParam(defaultValue="false") boolean thumbnail,@RequestParam(defaultValue="false") boolean download){
         var file=memories.download(actor.accountId(),id,thumbnail,download);
         var disposition=(file.attachment()?ContentDisposition.attachment():ContentDisposition.inline()).filename(file.name(),StandardCharsets.UTF_8).build();
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,disposition.toString()).header(HttpHeaders.CACHE_CONTROL,"no-store, private").contentType(MediaType.parseMediaType(file.mime())).contentLength(file.size()).body(new FileSystemResource(file.path()));
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,disposition.toString()).header(HttpHeaders.CACHE_CONTROL,"no-store, private").contentType(MediaType.parseMediaType(file.mime())).contentLength(file.size()).body(file.resource());
     }
     @ExceptionHandler(DataAccessException.class) public ResponseEntity<Map<String,String>> databaseFailure(){return ResponseEntity.status(503).body(Map.of("code","MEMORY_NOT_SAVED","message","We could not confirm this change. Keep your draft and retry with the same save identifier."));}
     @ExceptionHandler(MaxUploadSizeExceededException.class) public ResponseEntity<Map<String,String>> tooLarge(){return ResponseEntity.status(413).body(Map.of("code","FILE_TOO_LARGE","message","This file exceeds its upload limit."));}

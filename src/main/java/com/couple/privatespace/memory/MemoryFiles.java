@@ -10,6 +10,8 @@ import java.util.zip.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.pdfbox.Loader;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.core.io.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.json.JsonMapper;
@@ -23,7 +25,9 @@ public class MemoryFiles {
     private final String ffprobe,ffmpeg;
     private final Semaphore workers=new Semaphore(2);
     private final JsonMapper json=new JsonMapper();
-    public MemoryFiles(@Value("${app.memories.storage-root}") String root,@Value("${app.memories.ffprobe}") String ffprobe,@Value("${app.memories.ffmpeg}") String ffmpeg)throws IOException{
+    private final RemoteMemoryStore remote;
+    public MemoryFiles(@Value("${app.memories.storage-root}") String root,@Value("${app.memories.ffprobe}") String ffprobe,@Value("${app.memories.ffmpeg}") String ffmpeg,ObjectProvider<RemoteMemoryStore> remote)throws IOException{
+        this.remote=remote.getIfAvailable();
         this.root=Path.of(root).toAbsolutePath().normalize();this.stage=this.root.resolve("staging");this.objects=this.root.resolve("objects");this.ffprobe=ffprobe;this.ffmpeg=ffmpeg;
         Files.createDirectories(stage);Files.createDirectories(objects);
         for(Path p=this.root;p!=null;p=p.getParent())if(Files.isSymbolicLink(p))throw new IOException("Private storage must not use symbolic links");
@@ -113,8 +117,21 @@ public class MemoryFiles {
             try(var in=zip.getInputStream(zip.getEntry(main))){sax.newSAXParser().parse(in,new org.xml.sax.helpers.DefaultHandler(){boolean first=true;public void startElement(String uri,String local,String q,org.xml.sax.Attributes attrs)throws org.xml.sax.SAXException{if(first){first=false;String family=ext.equals("docx")?"wordprocessingml":ext.equals("xlsx")?"spreadsheetml":"presentationml";if(!local.equals(expectedRoot)||!Set.of("http://schemas.openxmlformats.org/"+family+"/2006/main","http://purl.oclc.org/ooxml/"+family+"/main").contains(uri))throw new org.xml.sax.SAXException("Wrong document root");}}});}
         }
     }
-    public void promote(Validated file)throws IOException{Files.move(staged(file.id(),false),path(file.id(),false),StandardCopyOption.ATOMIC_MOVE);if(!file.kind().equals("DOCUMENT"))Files.move(staged(file.id(),true),path(file.id(),true),StandardCopyOption.ATOMIC_MOVE);}
+    public void promote(Validated file)throws IOException{
+        if(remote!=null){remote.put(file.id(),false,staged(file.id(),false));if(!file.kind().equals("DOCUMENT"))remote.put(file.id(),true,staged(file.id(),true));return;}
+        Files.move(staged(file.id(),false),path(file.id(),false),StandardCopyOption.ATOMIC_MOVE);if(!file.kind().equals("DOCUMENT"))Files.move(staged(file.id(),true),path(file.id(),true),StandardCopyOption.ATOMIC_MOVE);
+    }
+    public boolean available(UUID id)throws IOException{return remote!=null?remote.exists(id,false):Files.isRegularFile(path(id,false),LinkOption.NOFOLLOW_LINKS);}
+    public Resource resource(UUID id,boolean thumb)throws IOException{
+        if(remote!=null)return remote.resource(id,thumb);
+        Path p=path(id,thumb);if(!Files.isRegularFile(p,LinkOption.NOFOLLOW_LINKS))throw new IOException("Private file unavailable");return new FileSystemResource(p);
+    }
+    public void reconcileRemote(java.util.function.Predicate<UUID> referenced)throws IOException{
+        if(remote==null)return;
+        var cutoff=java.time.Instant.now().minus(java.time.Duration.ofHours(24));
+        for(var object:remote.scan())if(object.modified()!=null&&object.modified().isBefore(cutoff)&&!referenced.test(object.id()))remote.delete(object.id(),object.thumbnail());
+    }
     public void discardStaged(UUID id){for(boolean thumb:new boolean[]{false,true})try{Files.deleteIfExists(staged(id,thumb));}catch(IOException ignored){/* aged staging maintenance retries */}}
-    public void delete(UUID id)throws IOException{for(boolean thumb:new boolean[]{false,true}){Path p=path(id,thumb);if(Files.isSymbolicLink(p))throw new IOException("Unsafe storage entry");Files.deleteIfExists(p);}}
+    public void delete(UUID id)throws IOException{for(boolean thumb:new boolean[]{false,true}){if(remote!=null)remote.delete(id,thumb);Path p=path(id,thumb);if(Files.isSymbolicLink(p))throw new IOException("Unsafe storage entry");Files.deleteIfExists(p);}}
     private ApiFailure failure(String code,String message){return new ApiFailure(400,code,message);}
 }

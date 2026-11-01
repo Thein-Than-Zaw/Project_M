@@ -1,0 +1,54 @@
+
+> check:neon
+> node scripts/app.mjs check:neon
+
+DB JDBC: connected (TLS required by JDBC)
+Resolved schema: couple_private_space; search_path: couple_private_space
+Existing table: couple_private_space.app_user
+Existing table: couple_private_space.call_command_receipt
+Existing table: couple_private_space.call_session
+Existing table: couple_private_space.chat_conversation
+Existing table: couple_private_space.chat_message
+Existing table: couple_private_space.couple_membership
+Existing table: couple_private_space.couple_space
+Existing table: couple_private_space.flyway_schema_history
+Existing table: couple_private_space.gift_catalog
+Existing table: couple_private_space.memory
+Existing table: couple_private_space.memory_asset
+Existing table: couple_private_space.memory_favorite
+Existing table: couple_private_space.memory_receipt
+Existing table: couple_private_space.pairing_confirmation
+Existing table: couple_private_space.pairing_invitation
+Existing table: couple_private_space.pairing_join_receipt
+Existing table: couple_private_space.registration_gate
+Existing table: couple_private_space.registration_token
+Existing table: couple_private_space.special_date
+Existing table: couple_private_space.special_date_creation_receipt
+Existing table: public.playing_with_neon
+Applied versioned migrations: 21; latest V21
+DB Unicode write/read/rollback: PASS (no persistent fixture)
+SPRING_FLYWAY JDBC: connected (TLS required by JDBC)
+Resolved schema: couple_private_space; search_path: couple_private_space
+Existing table: couple_private_space.app_user
+Existing table: couple_private_space.call_command_receipt
+Existing table: couple_private_space.call_session
+Existing table: couple_private_space.chat_conversation
+Existing table: couple_private_space.chat_message
+Existing table: couple_private_space.couple_membership
+Existing table: couple_private_space.couple_space
+Existing table: couple_private_space.flyway_schema_history
+Existing table: couple_private_space.gift_catalog
+Existing table: couple_private_space.memory
+Existing table: couple_private_space.memory_asset
+Existing table: couple_private_space.memory_favorite
+Existing table: couple_private_space.memory_receipt
+Existing table: couple_private_space.pairing_confirmation
+Existing table: couple_private_space.pairing_invitation
+Existing table: couple_private_space.pairing_join_receipt
+Existing table: couple_private_space.registration_gate
+Existing table: couple_private_space.registration_token
+Existing table: couple_private_space.special_date
+Existing table: couple_private_space.special_date_creation_receipt
+Existing table: public.playing_with_neon
+Applied versioned migrations: 21; latest V21
+SPRING_FLYWAY Unicode write/read/rollback: PASS (no persistent fixture)

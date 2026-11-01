@@ -1,0 +1,8 @@
+Resolved schema: couple_private_space; search_path: couple_private_space
+Applied versioned migrations: 21; latest V21
+Referenced memory assets: 0
+DB Unicode write/read/rollback: PASS (no persistent fixture)
+Resolved schema: couple_private_space; search_path: couple_private_space
+Applied versioned migrations: 21; latest V21
+Referenced memory assets: 0
+SPRING_FLYWAY Unicode write/read/rollback: PASS (no persistent fixture)

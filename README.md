@@ -19,6 +19,15 @@ This is a local development build, not a production release. Actual background/u
 
 ## Run on the configured Windows development machine
 
+Render deployment continuation: [HOST-02 record](docs/HOST-02_Deployment.md).
+Docker/private storage preparation: [HOST-01 setup](docs/HOST-01_Render_Setup.md).
+Live private bucket upload/readback/privacy/deletion passed; Linux container and public deployment verification are pending;
+the Render profile requires working object storage and never uses local files as durable media.
+
+Neon database setup and separate localhost port8082: see
+[NEON-01 setup checkpoint](docs/NEON-01_Setup.md). This connects the existing JVM
+app to Neon PostgreSQL; it does not host the JVM or media on Neon.
+
 Observed baseline: Oracle JDK27.0.1.0.3 (compiler release21), Spring Boot4.1.2, Maven3.9.12 and installed PostgreSQL18.6 on5432. Detailed versions: [Engineering profile](docs/Engineering_Profile.md). A Java21 runtime has not been independently tested here.
 
 From the project root:

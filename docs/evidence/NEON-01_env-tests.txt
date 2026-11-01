@@ -1,0 +1,15 @@
+
+> test:env
+> node --test src/test/javascript/neon-env.test.mjs
+
+✔ JDBC conversion decodes credentials and keeps them out of the URL (1.7473ms)
+✔ runtime uses Hikari on direct endpoint for reliable schema and isolated media (2.0611ms)
+✔ invalid, insecure, missing direct or pooled migration URLs fail closed (5.067ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 223.5907

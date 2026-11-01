@@ -1,0 +1,12 @@
+
+> test:neon:http
+> node scripts/smoke-neon.mjs
+
+PASS /actuator/health/readiness HTTP 200
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)

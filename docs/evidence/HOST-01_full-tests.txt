@@ -1,0 +1,32 @@
+[INFO] Running com.couple.privatespace.AuthenticationIntegrationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 88.87 s -- in com.couple.privatespace.AuthenticationIntegrationTest
+[INFO] Running com.couple.privatespace.CallIntegrationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.53 s -- in com.couple.privatespace.CallIntegrationTest
+[INFO] Running com.couple.privatespace.ChatIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.544 s -- in com.couple.privatespace.ChatIntegrationTest
+[INFO] Running com.couple.privatespace.DatePolicyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.couple.privatespace.DatePolicyTest
+[INFO] Running com.couple.privatespace.FoundationIntegrationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.281 s -- in com.couple.privatespace.FoundationIntegrationTest
+[INFO] Running com.couple.privatespace.GiftIntegrationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.295 s -- in com.couple.privatespace.GiftIntegrationTest
+[INFO] Running com.couple.privatespace.GiftMigrationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.841 s -- in com.couple.privatespace.GiftMigrationTest
+[INFO] Running com.couple.privatespace.HomeIntegrationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.064 s -- in com.couple.privatespace.HomeIntegrationTest
+[INFO] Running com.couple.privatespace.memory.S3MemoryStoreTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.205 s -- in com.couple.privatespace.memory.S3MemoryStoreTest
+[INFO] Running com.couple.privatespace.MemoryIntegrationTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 28.65 s -- in com.couple.privatespace.MemoryIntegrationTest
+[INFO] Running com.couple.privatespace.MemoryUploadGateTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.couple.privatespace.MemoryUploadGateTest
+[INFO] Running com.couple.privatespace.PairingIntegrationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.359 s -- in com.couple.privatespace.PairingIntegrationTest
+[INFO] Running com.couple.privatespace.RenderEnvironmentTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.couple.privatespace.RenderEnvironmentTest
+[INFO] Running com.couple.privatespace.RtcConfigurationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.couple.privatespace.RtcConfigurationTest
+[INFO] Tests run: 72, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  02:46 min
+[INFO] Finished at: 2026-11-01T18:00:54+06:30

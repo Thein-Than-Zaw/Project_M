@@ -11,6 +11,9 @@ class IssueSetupToken {
         String code = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         String hash = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(code.getBytes(StandardCharsets.UTF_8)));
         try (var db = DriverManager.getConnection(System.getenv("DB_URL"), System.getenv("DB_USERNAME"), System.getenv("DB_PASSWORD"))) {
+            if (System.getenv("SPRING_DATASOURCE_HIKARI_SCHEMA") != null) {
+                db.setSchema(System.getenv("SPRING_DATASOURCE_HIKARI_SCHEMA"));
+            }
             db.setAutoCommit(false);
             try (var sql = db.createStatement()) {
                 sql.executeQuery("SELECT id FROM registration_gate WHERE id=1 FOR UPDATE").close();
@@ -21,10 +24,12 @@ class IssueSetupToken {
                 try (var insert = db.prepareStatement("INSERT INTO registration_token(id,kind,token_hash,expires_at) VALUES (?,'SETUP',?,CURRENT_TIMESTAMP+INTERVAL '24 hours')")) {
                     insert.setObject(1, UUID.randomUUID()); insert.setString(2, hash); insert.executeUpdate();
                 }
-                Files.writeString(Path.of(".local/setup-token.txt"), code, StandardCharsets.US_ASCII);
+                Path tokenPath = Path.of(args.length == 0 ? ".local/setup-token.txt" : args[0]);
+                Files.createDirectories(tokenPath.toAbsolutePath().getParent());
+                Files.writeString(tokenPath, code, StandardCharsets.US_ASCII);
                 db.commit();
             } catch (Exception error) { db.rollback(); throw error; }
         }
-        System.out.println("Setup code saved privately to .local/setup-token.txt (valid 24 hours). Paste it into Create account.");
+        System.out.println("Setup code saved privately to " + (args.length == 0 ? ".local/setup-token.txt" : args[0]) + " (valid 24 hours). Paste it into Create account.");
     }
 }
