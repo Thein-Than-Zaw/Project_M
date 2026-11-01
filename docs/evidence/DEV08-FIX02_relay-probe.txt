@@ -1,0 +1,2 @@
+PASS authenticated TURN relay candidate allocation (TCP)
+PASS forced-relay WebRTC data-channel roundtrip (two local peers, no device media)

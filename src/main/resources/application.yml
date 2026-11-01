@@ -46,6 +46,8 @@ app:
     turn-urls: ${TURN_URLS:}
     stun-urls: ${STUN_URLS:}
     turn-secret: ${TURN_SHARED_SECRET:}
+    turn-username: ${TURN_USERNAME:}
+    turn-password: ${TURN_PASSWORD:}
     maintenance-ms: 2000
   memories:
     storage-root: ${MEMORY_STORAGE_ROOT:.local/uploads}

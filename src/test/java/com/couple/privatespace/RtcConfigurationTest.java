@@ -20,4 +20,14 @@ class RtcConfigurationTest {
   assertThrows(IllegalArgumentException.class,()->new RtcConfiguration("turn:localhost:3478","","short"));assertThrows(IllegalArgumentException.class,()->new RtcConfiguration("https://untrusted.invalid","","x".repeat(32)));assertThrows(IllegalArgumentException.class,()->new RtcConfiguration("turn:user:password@localhost:3478","","x".repeat(32)));
   var local=new RtcConfiguration("","","").configuration(UUID.randomUUID());assertFalse(local.relayConfigured());assertTrue(local.iceServers().isEmpty());
  }
+ @Test void managedProviderCredentialsArePassedUnmodifiedToAuthenticatedRtcConfig(){
+  var config=new RtcConfiguration("turn:relay.example.invalid:3478?transport=udp,turn:relay.example.invalid:3478?transport=tcp","stun:stun.example.invalid:3478","","test-user","test-turn-credential").configuration(UUID.randomUUID());
+  assertTrue(config.relayConfigured());assertEquals(2,config.iceServers().size());
+  var relay=config.iceServers().getLast();assertEquals("test-user",relay.username());assertEquals("test-turn-credential",relay.credential());assertEquals(2,relay.urls().size());
+ }
+ @Test void incompleteOrAmbiguousManagedCredentialsFailClosed(){
+  for(var pair:List.of(List.of("user",""),List.of("","password"),List.of("user\n","password")))assertThrows(IllegalArgumentException.class,()->new RtcConfiguration("turn:relay.example.invalid:3478","","",pair.get(0),pair.get(1)));
+  assertThrows(IllegalArgumentException.class,()->new RtcConfiguration("turn:relay.example.invalid:3478","","x".repeat(32),"user","password"));
+  assertThrows(IllegalArgumentException.class,()->new RtcConfiguration("","","","user","password"));
+ }
 }

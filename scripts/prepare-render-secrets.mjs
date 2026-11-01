@@ -12,6 +12,11 @@ const lines=keys.map(key=>{
   return `${key}=${escape(values[key])}`;
 });
 lines.push(`MEMORY_S3_BUCKET=${escape(values.MEMORY_S3_BUCKET||'couple-memories')}`);
+// Relay credentials stay in the runtime secret file, never in Docker/Git/argv.
+const turn=existsSync('.local/express-turn.env')?parseEnv(readFileSync('.local/express-turn.env','utf8')):{};
+for(const key of ['STUN_URLS','TURN_URLS','TURN_USERNAME','TURN_PASSWORD','TURN_SHARED_SECRET']){
+  const value=turn[key]||values[key];if(value)lines.push(`${key}=${escape(value)}`);
+}
 mkdirSync('.local',{recursive:true});
 writeFileSync('.local/render-private-space.properties',lines.join('\n')+'\n',{mode:0o600});
-console.log('Prepared ignored Render runtime secret file (6 keys); values not printed.');
+console.log(`Prepared ignored Render runtime secret file (${lines.length} keys); values not printed.`);
