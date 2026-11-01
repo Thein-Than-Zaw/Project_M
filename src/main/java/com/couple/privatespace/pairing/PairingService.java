@@ -21,7 +21,7 @@ public class PairingService {
             @Value("${app.couple.timezone}") String timezone, @Value("${app.pairing.invite-hours:24}") long hours) {
         this.jdbc=jdbc; this.accounts=accounts; this.events=events; this.zone=ZoneId.of(timezone); this.inviteHours=hours;
     }
-    public record Member(UUID id, String displayName, int slot) { }
+    public record Member(UUID id, String displayName, int slot, String avatarUrl) { public Member(UUID id,String displayName,int slot){this(id,displayName,slot,null);} }
     public record Space(String state, UUID id, LocalDate relationshipDate, String timezone,
             List<Member> members, LocalDate signupRelationshipDate, boolean canCreate, long version) { }
     public record Create(LocalDate relationshipDate, boolean confirmed) { }
@@ -47,8 +47,8 @@ public class PairingService {
     }
     private Space summary(UUID id, AccountStore.Account actor) {
         return jdbc.queryForObject("SELECT relationship_date,timezone,version FROM couple_space WHERE id=?",(r,n)->{
-            var members=jdbc.query("SELECT u.id,u.display_name,m.member_slot FROM couple_membership m JOIN app_user u ON u.id=m.user_id WHERE m.space_id=? ORDER BY m.member_slot",
-                (row,index)->new Member(row.getObject(1,UUID.class),row.getString(2),row.getInt(3)),id);
+            var members=jdbc.query("SELECT u.id,u.display_name,m.member_slot,u.avatar_jpeg IS NOT NULL,u.avatar_version FROM couple_membership m JOIN app_user u ON u.id=m.user_id WHERE m.space_id=? ORDER BY m.member_slot",
+                (row,index)->new Member(row.getObject(1,UUID.class),row.getString(2),row.getInt(3),row.getBoolean(4)?"/api/profiles/"+row.getObject(1,UUID.class)+"/photo?v="+row.getLong(5):null),id);
             return new Space(members.size()==2?"ACTIVE":"WAITING",id,r.getObject(1,LocalDate.class),r.getString(2),members,actor.relationshipDate(),false,r.getLong(3));
         },id);
     }

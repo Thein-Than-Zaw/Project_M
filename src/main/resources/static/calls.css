@@ -1,12 +1,85 @@
-/* DEV08-UI01: same-document full-page call; WebRTC stays connected when minimized. */
-.call-view-open{overflow:hidden}
-.call-launcher,.notification-mute{position:fixed;right:22px;z-index:8;border:1px solid #dfbdcb;border-radius:24px;background:#fff8fb;color:#963f62;padding:11px 18px;font:13px 'Segoe UI',sans-serif;min-height:44px;box-shadow:0 5px 24px #54374a14}
-.call-launcher{bottom:146px;max-width:240px}.notification-mute{bottom:96px}
-.call-panel{position:fixed;inset:0;z-index:1000;box-sizing:border-box;width:100%;height:100dvh;background:#17191e;color:#f4f5f7;display:flex;flex-direction:column;padding:18px 24px;gap:8px;overflow:auto;font:14px/1.5 'Segoe UI',sans-serif}
-.call-panel[hidden],.call-panel [hidden],.call-launcher[hidden]{display:none!important}
-.call-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.call-heading .eyebrow{color:#d7abbc;font-size:10px;letter-spacing:2px}.call-heading h2{font:24px/1.3 Georgia,serif;margin:5px 0}.call-panel button{width:auto;min-height:44px;border:1px solid #5b606c;border-radius:24px;padding:10px 18px;background:#30343d;color:#f7f7fa;font:13px/1.4 'Segoe UI',sans-serif;cursor:pointer}.call-panel button:disabled{opacity:.5;cursor:wait}.call-panel button:focus-visible{outline:3px solid #f6b4d0;outline-offset:3px}.call-panel button.primary{background:#dcaac0;color:#241820;border-color:#dcaac0}.call-panel .call-danger{background:#c83d50;border-color:#c83d50;color:white}
-.call-status{margin:0;color:#c9cdd7;font-size:13px}.call-panel .field-error{margin:0;padding:10px 14px;background:#6c2637;color:#fff0f3;border-radius:10px}.call-panel .field-error:empty{display:none}
-.call-stage{position:relative;flex:1 0 230px;min-height:230px;border-radius:18px;overflow:hidden;background:#22252c}.call-stage>video#call-remote{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.call-stage>video#call-local{position:absolute;right:18px;top:18px;width:22%;height:28%;max-width:260px;object-fit:cover;border:2px solid #ffffff70;border-radius:14px;transform:scaleX(-1);z-index:2;background:#30343d}.call-person{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;background:radial-gradient(ellipse at 50% 40%,#493746,#22252c);color:#fff0f7}.call-person>span{display:grid;place-items:center;width:90px;height:90px;border-radius:50%;background:#dcaac024;color:#edbdd2;font-size:45px}.call-person strong{font-size:28px;overflow-wrap:anywhere}.call-person p{font-size:13px;color:#d6c7d3}.call-duration{position:absolute;bottom:14px;left:16px;padding:5px 12px;border-radius:18px;background:#15171bbd;color:white;font-variant-numeric:tabular-nums}.call-duration:empty{display:none}
-.call-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.call-idle-actions{margin:auto}.call-controls{padding:8px 0}.call-controls button{display:flex;align-items:center;justify-content:center;gap:9px}.call-controls svg{width:23px;height:23px;flex-shrink:0}.call-controls button[aria-pressed=true]{background:#743044;border-color:#e6a3be}.call-footer{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.call-footer button{background:transparent;border-color:transparent;font-size:12px}.call-panel .fine-print{margin:0;text-align:center;color:#aeb4c1;font-size:11px}.call-history{border-top:1px solid #50545e;max-height:160px;overflow:auto;padding:8px}.call-history p{font-size:12px;overflow-wrap:anywhere}.conversation-header [data-call-mode]{padding:8px;min-width:44px;min-height:44px;font-size:18px}.conversation-header>a.secondary{margin-left:auto}.conversation-header [data-call-mode]+[data-call-mode]{margin-left:0}
-@media(max-width:760px){.call-panel{padding:12px 12px calc(10px + env(safe-area-inset-bottom));gap:7px}.call-heading h2{font-size:19px}.call-heading button{padding:8px 12px;font-size:12px}.call-stage>video#call-local{width:30%;height:24%;right:10px;top:10px}.call-controls{gap:8px}.call-controls button{padding:10px 14px}.call-controls #call-mic span,.call-controls #call-camera span,.call-controls #call-end span{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.call-footer{gap:0}.call-footer button{padding:8px 10px}.call-launcher,.notification-mute{right:14px}.call-launcher{bottom:142px}.notification-mute{bottom:92px}.conversation-header{gap:8px;flex-wrap:wrap}.conversation-header .avatar{width:34px;height:34px;flex:0 0 34px}.conversation-header>a.secondary,.conversation-header #logout{padding:8px;font-size:10px}}
-@media(prefers-reduced-motion:reduce){.call-panel *{scroll-behavior:auto!important}}
+/* DEV08-UI02: compact call chrome gives the video the remaining viewport height. */
+.call-view-open { overflow: hidden; }
+.call-launcher {
+ position: fixed; right: 22px; bottom: 96px; z-index: 8; min-height: 44px;
+ max-width: 240px; padding: 11px 18px; border: 1px solid #dfbdcb; border-radius: 24px;
+ background: #fff8fb; color: #963f62; box-shadow: 0 5px 24px #54374a14; font: 13px 'Segoe UI',sans-serif;
+}
+.call-panel {
+ position: fixed; inset: 0; z-index: 1000; box-sizing: border-box; width: 100%; height: 100dvh;
+ display: flex; flex-direction: column; gap: 10px; padding: 12px 16px;
+ overflow: auto; background: #17191e; color: #f4f5f7; font: 14px/1.5 'Segoe UI',sans-serif;
+}
+.call-panel[hidden], .call-panel [hidden], .call-launcher[hidden] { display: none !important; }
+.call-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0; }
+.call-heading > div { min-width: 0; }
+.call-heading h2 { margin: 0; font: 600 17px/1.4 'Segoe UI',sans-serif; overflow-wrap: anywhere; }
+.call-status { margin: 2px 0 0; color: #c9cdd7; font-size: 12px; }
+.call-panel button {
+ width: auto; min-height: 44px; padding: 10px 18px; border: 1px solid #5b606c; border-radius: 24px;
+ background: #30343d; color: #f7f7fa; font: 13px/1.4 'Segoe UI',sans-serif; cursor: pointer;
+}
+.call-heading button { flex-shrink: 0; }
+.call-panel button:disabled { opacity: .5; cursor: wait; }
+.call-panel button:focus-visible, .call-more summary:focus-visible { outline: 3px solid #f6b4d0; outline-offset: 3px; }
+.call-panel button.primary { background: #dcaac0; color: #241820; border-color: #dcaac0; }
+.call-panel .call-danger { background: #c83d50; border-color: #c83d50; color: white; }
+.call-panel .field-error { margin: 0; padding: 10px 14px; background: #6c2637; color: #fff0f3; border-radius: 10px; flex-shrink: 0; }
+.call-panel .field-error:empty { display: none; }
+.call-stage { position: relative; flex: 1 0 180px; min-height: 180px; border-radius: 16px; overflow: hidden; background: #22252c; }
+.call-stage > video#call-remote { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.call-stage > video#call-local {
+ position: absolute; top: 14px; right: 14px; z-index: 2; width: 22%; height: 28%; max-width: 260px; max-height: 160px;
+ border: 2px solid #ffffff70; border-radius: 12px; background: #30343d; object-fit: cover; transform: scaleX(-1);
+}
+.call-person {
+ position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+ gap: 14px; padding: 20px; text-align: center; background: radial-gradient(ellipse at 50% 40%,#493746,#22252c); color: #fff0f7;
+}
+.call-person > span { display: grid; place-items: center; width: 90px; height: 90px; border-radius: 50%; background: #dcaac024; color: #edbdd2; font-size: 45px; }
+.call-person strong { font-size: 28px; overflow-wrap: anywhere; }
+.call-person p { color: #d6c7d3; font-size: 13px; }
+.call-duration { position: absolute; bottom: 14px; left: 16px; padding: 5px 12px; border-radius: 18px; background: #15171bbd; color: white; font-variant-numeric: tabular-nums; }
+.call-duration:empty { display: none; }
+.call-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+#call-idle-actions { margin: auto; }
+.call-toolbar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-shrink: 0; padding: 0 0 2px; }
+.call-controls button { display: flex; align-items: center; justify-content: center; gap: 9px; }
+.call-controls svg { width: 23px; height: 23px; flex-shrink: 0; }
+.call-controls button[aria-pressed=true] { background: #743044; border-color: #e6a3be; }
+.call-more { position: relative; }
+.call-more summary {
+ display: grid; place-items: center; list-style: none; min-width: 44px; min-height: 44px; border: 1px solid #5b606c;
+ border-radius: 50%; background: #30343d; color: white; font-size: 26px; line-height: 1; cursor: pointer;
+}
+.call-more summary::-webkit-details-marker { display: none; }
+.call-more-menu {
+ position: absolute; bottom: calc(100% + 12px); right: 0; z-index: 5; box-sizing: border-box;
+ width: min(340px,calc(100vw - 32px)); max-height: min(420px,65dvh); overflow: auto; padding: 12px;
+ background: #292c34; border: 1px solid #5b606c; border-radius: 16px; box-shadow: 0 12px 40px #0008;
+}
+.call-more-menu button { display: block; width: 100%; margin-bottom: 6px; border-color: transparent; border-radius: 10px; text-align: left; }
+.call-panel .fine-print { margin: 8px 0 0; color: #bfc4cf; font-size: 12px; }
+.call-history { max-height: 160px; overflow: auto; margin-top: 8px; padding-top: 8px; border-top: 1px solid #50545e; }
+.call-history p { font-size: 12px; overflow-wrap: anywhere; }
+.conversation-header [data-call-mode] { padding: 8px; min-width: 44px; min-height: 44px; font-size: 18px; }
+.conversation-header > a.secondary { margin-left: auto; }
+.conversation-header [data-call-mode] + [data-call-mode] { margin-left: 0; }
+@media (max-width: 760px) {
+ .call-panel { gap: 8px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+ .call-heading h2 { font-size: 16px; }
+ .call-heading button { padding: 8px 12px; font-size: 12px; }
+ .call-stage > video#call-local { width: 29%; height: 24%; top: 10px; right: 10px; }
+ .call-controls, .call-toolbar { gap: 8px; }
+ .call-more-menu { position: fixed; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); width: calc(100vw - 24px); }
+ .call-controls button { padding: 10px 14px; }
+ .call-controls #call-mic span, .call-controls #call-camera span, .call-controls #call-end span {
+  position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+ }
+ .call-launcher { right: 14px; bottom: 92px; }
+ .conversation-header { gap: 8px; flex-wrap: wrap; }
+ .conversation-header .avatar { width: 34px; height: 34px; flex: 0 0 34px; }
+ .conversation-header > a.secondary, .conversation-header #logout { padding: 8px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .call-panel * { scroll-behavior: auto !important; } }
+.call-person .avatar{width:88px;height:88px;margin:0 auto 16px;font-size:34px;overflow:hidden}.call-person .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}

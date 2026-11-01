@@ -1,0 +1,23 @@
+/* DEV-09A: notification content lives in the inbox; sound controls stay in Settings. */
+.notification-entry svg { display: block; width: 23px; height: 23px; }
+.world-header .notification-entry, .conversation-header .notification-entry, .memory-heading .notification-entry { position: relative; display: grid; place-items: center; min-width: 44px; min-height: 44px; flex-shrink: 0; border: 1px solid #e7d5de; border-radius: 50%; background: white; color: #9b496b; text-decoration: none; }
+.world-header .notification-entry-label, .conversation-header .notification-entry-label, .memory-heading .notification-entry-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.world-header .notification-badge, .conversation-header .notification-badge, .memory-heading .notification-badge { position: absolute; top: -7px; right: -7px; }
+.notification-entry:focus-visible { outline: 3px solid #a74668; outline-offset: 3px; }
+.notification-badge { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 16px; color: white; background: #a74668; font: 11px 'Segoe UI',sans-serif; }
+.notification-badge[hidden] { display: none; }
+.mobile-nav .notification-entry { position: relative; }
+.mobile-nav .notification-entry .notification-badge { position: absolute; top: -2px; right: 4px; }
+.notification-inbox { position: fixed; inset: 12px 12px 12px auto; box-sizing: border-box; margin: 0; width: min(440px,calc(100vw - 24px)); height: calc(100dvh - 24px); max-height: none; padding: 22px; overflow: auto; border: 1px solid #e7d5de; border-radius: 22px; background: #fffaf8; color: #382235; box-shadow: 0 12px 50px #21182030; font: 14px/1.6 'Segoe UI',sans-serif; }
+.notification-inbox::backdrop { background: #17121d66; }
+.notification-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.notification-heading span { color: #8e5972; font-size: 10px; letter-spacing: 2px; }.notification-heading h2 { margin: 3px 0 16px; font: 30px/1.3 Georgia,serif; }
+.notification-inbox button { min-height: 44px; width: auto; padding: 8px 14px; border: 1px solid #dbc4d0; border-radius: 18px; background: white; color: #8a3e60; font: 13px/1.4 'Segoe UI',sans-serif; cursor: pointer; }
+.notification-inbox button:disabled { opacity: .55; cursor: wait; }.notification-inbox button:focus-visible { outline: 3px solid #a74668; outline-offset: 3px; }
+.notification-heading button { min-width: 44px; padding: 6px; font-size: 25px; }
+.notification-filters { display: flex; gap: 8px; }.notification-filters button[aria-pressed=true] { background: #f0dfe7; border-color: #c88ba5; }.notification-filters #notification-refresh { margin-left: auto; }
+.notification-status { color: #776674; font-size: 12px; }.notification-error { padding: 12px; background: #fde8ec; color: #922d43; border-radius: 12px; }
+.notification-list { display: grid; gap: 12px; }.notification-item { padding: 16px; border: 1px solid #eadde3; border-radius: 16px; background: white; }.notification-item.is-unread { border-left: 4px solid #ad4b72; background: #fff6f9; }
+.notification-item h3 { margin: 0 0 8px; font: 600 14px/1.6 'Segoe UI',sans-serif; }.notification-item time { color: #776674; font-size: 11px; }.notification-read-state { display: block; margin-top: 6px; color: #8a3e60; font-size: 11px; }.notification-item-actions { display: flex; gap: 8px; margin-top: 12px; }.notification-older { margin: 16px auto 0; }
+.notification-inbox [hidden] { display: none !important; }
+@media(max-width:760px) { .notification-inbox { inset: 0; width: 100%; height: 100dvh; max-width: none; border-radius: 0; padding: 20px 16px max(20px,env(safe-area-inset-bottom)); }.mobile-nav .notification-entry { min-width: 0; }.mobile-nav .notification-entry > span:nth-child(2) { font-size: 9px; } }

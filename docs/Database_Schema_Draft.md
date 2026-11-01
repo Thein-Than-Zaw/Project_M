@@ -98,3 +98,17 @@ Total quota, historical backup-copy policy and production object storage remain 
 V20 call_session stores metadata/outcomes, modeVOICE/VIDEO, caller/callee same-space membership, selected socket/raw random page-client binding, connected reports, negotiation UUID, authoritative timestamps/deadlines/version. No SDP/ICE/media BLOB. Partial unique(space_id) over nonterminal states enforces one live call; lifecycle/audit CHECKs protect terminal/connected states. V21 call_command_receipt PK(actor_id,event_id) stores command/intent hash/call FK for durable idempotency; cascade only when test-owned call rows or a separately authorized lifecycle deletes the parent.
 
 Space row lock serializes competing invites and accepts. Caller creates ringDeadline+30s; accept records selected callee/connectDeadline+30s; both current reports record connectedAt; recovery uses first15s cutoff. Terminal rows retain outcomes. Selected sockets are internal routing only; public Views project client-token hashes, never tokens/session IDs. Startup/maintenance reconciles persisted stale live calls with fresh socket state; SDP remains ephemeral and is renegotiated. Actual device/restart/relay readiness is separate from schema/native tests; see DEV-08_Checkpoint.md.
+## DEV-09A — V22 notification inbox
+
+notification_inbox: BIGSERIAL sequence PK, UUID id UNIQUE; space_id/recipient_id composite FK to couple_membership(space_id,user_id) ON DELETE CASCADE; source_event_id UUID, constrained type, target_id UUID, created_at TIMESTAMPTZ, nullable read_at TIMESTAMPTZ, nonnegative version BIGINT. Unique(source_event_id,recipient_id,type); (recipient_id,space_id,sequence DESC) paging index and equivalent unread partial index. No message content/sender/SDP/media copied. Deliberately no target FK: a generic notification survives target purge and protected target resolution returns unavailable. No retention/deletion/backfill policy selected. V22 is forward-only; previous migrations are unchanged.
+
+## CHAT-02A — V23–V25
+
+V23 adds chat_conversation.change_version; chat_message.reply_to_id, deleted_at, version, request_hash; same-space reply FK and unique(space_id,id). Reply cannot self-reference. Original intent is SHA256 of PostgreSQL canonical jsonb array(body,type,gift_code,reply_to_id); INSERT trigger computes it, upgrade backfills it, deletion never recomputes it. Body/gift check accepts only a fully scrubbed tombstone when deleted_at is nonnull. No payload snapshot is copied into replies.
+
+V24 chat_message_reaction: one row PK(message_id,user_id), scoped message/member FKs with cascade, exact six-emoji check, updated_at. V25 chat_message_hidden: same ownership FKs/PK, hidden_at; actor-only view deletion. Tables cascade with test/source row cleanup; ordinary user Delete for everyone does not physically delete the original message row. All migrations are forward files; V1–V22 unchanged. No backup-erasure/retention promise or chat Trash feature implied.
+# CHAT-03 schema addition (2 November 2026)
+
+V26 adds nullable `app_user.avatar_jpeg bytea` (maximum 262144 normalized bytes), application-managed `avatar_version bigint DEFAULT 0`, and nullable `last_active_at timestamptz`.
+Private same-space image reads; server-derived account writes. No account/chat/memory removal or public media URL.
+Photo resource bounds and activity semantics: [CHAT-03 record](CHAT-03_Mobile_Chat_UX.md). Applied migration history remains unchanged.

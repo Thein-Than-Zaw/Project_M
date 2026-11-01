@@ -124,6 +124,44 @@ class HomeIntegrationTest {
             assertNull(socket.frames.poll(300,TimeUnit.MILLISECONDS),"Failed stale write must not emit invalidation");
         }
     }
+    // CHAT-03: actual HTTP, CSRF, normalized persisted photo and same-space access.
+    @Test void privatePhotoNormalizesAndCannotTargetAnotherAccount()throws Exception {
+        var image=new java.awt.image.BufferedImage(64,32,java.awt.image.BufferedImage.TYPE_INT_RGB);
+        var bytes=new java.io.ByteArrayOutputStream();javax.imageio.ImageIO.write(image,"PNG",bytes);
+        var raw=bytes.toByteArray();
+        assertEquals(401,new Browser().get("/api/profiles/"+aId+"/photo").statusCode());
+        assertEquals(403,photo(a,raw,false).statusCode());
+        var saved=photo(a,raw,true);assertEquals(200,saved.statusCode(),saved.body());
+        String url=tree(saved).get("avatarUrl").asText();assertTrue(url.startsWith("/api/profiles/"+aId+"/photo?v="));
+        var response=b.client.send(HttpRequest.newBuilder(b.uri(url)).build(),HttpResponse.BodyHandlers.ofByteArray());
+        assertEquals(200,response.statusCode());assertTrue(response.headers().firstValue("Content-Type").orElse("").startsWith("image/jpeg"));
+        var decoded=javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(response.body()));assertEquals(256,decoded.getWidth());assertEquals(256,decoded.getHeight());
+        assertEquals(url,tree(a.get("/api/home")).get("self").get("avatarUrl").asText());
+        assertEquals(url,tree(b.get("/api/chat")).get("partner").get("avatarUrl").asText());
+        assertNull(jdbc.queryForObject("SELECT avatar_jpeg FROM app_user WHERE id=?",byte[].class,bId));
+        assertEquals(404,b.get("/api/profiles/"+UUID.randomUUID()+"/photo").statusCode());
+        jdbc.update("DELETE FROM couple_membership WHERE user_id=?",bId);
+        assertEquals(403,b.get(url).statusCode());assertEquals(403,photo(b,raw,true).statusCode());
+    }
+    @Test void malformedAndOversizedPhotosNeverOverwriteSavedImage()throws Exception {
+        assertEquals(400,photo(a,"<svg onload=alert(1)>".getBytes(StandardCharsets.UTF_8),true).statusCode());
+        assertEquals(413,photo(a,new byte[2097153],true).statusCode());
+        assertNull(jdbc.queryForObject("SELECT avatar_jpeg FROM app_user WHERE id=?",byte[].class,aId));
+        assertEquals(0,jdbc.queryForObject("SELECT avatar_version FROM app_user WHERE id=?",Long.class,aId));
+    }
+    @Test void activityUsesPartnerHeartbeatAndExpiresWithoutFabricatingLoginTime()throws Exception {
+        assertEquals(401,new Browser().get("/api/presence").statusCode());
+        var initial=tree(a.get("/api/presence"));assertFalse(initial.get("active").asBoolean());assertTrue(initial.get("lastActiveAt").isNull());
+        assertEquals(403,b.write("/api/presence","POST",null,null,false).statusCode());
+        assertEquals(204,b.write("/api/presence","POST",null,null,true).statusCode());assertTrue(tree(a.get("/api/presence")).get("active").asBoolean());
+        assertFalse(tree(b.get("/api/presence")).get("active").asBoolean(),"Must report partner, not actor");
+        jdbc.update("UPDATE app_user SET last_active_at=CURRENT_TIMESTAMP-interval '2 minutes' WHERE id=?",bId);
+        var idle=tree(a.get("/api/presence"));assertFalse(idle.get("active").asBoolean());assertFalse(idle.get("lastActiveAt").isNull());
+    }
+    HttpResponse<String> photo(Browser browser,byte[] data,boolean token)throws Exception {
+        var request=HttpRequest.newBuilder(browser.uri("/api/profile/photo")).header("Content-Type","application/octet-stream");if(token)request.header("X-CSRF-TOKEN",browser.csrf());
+        return browser.client.send(request.PUT(HttpRequest.BodyPublishers.ofByteArray(data)).build(),HttpResponse.BodyHandlers.ofString());
+    }
     Map<String,Object> event(String title,String date,boolean repeat,long version){return Map.of("title",title,"eventDate",date,"repeatYearly",repeat,"version",version);}
     JsonNode tree(HttpResponse<String> response){return json.readTree(response.body());}
     class Browser {

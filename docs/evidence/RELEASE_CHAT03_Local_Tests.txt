@@ -1,0 +1,12 @@
+CHAT-03 main deployment local test evidence — 2 November 2026, +06:30
+Actual command: Maven -B -ntp -DargLine=-Djava.io.tmpdir=C:/Projects/Project_M/target/test-tmp test
+[INFO] Tests run: 98, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time: 03:21 min
+[INFO] Finished at: 2026-11-02T01:16:27+06:30
+JavaScript command: node --test src/test/javascript/*.test.mjs
+tests 48; pass 48; fail 0; skipped 0.
+Initial complete suite: 98 runs, 1 stale V21 assertion failure, 4 Windows Temp cleanup errors; retained separately, not discarded.
+Correction: Foundation expected count updated to current V26; test-only temporary directory moved inside ignored workspace target/test-tmp through JVM argLine. No runtime logic changed, tests skipped or assertions removed.
+App JAR build and graphical/native predecessor/fresh evidence remain linked in CHAT-03_Mobile_Chat_UX.md.
+No production fixture creation or backup export. Deployment authorization is separate from real-phone/human UAT and Drive package verification.

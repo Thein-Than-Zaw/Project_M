@@ -1,0 +1,73 @@
+DEV-09A local verification / 1 November 2026 Asia/Yangon
+Base commit 2e74847; working changes uncommitted; no push/deploy.
+Initial native run: 46 tests, 1 memory test assertion failed because initial notifications.updated invalidation was newly expected. Memory test now consumes/asserts that initial event before checking zero replay events.
+
+Initial native run (per-class results; Memory result superseded below)
+2026-11-01T22:30:36.205+06:30  INFO 30320 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev07_fresh_20261101" to version "22 - create notification inbox"
+2026-11-01T22:30:36.511+06:30  INFO 30320 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "dev07_fresh_20261101", now at version v22 (execution time 00:00.273s)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 49.85 s -- in com.couple.privatespace.CallIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.071 s -- in com.couple.privatespace.ChatIntegrationTest
+[ERROR] Tests run: 15, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 37.12 s <<< FAILURE! -- in com.couple.privatespace.MemoryIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.882 s -- in com.couple.privatespace.NotificationIntegrationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.973 s -- in com.couple.privatespace.PairingIntegrationTest
+[ERROR] Tests run: 46, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+[INFO] Total time:  02:23 min
+
+Final Memory regression retest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 69.20 s -- in com.couple.privatespace.MemoryIntegrationTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  01:29 min
+
+Fresh V1–V22 schema + Inbox retest
+2026-11-01T22:36:37.328+06:30  INFO 18980 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev09_fresh_20261101" to version "22 - create notification inbox"
+2026-11-01T22:36:37.366+06:30  INFO 18980 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 22 migrations to schema "dev09_fresh_20261101", now at version v22 (execution time 00:00.414s)
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 44.72 s -- in com.couple.privatespace.NotificationIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  01:04 min
+
+Final npm.cmd run build
+[INFO] BUILD SUCCESS
+[INFO] Total time:  17.754 s
+
+JavaScript sound/media tests
+ℹ tests 11
+ℹ pass 11
+ℹ fail 0
+ℹ skipped 0
+
+Source markup checks
+PASS balanced markup/unique IDs: home.html
+PASS balanced markup/unique IDs: chat.html
+PASS balanced markup/unique IDs: memories.html
+PASS balanced markup/unique IDs: call-widget template
+PASS balanced markup/unique IDs: notification-inbox template
+PASS sound preferences remain confined to existing Settings view
+
+Local health/security smoke
+PASS /actuator/health/readiness HTTP 200
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)
+
+Local source-match and anonymous denial
+PASS local notification-inbox.js: HTTP 200 and source matches
+PASS local notifications.css: HTTP 200 and source matches
+PASS local call-widget.js: HTTP 200 and source matches
+PASS local calls.css: HTTP 200 and source matches
+PASS local home.js: HTTP 200 and source matches
+PASS local home.css: HTTP 200 and source matches
+PASS local chat.js: HTTP 200 and source matches
+PASS local memories.js: HTTP 200 and source matches
+PASS anonymous /api/notifications: HTTP 401
+PASS anonymous /api/notifications/00000000-0000-0000-0000-000000000001/target: HTTP 401
+
+Final unique native cases: Call10 + Chat8 + Pairing5 + Inbox8 + Memory15 = 46 passing across the recorded runs. Inbox8 repeated on fresh schema; not counted twice. JS11 passed. Syntax checks for changed JS passed.
+Actual graphical/browser/audio/mobile inbox/settings/call interaction: NOT_TESTED. Source/HTTP checks do not replace it.
+No production/Neon/Render operation or account-data migration.

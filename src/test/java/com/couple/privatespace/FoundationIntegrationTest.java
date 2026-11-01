@@ -49,7 +49,8 @@ class FoundationIntegrationTest {
             db.setAutoCommit(false);
             try {
                 try (var rows = db.createStatement().executeQuery("SELECT count(*) FROM flyway_schema_history WHERE success AND version IS NOT NULL")) {
-                    assertTrue(rows.next()); assertEquals(21, rows.getInt(1)); // DEV-07 adds V16–V19; prior migrations remain unchanged.
+                    // CHAT-03 release: V22–V26 are additive; verify the complete current migration chain.
+                    assertTrue(rows.next()); assertEquals(26, rows.getInt(1));
                 }
                 insertUser(db, UUID.randomUUID(), 1, "A@example.invalid", "2020-01-01");
                 insertUser(db, UUID.randomUUID(), 2, "B@example.invalid", "2020-01-02");

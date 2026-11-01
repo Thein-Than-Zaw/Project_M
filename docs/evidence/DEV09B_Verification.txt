@@ -1,0 +1,42 @@
+DEV-09B local notification controls / 1 November2026 Asia/Yangon
+Source ca1cf45dc919cf48ed2ee3874ee4589f40a79af8eafb6f21cbd2bebd8941f735
+JAR 6982ac4be2f769d381d3a5183f5a76ef034af94c7c9e5e0539e28ba1e71c859c
+No commit/push/deploy; business APIs and schema unchanged.
+
+npm.cmd run build
+[INFO] BUILD SUCCESS
+[INFO] Total time:  14.205 s
+
+Node sound/browser/sent-transition/media tests
+ℹ tests 27
+ℹ pass 27
+ℹ fail 0
+ℹ skipped 0
+
+Local HTTP smoke
+PASS /actuator/health/readiness HTTP 200
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)
+
+Local served-source/anonymous-access checks
+PASS local browser-notifications.js: HTTP 200 and source matches
+PASS local notification-sounds.js: HTTP 200 and source matches
+PASS local notification-inbox.js: HTTP 200 and source matches
+PASS local notifications.css: HTTP 200 and source matches
+PASS local call-widget.js: HTTP 200 and source matches
+PASS local calls.css: HTTP 200 and source matches
+PASS local home.js: HTTP 200 and source matches
+PASS local home.css: HTTP 200 and source matches
+PASS local chat.js: HTTP 200 and source matches
+PASS local memories.js: HTTP 200 and source matches
+PASS anonymous /api/notifications: HTTP 401
+PASS anonymous /api/notifications/00000000-0000-0000-0000-000000000001/target: HTTP 401
+
+Changed JS syntax and markup balance/unique-ID/Settings-only controls checks PASS.
+Actual speaker volume, OS popup, trusted permission gesture and Android/iOS graphical behavior NOT_TESTED. Unit tests use controlled API/audio doubles; sent gating tests execute actual merge/transmit source functions in a Node VM without a real browser.
+Existing DEV-09A native results remain historical; broad native suite was not rerun for this frontend/static-allowlist change.

@@ -1,0 +1,42 @@
+CHAT-02B / 2 November2026 Asia/Yangon / local only
+Source83535771b9bf042346cf9ee63f52cd11c7cd64a08d682f04467c9a746142b92d
+JAR98768a403d0f151c048f9c5e0194994fc0538035c2b1252b0b2402d9665dba11
+
+Node controlled gestures + existing JS regressions
+ℹ tests 38
+ℹ pass 38
+ℹ fail 0
+ℹ skipped 0
+
+npm.cmd run build
+[INFO] BUILD SUCCESS
+[INFO] Total time:  17.283 s
+
+Local health/security smoke
+PASS /actuator/health/readiness HTTP 200
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)
+
+Local asset/source checks
+PASS local chat.css: HTTP 200 and source matches
+PASS local browser-notifications.js: HTTP 200 and source matches
+PASS local notification-sounds.js: HTTP 200 and source matches
+PASS local notification-inbox.js: HTTP 200 and source matches
+PASS local notifications.css: HTTP 200 and source matches
+PASS local call-widget.js: HTTP 200 and source matches
+PASS local calls.css: HTTP 200 and source matches
+PASS local home.js: HTTP 200 and source matches
+PASS local home.css: HTTP 200 and source matches
+PASS local chat.js: HTTP 200 and source matches
+PASS local memories.js: HTTP 200 and source matches
+PASS anonymous /api/notifications: HTTP 401
+PASS anonymous /api/notifications/00000000-0000-0000-0000-000000000001/target: HTTP 401
+
+Changed JS syntax, HTML/template balance/unique IDs and packaged Chat HTML/JS/CSS source match PASS.
+No backend/schema change; prior native tests not rerun for this UI revision. Actual graphical desktop/mobile behavior NOT_TESTED.
+No commit/push/Render deployment; no data migration or account change.

@@ -4,3 +4,26 @@ body{background:#faf7f3;font-size:14px}.sidebar{position:fixed;inset:0 auto 0 0;
 .save-status:empty{display:none}.save-status{padding:12px 16px;background:#edf1e8;border:1px solid #ced8c3;border-radius:10px;color:#4b6243;font-size:13px;margin:0 0 20px}
 [data-chat-unread]{display:inline-block;min-width:20px;padding:2px 6px;background:#a74668;color:white;border-radius:12px;font-size:10px;text-align:center;margin-left:4px}.mobile-nav a{min-width:60px}
 .memory-home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.memory-home-grid>a{display:block;padding:16px;border:1px solid var(--border);border-radius:16px;background:white;text-decoration:none;overflow-wrap:anywhere}.memory-home-grid img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:12px}.memory-home-grid strong{font:21px/1.4 var(--serif)}.memory-home-grid .empty-card{grid-column:1/-1}@media(max-width:760px){.memory-home-grid{grid-template-columns:1fr}}
+/* DEV08-UI02: notification controls are confined to the dedicated Settings view. */
+.notification-settings-card { max-width: 780px; margin-top: 20px; }
+.settings-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--rose); text-decoration: none; }
+.notification-settings-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.notification-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0; border-bottom: 1px solid var(--border); }
+.notification-setting-row > div { flex: 1; min-width: 0; }
+.notification-setting-row h3 { margin: 0 0 6px; font: 600 15px/1.5 var(--sans,'Segoe UI',sans-serif); }
+.notification-setting-row p { margin: 0; max-width: 490px; }
+.notification-setting-row button { flex-shrink: 0; min-height: 44px; }
+.notification-always-on { flex-shrink: 0; padding: 6px 12px; border-radius: 20px; background: #edf1e8; color: #4b6243; font-size: 12px; }
+.notification-switch { position: relative; display: flex; align-items: center; min-width: 52px; min-height: 44px; margin: 0; cursor: pointer; }
+.notification-switch input { position: absolute; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.notification-switch span { display: block; width: 48px; height: 28px; border-radius: 20px; background: #d5cbd1; pointer-events: none; }
+.notification-switch span::after { content: ''; display: block; width: 22px; height: 22px; margin: 3px; border-radius: 50%; background: white; box-shadow: 0 1px 3px #0002; }
+.notification-switch input:checked + span { background: var(--rose,#a74668); }
+.notification-switch input:checked + span::after { transform: translateX(20px); }
+.notification-switch input:focus-visible + span { outline: 3px solid var(--rose,#a74668); outline-offset: 4px; }
+@media (max-width: 480px) { .notification-setting-row { gap: 14px; flex-wrap: wrap; }.notification-setting-row > div { flex-basis: 65%; }.notification-setting-row button { margin-left: auto; } }
+.notification-volume-control { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+.notification-volume-control input[type=range] { width: 100%; min-height: 44px; padding: 0; accent-color: var(--rose,#a74668); cursor: pointer; }
+.notification-volume-control output { min-width: 44px; color: var(--rose,#a74668); font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+/* CHAT-03: responsive conversation, compact controls and bubble-corner reactions. */
+html,body{width:100%;max-width:100%;overflow-x:hidden}.avatar,.initials span{overflow:hidden;flex-shrink:0}.avatar img,.initials img{width:100%;height:100%;object-fit:cover;border-radius:inherit}.settings-item{display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--rose)}.settings-item span{font-size:20px}.sidebar nav a[data-view=settings]{white-space:nowrap}

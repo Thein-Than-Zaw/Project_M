@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,6 +29,14 @@ public class ChatController {
     public ChatService.GiftHistory giftsHistory(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam(defaultValue="all") String direction,@RequestParam(required=false) Long before){return chat.giftHistory(actor.accountId(),direction,before);}
     @GetMapping("/api/chat/receipts") @ResponseBody
     public List<ChatService.Receipt> receipts(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam List<UUID> ids){return chat.receipts(actor.accountId(),ids);}
+    @GetMapping("/api/chat/messages") @ResponseBody
+    public ChatService.Snapshot snapshots(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam List<UUID> ids){return chat.snapshots(actor.accountId(),ids);}
+    @PostMapping("/api/chat/messages/{id}/hide") @ResponseBody @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void hide(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id){chat.hide(actor.accountId(),id);}
+    @PostMapping("/api/chat/messages/{id}/delete") @ResponseBody
+    public ChatService.Message delete(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id){return chat.delete(actor.accountId(),id);}
+    @PutMapping("/api/chat/messages/{id}/reaction") @ResponseBody
+    public ChatService.Message react(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id,@RequestBody ChatService.React body){return chat.react(actor.accountId(),id,body);}
     @MessageMapping("/chat.send") @SendToUser(value="/queue/chat",broadcast=false)
     public Reply send(Principal principal,@Header("simpSessionId") String session,ChatService.Send command){
         try{return new Reply("chat.sent",command.clientMessageId(),chat.send(actor(principal,session),command),List.of(),null,null);}

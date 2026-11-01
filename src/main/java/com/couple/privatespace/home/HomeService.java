@@ -18,7 +18,7 @@ public class HomeService {
     public HomeService(JdbcTemplate jdbc,PairingService pairing,ApplicationEventPublisher events) {
         this.jdbc=jdbc;this.pairing=pairing;this.events=events;
     }
-    public record Profile(UUID id,String displayName,String email,long version) { }
+    public record Profile(UUID id,String displayName,String email,long version,String avatarUrl) { }
     public record ProfileEdit(String displayName,Long version) { }
     public record RelationshipEdit(LocalDate relationshipDate,Long version,boolean confirmed) { }
     public record EventEdit(String title,LocalDate eventDate,Boolean repeatYearly,Long version) { }
@@ -36,7 +36,7 @@ public class HomeService {
         var next=list(space.id(),calendar.today(),0,true);
         return new Home(space.state(),space.id(),space.relationshipDate(),space.timezone(),space.members(),
             space.signupRelationshipDate(),space.canCreate(),space.version(),profile(actor),calendar,next.isEmpty()?null:next.getFirst(),
-            jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND read_at IS NULL",Long.class,space.id(),actor));
+            jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND read_at IS NULL AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)",Long.class,space.id(),actor,actor));
     }
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public Dates dates(UUID actor,int page) {
@@ -48,8 +48,8 @@ public class HomeService {
         return DatePolicy.calendar(space.relationshipDate(),ZoneId.of(space.timezone()),Clock.systemUTC());
     }
     private Profile profile(UUID actor) {
-        return jdbc.queryForObject("SELECT id,display_name,email,version FROM app_user WHERE id=?",
-            (r,n)->new Profile(r.getObject(1,UUID.class),r.getString(2),r.getString(3),r.getLong(4)),actor);
+        return jdbc.queryForObject("SELECT id,display_name,email,version,avatar_jpeg IS NOT NULL,avatar_version FROM app_user WHERE id=?",
+            (r,n)->new Profile(r.getObject(1,UUID.class),r.getString(2),r.getString(3),r.getLong(4),r.getBoolean(5)?"/api/profiles/"+actor+"/photo?v="+r.getLong(6):null),actor);
     }
     /** HOME-01/03: actor comes from session, never an arbitrary target profile. */
     @Transactional

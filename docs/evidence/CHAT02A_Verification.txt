@@ -1,0 +1,84 @@
+CHAT-02A local verification / 1 November2026 Asia/Yangon
+Base HEAD2e74847 + uncommitted prior UI02/DEV09A/B and Reply/Delete/React. No push/deploy.
+
+Initial new Actions10 + adjacent Chat/Gift/Home/Inbox28
+2026-11-01T23:25:40.522+06:30  INFO 7788 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev09_fresh_20261101" to version "23 - add chat reply and deletion"
+2026-11-01T23:25:41.002+06:30  INFO 7788 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev09_fresh_20261101" to version "24 - create chat message reaction"
+2026-11-01T23:25:41.054+06:30  INFO 7788 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev09_fresh_20261101" to version "25 - create chat message hidden"
+2026-11-01T23:25:41.084+06:30  INFO 7788 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "dev09_fresh_20261101", now at version v25 (execution time 00:00.472s)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 52.12 s -- in com.couple.privatespace.ChatActionsIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.798 s -- in com.couple.privatespace.ChatIntegrationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.834 s -- in com.couple.privatespace.GiftIntegrationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.942 s -- in com.couple.privatespace.HomeIntegrationTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.238 s -- in com.couple.privatespace.NotificationIntegrationTest
+[INFO] Tests run: 38, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  01:53 min
+
+Fresh schema V1–V25 and Actions10
+2026-11-01T23:29:22.875+06:30  INFO 33624 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "chat02_fresh_20261101" to version "23 - add chat reply and deletion"
+2026-11-01T23:29:22.927+06:30  INFO 33624 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "chat02_fresh_20261101" to version "24 - create chat message reaction"
+2026-11-01T23:29:22.950+06:30  INFO 33624 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "chat02_fresh_20261101" to version "25 - create chat message hidden"
+2026-11-01T23:29:22.972+06:30  INFO 33624 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 25 migrations to schema "chat02_fresh_20261101", now at version v25 (execution time 00:00.595s)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 37.98 s -- in com.couple.privatespace.ChatActionsIntegrationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  55.321 s
+
+Final reply-target recovery Actions10
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 38.64 s -- in com.couple.privatespace.ChatActionsIntegrationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  56.439 s
+
+Actual STOMP Reply adapter/ACK/error test1
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 30.94 s -- in com.couple.privatespace.ChatActionsIntegrationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  48.427 s
+
+Final JavaScript33
+ℹ tests 33
+ℹ pass 33
+ℹ fail 0
+ℹ skipped 0
+
+Final npm.cmd run build
+[INFO] BUILD SUCCESS
+[INFO] Total time:  13.025 s
+
+Local V22→V25 upgrade/boot
+2026-11-01T23:39:30.350+06:30  INFO 25548 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "23 - add chat reply and deletion"
+2026-11-01T23:39:30.668+06:30  INFO 25548 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "24 - create chat message reaction"
+2026-11-01T23:39:30.715+06:30  INFO 25548 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "25 - create chat message hidden"
+2026-11-01T23:39:30.747+06:30  INFO 25548 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v25 (execution time 00:00.336s)
+2026-11-01T23:39:37.506+06:30  INFO 25548 --- [couple-private-space] [           main] c.c.p.PrivateSpaceApplication            : Started PrivateSpaceApplication in 24.572 seconds (process running for 26.54)
+
+Local HTTP smoke
+PASS /actuator/health/readiness HTTP 200
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)
+
+Local served source and anonymous ACL
+PASS local browser-notifications.js: HTTP 200 and source matches
+PASS local notification-sounds.js: HTTP 200 and source matches
+PASS local notification-inbox.js: HTTP 200 and source matches
+PASS local notifications.css: HTTP 200 and source matches
+PASS local call-widget.js: HTTP 200 and source matches
+PASS local calls.css: HTTP 200 and source matches
+PASS local home.js: HTTP 200 and source matches
+PASS local home.css: HTTP 200 and source matches
+PASS local chat.js: HTTP 200 and source matches
+PASS local memories.js: HTTP 200 and source matches
+PASS anonymous /api/notifications: HTTP 401
+PASS anonymous /api/notifications/00000000-0000-0000-0000-000000000001/target: HTTP 401
+
+Additional: anonymous loaded-message snapshot API HTTP401; packaged Chat HTML/JS/CSS and call integration match source; markup/unique IDs and JS syntax PASS.
+39 unique native cases across the recorded runs; repeated10-case tests not double-counted. JS33 passed.
+Real graphical desktop/mobile / actual click flows: NOT_TESTED; latest browser access observation disabled in Work settings. No actual local/online user message was deleted/reacted/hidden by tests.
+Private local pre-upgrade archive:75,353 bytes, pg_restore --list passed; no restore drill performed. Source manifest and local JAR identity in CHAT02A_Source_Manifest.json.

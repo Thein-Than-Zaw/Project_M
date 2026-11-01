@@ -40,3 +40,16 @@ Current state: source IMPLEMENTED, verification IN_PROGRESS. Namespace bug fixed
 # DEV-08 current task update
 
 Owner explicitly starts Voice/Video while personally reviewing DEV-07 and confirms ring30s/recovery15s/Busy/first-tab rules. Source IMPLEMENTED for the bounded call increment; native state/signaling/auth/concurrency/credential tests and local V19→V21 upgrade/run recorded in DEV-08_Checkpoint.md. Graphical actual media, physical two-device/two-network, forced TURN relay and hardware-release qualifications remain NOT_TESTED; Docker absent/WSL not installed and browser automation disabled. Full F06/DEV-08 is not COMPLETE. Continue those checks when runtime/browser access is available; do not silently promote native signaling into real-media acceptance or begin unrelated DEV-09 scope.
+
+## DEV-09A active local increment
+
+Owner continues with durable Notification Inbox while DEV08-UI02 local visual revision is preserved; explicit deployment hold remains in force. DEV-07/08 older table PLANNED labels above are historical; source/checkpoints and latest owner media reports supersede them without claiming full graphical acceptance. DEV-09A scope is own inbox/badge, all/unread paging, read/unread, safe targets, atomic source-event dedup, after-commit private invalidation and offline REST recovery. See DEV-09A_Working_Spec.md and DEV-09A_Checkpoint.md. Remaining DEV-09 presence/typing/reminder/retention/security/session decisions and DEV-10 integrated device/UAT/recovery review remain separate. No Git push/Render deployment during this local increment.
+
+DEV-09B local continuation: owner adds confirmed-Sent sound, notification volume/Test sound and opt-in open-page background browser alerts. Four owner clauses mapped in DEV-09B_Notification_Controls.md. No Web Push/provider/session/presence expansion; no deployment.
+
+CHAT-02A owner continuation: Reply, Delete for me/Delete for everyone and one editable/removable reaction per member from six confirmed emoji. Implemented as bounded chat extension; UI02/DEV09A/B preserved and deployment HOLD remains. Current scope/results/identity in CHAT-02A_Working_Spec.md / CHAT-02A_Checkpoint.md. Message Edit remains deferred.
+
+CHAT-02B local appearance/interaction correction (2 Nov2026): owner requests hover→reaction and right-click→Reply/Delete instead of ellipsis. Source/controlled tests and current identity in CHAT-02B_Hover_Context_Menu.md. No backend/schema change or deployment.
+# Latest local update — CHAT-03 (2 November 2026)
+
+[Mobile Chat UX/private profiles record](CHAT-03_Mobile_Chat_UX.md): owner-requested compact responsive Chat, actual right-click timer fix, bubble-corner reactions, scroll pagination, Settings hierarchy, private profile photos and observed activity. Local verification recorded separately from physical-device UAT. Deployment HOLD and DRIVE_SYNC_PENDING continue.

@@ -76,7 +76,7 @@ class PairingIntegrationTest {
             assertEquals(409,b.post("/api/invitations/join",join,UUID.randomUUID()).statusCode());
             var changed=new HashMap<>(join);changed.put("confirmedRelationshipDate","2020-01-02");
             assertEquals(409,b.post("/api/invitations/join",changed,key).statusCode());
-            assertEquals(2,jdbc.queryForObject("SELECT count(*) FROM couple_membership",Integer.class));
+            assertEquals(2,jdbc.queryForObject("SELECT count(*) FROM couple_membership",Integer.class));assertEquals(1,jdbc.queryForObject("SELECT count(*) FROM notification_inbox WHERE recipient_id=? AND type='PARTNER_JOINED'",Integer.class,aId));assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM notification_inbox WHERE recipient_id=?",Integer.class,bId));
             assertEquals("2020-02-01",jdbc.queryForObject("SELECT signup_relationship_date::text FROM app_user WHERE id=?",String.class,bId));
             assertEquals(409,a.post("/api/invitations",Map.of(),null).statusCode());
             assertEquals(204,a.post("/api/auth/logout",Map.of(),null).statusCode());

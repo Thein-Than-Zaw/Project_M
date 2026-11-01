@@ -165,6 +165,7 @@ class MemoryIntegrationTest {
    var a=asset(f.a,"note.pdf");assertFalse(receiver.frames.stream().anyMatch(frame->frame.contains("memory.published")),"Drafts must not notify");
    UUID key=UUID.randomUUID();var command=body(List.of(a),"One publication notice",null);var saved=f.a.post("/api/memories",command,key);assertEquals(201,saved.statusCode());
    String first=receiver.await("memory.published");assertTrue(first.contains(f.transport.tree(saved).get("id").asText()));
+   assertTrue(receiver.await("notifications.updated").contains("ACTIVE"));assertEquals(1,jdbc.queryForObject("SELECT count(*) FROM notification_inbox WHERE recipient_id=? AND type='MEMORY'",Integer.class,f.bId));
    for(int i=0;i<3;i++)assertEquals(201,f.a.post("/api/memories",command,key).statusCode());
    assertNull(receiver.frames.poll(300,TimeUnit.MILLISECONDS),"No further event is emitted by create replay");
   }

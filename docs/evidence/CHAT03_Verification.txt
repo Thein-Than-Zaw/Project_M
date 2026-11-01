@@ -1,0 +1,38 @@
+CHAT-03 final verification — 2 November 2026 (+06:30)
+Base commit: 2e74847; uncommitted local work; no push/deploy.
+Source SHA256: d20ab49dee3c6077ab2def55a527d7fb3004ce265a25d5de911054003f73e245
+JAR SHA256: 4e444e974ed5623ec18763719ea603fef1fc8d15396cadb64679620e82728ef2
+PASS served/source chat.js HTTP 200
+PASS served/source chat.css HTTP 200
+PASS served/source home.js HTTP 200
+PASS served/source home.css HTTP 200
+PASS served/source memories.js HTTP 200
+PASS served/source profile-ui.js HTTP 200
+PASS served/source call-widget.js HTTP 200
+PASS served/source calls.css HTTP 200
+PASS served/source notification-inbox.js HTTP 200
+PASS served/source notification-sounds.js HTTP 200
+PASS served/source notifications.css HTTP 200
+PASS anonymous private endpoint HTTP 401: /api/presence
+PASS anonymous private endpoint HTTP 401: /api/profiles/ac044032-d150-449a-a97f-350d59bfcc21/photo
+Build: npm.cmd run build — BUILD SUCCESS, 10.929s, 2026-11-02T00:58:48+06:30. Tests executed separately.
+Native Home (10): [INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+Native Chat + Pairing (13): [INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+Fresh V1-V26 + repeated Home photo/activity (3): [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+PASS JavaScript: 48 pass, 0 fail.
+Native totals: 26 executions, 23 unique tests; fresh 3 repeat existing methods.
+Local HTTP health/security/database-backed login lookup: 8 PASS; no account created.
+First local V26 upgrade observed: 2026-11-02T00:56:21.210+06:30, public V25 to V26; final restart validates V26.
+PASS packaged/source equality: 14 static assets + V26 migration.
+PASS real browser final JAR right-click opens Reply/Delete menu; final smoke console errors: none.
+PASS synthetic browser flows: Unicode reply persisted, reaction add/remove/change, partner author-only delete visibility, mute icon immediate state, 50 to 91 automatic history load, 60 to 120 automatic sticker load, Back, Settings/Profile/Notification settings, actual photo upload/reload and shared Home/Chat/Memories avatar URLs.
+PASS 1366x768 desktop side panel; 360x740 mobile zero horizontal overflow; 320x420 multiline short viewport zero horizontal overflow and 255px message log.
+NOT_TESTED: physical iOS/Android touch/long-press/software keyboard, active-call avatar/media, human UAT.
+The test UI server used isolated couple_private_space_test.chat03_ui_20261102; source accounts/content were not used.
+Private pre-V26 pg_dump inventory validated; restore drill not performed.
+Release HOLD; human acceptance NOT_RECORDED; Drive sync pending.
+Screenshot docs/evidence/CHAT03_Mobile.jpg SHA256 5cd2107a506a2c62872cfd9d7598fe89bb001aa85a97e3cc630eb04f905e356f
+Screenshot docs/evidence/CHAT03_Context_Menu.jpg SHA256 7908679f4a2fed5ad5c7ac1d4fd2c40fcae057227ed5457ba46323017c773189
+Screenshot docs/evidence/CHAT03_Desktop.jpg SHA256 a6a9a4bf188a4ccc43b2ca48f84956f89a802bc280221dde282471f72de5077d
+Screenshot docs/evidence/CHAT03_Short_Viewport.jpg SHA256 83997152491aca70a452e2801f35159b704bd655dcbb249f54215504ad75a632
+Cleanup: isolated 18081 server stopped; named synthetic UI fixtures removed from test schema; main 8080 readiness HTTP 200. Browser viewport reset and test tabs closed.

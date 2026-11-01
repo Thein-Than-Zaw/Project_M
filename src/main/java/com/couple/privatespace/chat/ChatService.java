@@ -18,13 +18,21 @@ public class ChatService {
     public ChatService(JdbcTemplate jdbc,PairingService pairing,ApplicationEventPublisher events,ChatLimiter limiter) {
         this.jdbc=jdbc;this.pairing=pairing;this.events=events;this.limiter=limiter;
     }
+    public record Reaction(UUID userId,String emoji) { }
+    public record Quote(UUID id,UUID senderId,String body,String type,String giftName,boolean unavailable) { }
     public record Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,String type,String giftCode,String giftName,String giftAssetPath,
-            Instant createdAt,Instant deliveredAt,Instant readAt) { }
+            Instant createdAt,Instant deliveredAt,Instant readAt,UUID replyToId,Quote reply,List<Reaction> reactions,Instant deletedAt,long version,boolean hidden) {
+        public Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,String type,String giftCode,String giftName,String giftAssetPath,Instant createdAt,Instant deliveredAt,Instant readAt){this(id,sequence,senderId,clientMessageId,body,type,giftCode,giftName,giftAssetPath,createdAt,deliveredAt,readAt,null,null,List.of(),null,0,false);}
+    }
     public record Receipt(UUID id,long sequence,Instant deliveredAt,Instant readAt) { }
-    public record State(long latestSequence,long unreadCount) { }
+    public record State(long latestSequence,long unreadCount,long changeVersion) { }
     public record Page(UUID selfId,String selfName,PairingService.Member partner,String timezone,List<Message> items,
-            boolean hasMore,long latestSequence,long unreadCount) { }
-    public record Send(UUID clientMessageId,String body,String type,String giftCode,UUID recipientId) { }
+            boolean hasMore,long latestSequence,long unreadCount,long changeVersion,String selfAvatarUrl) { }
+    public record Send(UUID clientMessageId,String body,String type,String giftCode,UUID recipientId,UUID replyToId) {
+        public Send(UUID key,String body,String type,String giftCode,UUID recipientId){this(key,body,type,giftCode,recipientId,null);}
+    }
+    public record Snapshot(List<Message> items,List<UUID> removedIds) { }
+    public record React(String emoji) { }
     public record Gift(String code,String name,String pack,String assetPath) { }
     public record Catalogue(List<Gift> items,List<String> packs,long total,boolean hasMore) { }
     public record GiftHistory(List<Message> items,boolean hasMore) { }
@@ -48,28 +56,28 @@ public class ChatService {
         var space=active(actor);
         if(!Set.of("all","sent","received").contains(direction)||before!=null&&before<=0)throw new ApiFailure(400,"INVALID_GIFT_HISTORY","Choose sent or received stickers.");
         String filter=direction.equals("all")?"":direction.equals("sent")?" AND sender_id=?":" AND sender_id<>?";
-        var args=new ArrayList<Object>();args.add(space.id());args.add(before==null?Long.MAX_VALUE:before);if(!direction.equals("all"))args.add(actor);
-        var rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence<? AND type='GIFT'"+filter+" ORDER BY sequence DESC LIMIT 51",(r,n)->map(r),args.toArray());
-        return new GiftHistory(rows.stream().limit(50).toList(),rows.size()>50);
+        var args=new ArrayList<Object>();args.add(space.id());args.add(before==null?Long.MAX_VALUE:before);args.add(actor);if(!direction.equals("all"))args.add(actor);
+        var rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence<? AND type='GIFT' AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)"+filter+" ORDER BY sequence DESC LIMIT 51",(r,n)->map(r),args.toArray());
+        return new GiftHistory(hydrate(space.id(),actor,rows.stream().limit(50).toList()),rows.size()>50);
     }
 
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public State state(UUID actor) {var space=active(actor);return state(space.id(),actor);}
     private State state(UUID space,UUID actor) {
         long sequence=jdbc.queryForObject("SELECT COALESCE((SELECT last_sequence FROM chat_conversation WHERE space_id=?),0)",Long.class,space);
-        long unread=jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND read_at IS NULL",Long.class,space,actor);
-        return new State(sequence,unread);
+        long unread=jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND read_at IS NULL AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)",Long.class,space,actor,actor);
+        return new State(sequence,unread,jdbc.queryForObject("SELECT COALESCE((SELECT change_version FROM chat_conversation WHERE space_id=?),0)",Long.class,space));
     }
     /** CHAT-02: bounded keyset pages, stable server order, no other user's cursor/space inputs. */
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public Page history(UUID actor,Long before,Long after) {
         if((before!=null&&after!=null)||(before!=null&&before<=0)||(after!=null&&after<0))throw new ApiFailure(400,"INVALID_CURSOR","Choose one valid history cursor.");
         var space=active(actor);var state=state(space.id(),actor);List<Message> rows;
-        if(after!=null)rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence>? ORDER BY sequence LIMIT 51",(r,n)->map(r),space.id(),after);
-        else rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence<? ORDER BY sequence DESC LIMIT 51",(r,n)->map(r),space.id(),before==null?Long.MAX_VALUE:before);
+        if(after!=null)rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence>? AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?) ORDER BY sequence LIMIT 51",(r,n)->map(r),space.id(),after,actor);
+        else rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence<? AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?) ORDER BY sequence DESC LIMIT 51",(r,n)->map(r),space.id(),before==null?Long.MAX_VALUE:before,actor);
         boolean more=rows.size()>50;var page=new ArrayList<>(rows.stream().limit(50).toList());
         if(after==null)Collections.reverse(page);
-        return new Page(actor,space.members().stream().filter(m->m.id().equals(actor)).findFirst().orElseThrow().displayName(),space.members().stream().filter(m->!m.id().equals(actor)).findFirst().orElseThrow(),space.timezone(),page,more,state.latestSequence(),state.unreadCount());
+        return new Page(actor,space.members().stream().filter(m->m.id().equals(actor)).findFirst().orElseThrow().displayName(),space.members().stream().filter(m->!m.id().equals(actor)).findFirst().orElseThrow(),space.timezone(),hydrate(space.id(),actor,page),more,state.latestSequence(),state.unreadCount(),state.changeVersion(),space.members().stream().filter(m->m.id().equals(actor)).findFirst().orElseThrow().avatarUrl());
     }
     @Transactional(readOnly=true)
     public List<Receipt> receipts(UUID actor,List<UUID> ids) {
@@ -94,19 +102,22 @@ public class ChatService {
         var existing=jdbc.query("SELECT * FROM chat_message WHERE sender_id=? AND client_message_id=?",(r,n)->map(r),actor,command.clientMessageId());
         if(!existing.isEmpty()) {
             var old=existing.getFirst();
-            if(!old.body().equals(body)||!old.type().equals(type)||!Objects.equals(old.giftCode(),command.giftCode()))throw new ApiFailure(409,"MESSAGE_CONFLICT","This message identifier was already used for different content.");
-            return existing.getFirst();
+            boolean same=jdbc.queryForObject("SELECT request_hash=sha256(convert_to(jsonb_build_array(?::text,?::text,?::text,?::uuid)::text,'UTF8')) FROM chat_message WHERE id=?",Boolean.class,body,type,command.giftCode(),command.replyToId(),old.id());
+            if(!same)throw new ApiFailure(409,"MESSAGE_CONFLICT","This message identifier was already used for different content.");
+            if(hidden(actor,old.id()))return copy(old,"",null,null,List.of(),true);
+            return hydrate(space.id(),actor,List.of(old)).getFirst();
         }
+        if(command.replyToId()!=null){Message original;try{original=visible(space.id(),actor,command.replyToId());}catch(ApiFailure unavailable){throw new ApiFailure(409,"REPLY_UNAVAILABLE","The original message is no longer available. Send without reply or cancel and try again.");}if(original.deletedAt()!=null)throw new ApiFailure(409,"REPLY_UNAVAILABLE","The original message is no longer available. Send without reply or cancel and try again.");}
         Gift selected=null;
         if(gift){
             var choices=jdbc.query("SELECT code,name,pack,asset_path FROM gift_catalog WHERE code=? AND active FOR SHARE",(r,n)->new Gift(r.getString(1),r.getString(2),r.getString(3),r.getString(4)),command.giftCode());
             if(choices.isEmpty())throw new ApiFailure(400,"INVALID_GIFT","This gift is not available.");selected=choices.getFirst();
         }
         limiter.check(actor,true);
-        long sequence=jdbc.queryForObject("UPDATE chat_conversation SET last_sequence=last_sequence+1,updated_at=clock_timestamp() WHERE space_id=? RETURNING last_sequence",Long.class,space.id());
-        var message=jdbc.queryForObject("INSERT INTO chat_message(id,space_id,sequence,sender_id,client_message_id,body,type,gift_code,gift_name,gift_asset_path) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING *",
-            (r,n)->map(r),UUID.randomUUID(),space.id(),sequence,actor,command.clientMessageId(),body,type,selected==null?null:selected.code(),selected==null?null:selected.name(),selected==null?null:selected.assetPath());
-        events.publishEvent(new Changed(memberIds(space),"message.created",message,List.of()));return message;
+        long sequence=jdbc.queryForObject("UPDATE chat_conversation SET last_sequence=last_sequence+1,change_version=change_version+1,updated_at=clock_timestamp() WHERE space_id=? RETURNING last_sequence",Long.class,space.id());
+        var message=jdbc.queryForObject("INSERT INTO chat_message(id,space_id,sequence,sender_id,client_message_id,body,type,gift_code,gift_name,gift_asset_path,reply_to_id) VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING *",
+            (r,n)->map(r),UUID.randomUUID(),space.id(),sequence,actor,command.clientMessageId(),body,type,selected==null?null:selected.code(),selected==null?null:selected.name(),selected==null?null:selected.assetPath(),command.replyToId());
+        events.publishEvent(new Changed(memberIds(space),"message.created",message,List.of()));return hydrate(space.id(),actor,List.of(message)).getFirst();
     }
     /** CHAT-03 / AC-F04-06: recipient-only explicit per-message receipts never mark unseen older pages. */
     @Transactional
@@ -117,10 +128,44 @@ public class ChatService {
         var args=new ArrayList<Object>();args.add(space.id());args.add(actor);args.addAll(ids);
         int count=jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND id IN ("+placeholders+")",Integer.class,args.toArray());
         if(count!=ids.size())throw new ApiFailure(403,"INVALID_RECIPIENT","You can acknowledge only messages sent to you.");
-        String condition=read?"read_at IS NULL":"delivered_at IS NULL";
+        String condition=(read?"read_at IS NULL":"delivered_at IS NULL")+" AND deleted_at IS NULL";
         var receipts=jdbc.query("UPDATE chat_message SET delivered_at=COALESCE(delivered_at,clock_timestamp())"+(read?",read_at=clock_timestamp()":"")+" WHERE space_id=? AND sender_id<>? AND id IN ("+placeholders+") AND "+condition+" RETURNING id,sequence,delivered_at,read_at",
             (r,n)->new Receipt(r.getObject(1,UUID.class),r.getLong(2),instant(r,3),instant(r,4)),args.toArray());
         if(!receipts.isEmpty())events.publishEvent(new Changed(memberIds(space),"message.receipt",null,receipts));return receipts(actor,ids);
+    }
+    private static final Set<String> EMOJI=Set.of("❤️","😂","😮","😢","👍","🥰");
+    private boolean hidden(UUID actor,UUID id){return jdbc.queryForObject("SELECT count(*) FROM chat_message_hidden WHERE message_id=? AND user_id=?",Integer.class,id,actor)>0;}
+    private Message visible(UUID space,UUID actor,UUID id){return jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND id=? AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)",(r,n)->map(r),space,id,actor).stream().findFirst().orElseThrow(()->new ApiFailure(404,"MESSAGE_UNAVAILABLE","This message is not available."));}
+    private Message copy(Message m,String body,UUID replyTo,Quote quote,List<Reaction> reactions,boolean hidden){return new Message(m.id(),m.sequence(),m.senderId(),m.clientMessageId(),body,m.type(),hidden?null:m.giftCode(),hidden?null:m.giftName(),hidden?null:m.giftAssetPath(),m.createdAt(),m.deliveredAt(),m.readAt(),replyTo,quote,reactions,m.deletedAt(),m.version(),hidden);}
+    private List<Message> hydrate(UUID space,UUID actor,List<Message> rows){
+        if(rows.isEmpty())return List.of();var ids=rows.stream().map(Message::id).toList();var replies=rows.stream().map(Message::replyToId).filter(Objects::nonNull).distinct().toList();var quotes=new HashMap<UUID,Quote>();
+        if(!replies.isEmpty()){
+            var args=new ArrayList<Object>();args.add(space);args.add(actor);args.addAll(replies);
+            jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?) AND id IN ("+String.join(",",Collections.nCopies(replies.size(),"?"))+")",(org.springframework.jdbc.core.RowCallbackHandler)r->{var original=map(r);boolean deleted=original.deletedAt()!=null;String body=deleted?null:original.body();if(body!=null&&body.codePointCount(0,body.length())>200)body=body.substring(0,body.offsetByCodePoints(0,200))+"…";quotes.put(original.id(),new Quote(original.id(),original.senderId(),body,original.type(),deleted?null:original.giftName(),deleted));},args.toArray());
+        }
+        var reactions=new HashMap<UUID,List<Reaction>>();var args=new ArrayList<Object>();args.add(space);args.addAll(ids);
+        jdbc.query("SELECT message_id,user_id,emoji FROM chat_message_reaction WHERE space_id=? AND message_id IN ("+String.join(",",Collections.nCopies(ids.size(),"?"))+") ORDER BY user_id",(org.springframework.jdbc.core.RowCallbackHandler)r->reactions.computeIfAbsent(r.getObject(1,UUID.class),key->new ArrayList<>()).add(new Reaction(r.getObject(2,UUID.class),r.getString(3))),args.toArray());
+        return rows.stream().map(m->copy(m,m.body(),m.deletedAt()==null?m.replyToId():null,m.replyToId()==null||m.deletedAt()!=null?null:quotes.getOrDefault(m.replyToId(),new Quote(m.replyToId(),null,null,null,null,true)),m.deletedAt()!=null?List.of():List.copyOf(reactions.getOrDefault(m.id(),List.of())),false)).toList();
+    }
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
+    public Snapshot snapshots(UUID actor,List<UUID> requested){
+        if(requested==null||requested.isEmpty()||requested.size()>50||requested.stream().anyMatch(Objects::isNull))throw new ApiFailure(400,"INVALID_MESSAGE_IDS","Choose up to 50 messages.");var space=active(actor);var ids=requested.stream().distinct().toList();var args=new ArrayList<Object>();args.add(space.id());args.addAll(ids);
+        var rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND id IN ("+String.join(",",Collections.nCopies(ids.size(),"?"))+")",(r,n)->map(r),args.toArray());if(rows.size()!=ids.size())throw new ApiFailure(403,"INVALID_MESSAGE_SCOPE","These messages are not available.");
+        var hiddenArgs=new ArrayList<Object>();hiddenArgs.add(space.id());hiddenArgs.add(actor);hiddenArgs.addAll(ids);var hiddenIds=new HashSet<>(jdbc.queryForList("SELECT message_id FROM chat_message_hidden WHERE space_id=? AND user_id=? AND message_id IN ("+String.join(",",Collections.nCopies(ids.size(),"?"))+")",UUID.class,hiddenArgs.toArray()));var visible=new ArrayList<Message>();var removed=new ArrayList<UUID>();for(var m:rows){if(hiddenIds.contains(m.id()))removed.add(m.id());else visible.add(m);}return new Snapshot(hydrate(space.id(),actor,visible),List.copyOf(removed));
+    }
+    private void changed(PairingService.Space space,List<UUID> recipients,String type){jdbc.update("UPDATE chat_conversation SET change_version=change_version+1,updated_at=clock_timestamp() WHERE space_id=?",space.id());events.publishEvent(new Changed(recipients,type,null,List.of()));}
+    @Transactional
+    public void hide(UUID actor,UUID id){var space=active(actor);limiter.check(actor,false);lock(space.id());var rows=jdbc.queryForList("SELECT id FROM chat_message WHERE space_id=? AND id=?",UUID.class,space.id(),id);if(rows.isEmpty())throw new ApiFailure(404,"MESSAGE_UNAVAILABLE","This message is not available.");if(jdbc.update("INSERT INTO chat_message_hidden(space_id,message_id,user_id) VALUES (?,?,?) ON CONFLICT DO NOTHING",space.id(),id,actor)>0)changed(space,List.of(actor),"message.hidden");}
+    @Transactional
+    public Message delete(UUID actor,UUID id){
+        var space=active(actor);limiter.check(actor,false);lock(space.id());var message=visible(space.id(),actor,id);if(!message.senderId().equals(actor))throw new ApiFailure(403,"MESSAGE_DELETE_FORBIDDEN","You can delete for everyone only messages you sent.");
+        if(message.deletedAt()==null){jdbc.update("UPDATE chat_message SET body='',gift_code=NULL,gift_name=NULL,gift_asset_path=NULL,reply_to_id=NULL,deleted_at=clock_timestamp(),version=version+1 WHERE id=?",id);jdbc.update("DELETE FROM chat_message_reaction WHERE message_id=?",id);changed(space,memberIds(space),"message.deleted");}return hydrate(space.id(),actor,List.of(visible(space.id(),actor,id))).getFirst();
+    }
+    @Transactional
+    public Message react(UUID actor,UUID id,React request){
+        if(request==null||request.emoji()!=null&&!EMOJI.contains(request.emoji()))throw new ApiFailure(400,"INVALID_REACTION","Choose one of the available reactions.");var space=active(actor);limiter.check(actor,false);lock(space.id());var message=visible(space.id(),actor,id);if(message.deletedAt()!=null)throw new ApiFailure(409,"MESSAGE_DELETED","This message was deleted. Reactions are no longer available.");
+        int changed=request.emoji()==null?jdbc.update("DELETE FROM chat_message_reaction WHERE message_id=? AND user_id=?",id,actor):jdbc.update("INSERT INTO chat_message_reaction(space_id,message_id,user_id,emoji) VALUES (?,?,?,?) ON CONFLICT(message_id,user_id) DO UPDATE SET emoji=EXCLUDED.emoji,updated_at=clock_timestamp() WHERE chat_message_reaction.emoji<>EXCLUDED.emoji",space.id(),id,actor,request.emoji());
+        if(changed>0){jdbc.update("UPDATE chat_message SET version=version+1 WHERE id=?",id);changed(space,memberIds(space),"message.reacted");}return hydrate(space.id(),actor,List.of(visible(space.id(),actor,id))).getFirst();
     }
     private PairingService.Space active(UUID actor) {
         var space=pairing.current(actor);if(!space.state().equals("ACTIVE"))throw new ApiFailure(403,"PAIRING_REQUIRED","Connect with your partner first.");return space;
@@ -131,7 +176,7 @@ public class ChatService {
     }
     private List<UUID> memberIds(PairingService.Space space){return space.members().stream().map(PairingService.Member::id).toList();}
     private Message map(java.sql.ResultSet r)throws java.sql.SQLException {
-        return new Message(r.getObject("id",UUID.class),r.getLong("sequence"),r.getObject("sender_id",UUID.class),r.getObject("client_message_id",UUID.class),r.getString("body"),r.getString("type"),r.getString("gift_code"),r.getString("gift_name"),r.getString("gift_asset_path"),r.getTimestamp("created_at").toInstant(),instant(r,"delivered_at"),instant(r,"read_at"));
+        return new Message(r.getObject("id",UUID.class),r.getLong("sequence"),r.getObject("sender_id",UUID.class),r.getObject("client_message_id",UUID.class),r.getString("body"),r.getString("type"),r.getString("gift_code"),r.getString("gift_name"),r.getString("gift_asset_path"),r.getTimestamp("created_at").toInstant(),instant(r,"delivered_at"),instant(r,"read_at"),r.getObject("reply_to_id",UUID.class),null,List.of(),instant(r,"deleted_at"),r.getLong("version"),false);
     }
     private static Instant instant(java.sql.ResultSet r,String field)throws java.sql.SQLException {var t=r.getTimestamp(field);return t==null?null:t.toInstant();}
     private static Instant instant(java.sql.ResultSet r,int field)throws java.sql.SQLException {var t=r.getTimestamp(field);return t==null?null:t.toInstant();}

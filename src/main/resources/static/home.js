@@ -1,3 +1,6 @@
+import {avatar} from '/profile-ui.js';
+import {browserNotifications} from '/browser-notifications.js';
+import {refreshNotifications} from '/notification-inbox.js';
 import {notificationSounds} from '/notification-sounds.js';
 import {watchPairing} from '/pairing-socket.js';
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
@@ -27,10 +30,10 @@ async function api(path,method='GET',body,key){
   return response.status===204?null:response.json();
 }
 function route(){
-  const view=['dates','profile'].includes(location.hash.slice(1))?location.hash.slice(1):'home';
-  for(const item of ['home','dates','profile'])$(`#view-${item}`).hidden=item!==view;
-  for(const link of $$('[data-view]')){if(link.dataset.view===view)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
-  $('#page-title').textContent={home:'Your favorite place is a person.',dates:'Our dates.',profile:'Your own little corner.'}[view];
+  const view=['dates','profile','notifications','settings'].includes(location.hash.slice(1))?location.hash.slice(1):'home';
+  for(const item of ['home','dates','profile','notifications','settings'])$(`#view-${item}`).hidden=item!==view;
+  for(const link of $$('[data-view]')){if(link.dataset.view===(['notifications','profile'].includes(view)?'settings':view))link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
+  $('#page-title').textContent={home:'Your favorite place is a person.',dates:'Our dates.',profile:'Your own little corner.',notifications:'Just the way you like it.',settings:'Settings.'}[view];
   if(home)$('#welcome').textContent=`${pretty(home.calendar.today)} · Welcome home, ${home.self.displayName}`;
 }
 function render(){
@@ -40,8 +43,8 @@ function render(){
   for(const node of $$('[data-anniversary]'))node.textContent=pretty(home.calendar.anniversary);
   for(const node of $$('[data-anniversary-count]'))node.textContent=dayLabel(home.calendar.daysUntilAnniversary);
   $('#couple-names').textContent=home.members.map(m=>m.displayName).join(' & ');
-  $('#initials').replaceChildren(...home.members.map(m=>{const span=document.createElement('span');span.textContent=Array.from(m.displayName)[0];return span;}));
-  $('#profile-initial').textContent=Array.from(home.self.displayName)[0];$('#profile-name').textContent=home.self.displayName;$('#profile-email').textContent=home.self.email;
+  $('#initials').replaceChildren(...home.members.map(m=>{const span=document.createElement('span');avatar(span,m);return span;}));
+  avatar($('#profile-initial'),home.self);$('#profile-name').textContent=home.self.displayName;$('#profile-email').textContent=home.self.email;
   $('#next-title').textContent=home.nextEvent?.title??'No special dates yet';
   $('#next-detail').textContent=home.nextEvent?`${pretty(home.nextEvent.nextDate)} · ${dayLabel(home.nextEvent.daysUntil)}`:'Make room for your next little celebration.';
   for(const badge of $$('[data-chat-unread]')){badge.textContent=home.unreadMessages>99?'99+':String(home.unreadMessages||0);badge.hidden=!home.unreadMessages;}
@@ -73,8 +76,8 @@ function openEditor(mode,event){
   if(!home)return;
   editing={mode,event,key:crypto.randomUUID(),version:mode==='profile'?home.self.version:mode==='relationship'?home.version:event?.version};
   $('#editor-form').reset();$('#form-error').hidden=true;$('#reload-latest').hidden=true;$('#save').disabled=false;$('#save').textContent=mode==='delete'?'Delete date':'Save';
-  $('#editor-title').textContent={profile:'A name that feels like you.',relationship:'The day it all began.',event:event?'Edit our special day.':'A day worth keeping.',delete:'Delete this special day?'}[mode];
-  for(const [id,show] of [['name-field',mode==='profile'],['title-field',mode==='event'],['date-field',mode==='event'||mode==='relationship'],['repeat-field',mode==='event'],['confirm-field',mode==='relationship'],['delete-message',mode==='delete'],['reminder-note',mode==='event']])$(`#${id}`).hidden=!show;
+  $('#editor-title').textContent={profile:'Make your profile feel like you.',relationship:'The day it all began.',event:event?'Edit our special day.':'A day worth keeping.',delete:'Delete this special day?'}[mode];
+  for(const [id,show] of [['name-field',mode==='profile'],['photo-field',mode==='profile'],['title-field',mode==='event'],['date-field',mode==='event'||mode==='relationship'],['repeat-field',mode==='event'],['confirm-field',mode==='relationship'],['delete-message',mode==='delete'],['reminder-note',mode==='event']])$(`#${id}`).hidden=!show;
   $('#display-name').value=home.self.displayName;$('#event-title').value=event?.title??'';$('#event-date').value=mode==='relationship'?home.relationshipDate:event?.eventDate??home.calendar.today;$('#event-date').max=mode==='relationship'?home.calendar.today:'9999-12-31';$('#repeat-yearly').checked=event?.repeatYearly??false;$('#date-label').textContent=mode==='relationship'?'Shared relationship start date':'Date';
   $('#delete-message').textContent=`“${event?.title??''}” will be removed for both of you. This cannot be undone.`;
   for(const node of $$('#editor input'))node.removeAttribute('aria-invalid');$('#editor').showModal();
@@ -89,7 +92,7 @@ $('#editor-form').addEventListener('submit',async event=>{
   else if(mode==='delete'){path=`/api/dates/${date.id}?version=${version}`;method='DELETE';}
   else{path=date?`/api/dates/${date.id}`:'/api/dates';method=date?'PATCH':'POST';body={title:$('#event-title').value,eventDate:$('#event-date').value||null,repeatYearly:$('#repeat-yearly').checked,version};}
   $('#save').disabled=true;$('#save').textContent='Saving…';
-  try{await api(path,method,body,mode==='event'&&!date?key:undefined);$('#editor').close();editing=null;$('#status').textContent=mode==='delete'?'Special date deleted.':'Your changes are saved.';await load(false);}
+  try{await api(path,method,body,mode==='event'&&!date?key:undefined);if(mode==='profile'&&$('#profile-photo').files[0]){try{await saveProfilePhoto($('#profile-photo').files[0]);}catch(error){await load(false);editing.version=home.self.version;throw new Error('Name saved. Photo not saved: '+error.message);}}$('#editor').close();editing=null;$('#status').textContent=mode==='delete'?'Special date deleted.':'Your changes are saved.';await load(false);}
   catch(error){$('#form-error').textContent=error.message||'We could not confirm this save. Check your connection. Retrying the same new date is safe.';$('#form-error').hidden=false;
     for(const [field,id] of Object.entries({displayName:'display-name',title:'event-title',eventDate:'event-date',relationshipDate:'event-date'}))if(error.fields?.[field])$(`#${id}`).setAttribute('aria-invalid','true');
     $('#reload-latest').hidden=!['VERSION_CONFLICT','DATE_NOT_FOUND','IDEMPOTENCY_CONFLICT'].includes(error.code);$('#form-error').scrollIntoView({block:'nearest'});
@@ -101,6 +104,37 @@ $('#edit-profile').addEventListener('click',()=>openEditor('profile'));$('#edit-
 $('#previous').addEventListener('click',()=>{page=Math.max(0,page-1);load(false);});$('#next').addEventListener('click',()=>{page++;load(false);});$('#retry').addEventListener('click',()=>load(!home));
 $('#logout').addEventListener('click',async()=>{$('#logout').disabled=true;try{await api('/api/auth/logout','POST');location.replace('/?signedout=1');}catch{$('#error').textContent='Could not confirm sign out. Check your connection and try again.';$('#error').hidden=false;$('#logout').disabled=false;}});
 window.addEventListener('hashchange',route);
-window.addEventListener('pageshow',()=>{route();load(true);stopSocket?.();stopSocket=watchPairing(update=>{if(update?.incomingMessageId)notificationSounds.message(update.incomingMessageId);load(false);},status=>$('#connection').textContent=status);clearInterval(poll);poll=setInterval(()=>{if(!document.hidden)load(false);},15000);});
+window.addEventListener('pageshow',()=>{route();load(true);stopSocket?.();stopSocket=watchPairing(update=>{refreshNotifications();if(update?.incomingMessageId)notificationSounds.message(update.incomingMessageId);load(false);},status=>$('#connection').textContent=status);clearInterval(poll);poll=setInterval(()=>{if(!document.hidden)load(false);},15000);});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(false);});
 window.addEventListener('pagehide',()=>{epoch++;stopSocket?.();clearInterval(poll);clearTimeout(midnightTimer);$('#content').hidden=true;$('#editor').close();home=null;dates=null;$('#couple-names').textContent='';$('#initials').replaceChildren();});
+
+// DEV08-UI02: notification preferences belong only in My profile → Notification settings.
+function renderNotificationSettings(){
+ const muted=notificationSounds.muted,enabled=notificationSounds.enabled;
+ $('#notification-muted').checked=muted;
+ $('#notification-volume').value=notificationSounds.volume;$('#notification-volume-value').value=notificationSounds.volume+'%';$('#notification-preview').disabled=muted||notificationSounds.volume===0;
+ $('#notification-enable').disabled=muted||enabled;
+ $('#notification-enable').textContent=enabled?'Sounds enabled':'Enable sounds';
+ $('#notification-playback-state').textContent=muted?'Muted. Turn off mute to hear message and call alerts.':enabled?'Message chimes and incoming-call melody are ready.':'Allow sound playback in this browser to hear message and call alerts.';
+}
+async function enableNotificationSounds(){try{await notificationSounds.enable();$('#notification-settings-error').hidden=true;}catch{const error=$('#notification-settings-error');error.hidden=false;error.textContent='Sound playback is unavailable. Check your browser sound permissions. Visual alerts remain on.';}finally{renderNotificationSettings();}}
+$('#notification-enable').addEventListener('click',enableNotificationSounds);
+$('#notification-muted').addEventListener('change',async event=>{notificationSounds.mute(event.target.checked);renderNotificationSettings();if(!notificationSounds.muted)await enableNotificationSounds();});
+window.addEventListener('notification-sounds-change',renderNotificationSettings);
+renderNotificationSettings();
+
+$('#notification-volume').addEventListener('input',event=>{notificationSounds.setVolume(event.target.value);$('#notification-volume-value').value=notificationSounds.volume+'%';$('#notification-preview').disabled=notificationSounds.muted||notificationSounds.volume===0;});
+$('#notification-preview').addEventListener('click',async()=>{await enableNotificationSounds();if(notificationSounds.enabled)notificationSounds.preview();});
+function renderBrowserNotifications(){
+ const toggle=$('#browser-notification-enabled');toggle.disabled=!browserNotifications.supported;toggle.checked=browserNotifications.enabled;$('#browser-notification-test').disabled=!browserNotifications.enabled;
+ $('#browser-notification-state').textContent=browserNotifications.error||(!browserNotifications.supported?'Not supported here. In-app alerts remain available.':browserNotifications.permission==='denied'?'Blocked by browser permissions. Allow notifications in your browser site settings.':browserNotifications.enabled?'On · alerts appear while you use another tab or app. Message contents stay private.':'Off · turn on to request browser permission. The app must remain open.');
+}
+$('#browser-notification-enabled').addEventListener('change',async event=>{const enabled=event.target.checked;event.target.disabled=true;try{if(enabled)await browserNotifications.enable();else browserNotifications.disable();$('#notification-settings-error').hidden=true;}catch(error){$('#notification-settings-error').hidden=false;$('#notification-settings-error').textContent=error.message;}finally{renderBrowserNotifications();}});
+$('#browser-notification-test').addEventListener('click',()=>browserNotifications.show({id:'test:'+crypto.randomUUID(),title:'us, always',body:'Browser alerts are ready. Your private messages stay in the app.',test:true}));
+window.addEventListener('browser-notifications-change',renderBrowserNotifications);renderBrowserNotifications();
+
+async function saveProfilePhoto(file){
+ if(!['image/jpeg','image/png'].includes(file.type)||file.size>2097152)throw new Error('Choose a JPG or PNG up to 2 MB.');
+ const c=await api('/api/csrf');const response=await fetch('/api/profile/photo',{method:'PUT',headers:{[c.headerName]:c.token,'Content-Type':'application/octet-stream'},body:file,signal:AbortSignal.timeout(20000)});
+ if(!response.ok){const error=await response.json().catch(()=>({}));throw new Error(error.message||'Photo upload failed. Retry.');}
+}
