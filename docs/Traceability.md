@@ -1,3 +1,5 @@
+> Current status (1 November 2026): DEV-08 native call increment and V21 local upgrade are recorded in DEV-08_Checkpoint.md. Latest DEV-08/DEV-07 addenda supersede historical foundation/planning descriptions. Actual browser/media/relay verification remains pending.
+
 # Traceability / current coverage v0.1
 
 Latest engineering increment DB18: owner-approved local runtime17.7/54329→installed18.6/5432 supports §5.11.1/6/7 and D05, with no product/API/UI rule changes. ProvisionLocalDatabase.java adds operator connection/privilege-owner guards; VerifyLocalDatabase.java checks app-only access; local-env/init/stop scripts select ignored configuration and avoid implicit fallback/admin use. Dev V1–V9 restored with exact data/history; fresh installed test DB constructed9, auth5/foundation3/pairing5 PASS. Setup token preserved; old portable stopped with data/backup retained. Current evidence/source: PostgreSQL_18_Checkpoint.md / DB18_source-manifest.json. Earlier17.7/UI observations are historical, not relabeled as new graphical18.6 journeys.
@@ -63,3 +65,20 @@ Declared five parent AC / nine working coverage rows:6 UI_REQUIRED +3 BACKEND_ON
 CHAT-UI-01 (1 Nov2026 owner visual request): F04 conversation now fills available viewport, removed top decorative copy/right card, Sign out moved into partner header.3 UI resources changed, no contract/business rule change. Final desktop/mobile geometry, text/sticker send and refresh checks PASS on recorded build; prior native test identities retained separately. See CHAT-UI-01_Checkpoint.md and source manifest/screenshots. Human acceptance and Drive sync pending; DEV05-UI01 unchanged.
 
 DEV-07 planning continuation (1 Nov2026): owner confirms video maximum180s/100MB and extends private memories to PDF/DOCX/XLSX/PPTX documents maximum20MB per file. Owner subsequently confirms3-day Trash/Restore then permanent deletion; Empty Trash permanently removes the confirmed Trash batch immediately, including attached files/thumbnail content. F07 MEM-01–03 / AC-F07-01–08 affected; permission/privacy D03/D04 unchanged. DEV-07_Working_Spec.md records authority, cross-layer impacts, planned document/boundary/security and Trash/restore/expiry/concurrency/file-cleanup checks. Proposed120s video and30d memory purge defaults superseded; photo/count/quota/codec/backup rules remain separate. Documentation only; implementation, migrations and upload/Trash/GUI/UAT tests NOT RUN. Existing Chat/Sticker/layout evidence remains historical and unaffected.
+# DEV-07 current traceability addendum — 1 November 2026
+
+This addendum supersedes older PLAN ONLY/no-memory-code rows for current DEV-07 source. Original source IDs retained; no claim of human acceptance.
+
+| Source | Implementation | Verification responsibility |
+|---|---|---|
+| MEM-01 / AC-F07-01/02 | MemoryFiles actual validation/private files, MemoryUploadGate early request cap, MemoryController upload/download; V17 | Real8-format upload/download/range persistence, video duration/100MB, malformed/spoofed/macros/XML, gate concurrency tests; graphical persistence/playback pending. |
+| MEM-02 / AC-F07-04 | MemoryService.registerUpload/create + V18 receipts/rollback compensation | Failed-save unpublished/private state, same-key retry/concurrent dedup, partner notification only on committed new create. |
+| MEM-03/D03 / AC-F07-03/05/08 | Membership-scoped service reads/writes, V16 audit/version, V17 composite ownership | Partner edit/delete/audit, unpublished draft isolation, revoked-member/anonymous denial, stale edit/delete409; GUI conflict flow pending. |
+| MEM-02/03 / AC-F07-06 | V19 + MemoryService.favorite/list; memories.js filters/paging | Per-user favorites, type filters, 24+1 keyset pagination; graphical filters pending. |
+| MEM-02/03 / AC-F07-07 + owner Trash rule | MemoryPurger/Maintenance, V16 TRASHED/PURGING; restore/confirmed Empty Trash dialogs | 72h cutoff, hide/download denial, restore byte preservation, batch-change conflict, physical deletion, durable storage-failure retry/orphan cleanup; actual process-restart purge drill pending. |
+| F03 HOME-02 recent memories | home.js real newest3, home/chat mobile/desktop Memories links | Home integration API regression; graphical navigation pending. |
+
+Actual command/result/build identities are recorded in DEV-07_Checkpoint.md and evidence; coverage mapping is not test success.
+# DEV-08 source traceability
+
+CALL-01–03 / AC-F06-01–06 → call/CallService, CallController, CallEvents, CallMaintenance, RtcConfiguration; V20/V21; realtime SocketRegistry revoked-session events and exact calls SEND/SUBSCRIBE/outbound guards; static call-widget.js/call-socket.js/calls.css and Home/Chat/Memories entries. Native CallIntegrationTest covers actual cookie/STOMP state, offline/Busy, durable retry/rollback, competing invite/accept, selected-session privacy including disconnected-target routing, wrong roles/IDs/negotiation/size, deadlines/recovery, logout/leave and resumed socket. RtcConfigurationTest covers expiring credentials/secret non-disclosure and invalid configuration. Original source AC and working owner additions mapped in DEV-08_UI_Coverage.md; actual media assertions remain NOT_TESTED, not replaced by synthetic SDP. Exact build/native/evidence identities in DEV-08_Checkpoint.md; qualified human/UAT/release approval unrecorded.

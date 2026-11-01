@@ -36,6 +36,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/api/space").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/spaces","/api/invitations","/api/invitations/preview","/api/invitations/join").authenticated()
                 .requestMatchers(HttpMethod.GET,"/home.css","/chat.css","/chat.js","/chat-socket.js","/memories.css","/memories.js").permitAll()
+                .requestMatchers(HttpMethod.GET,"/call-widget.js","/call-socket.js","/call-media.js","/calls.css").permitAll()
+                .requestMatchers("/api/calls/**","/api/rtc/config").access((identity,context)->new AuthorizationDecision(
+                    identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers("/memories.html","/api/memories","/api/memories/**","/api/memory-uploads","/api/memory-uploads/**","/api/memory-assets/*").access((identity,context)->new AuthorizationDecision(
                     identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers(HttpMethod.GET,"/home.html","/api/home","/api/dates","/chat.html","/api/chat","/api/chat/state","/api/chat/receipts","/api/gifts","/api/gifts/history","/stickers/**").access((identity,context)->new AuthorizationDecision(
@@ -62,6 +65,7 @@ public class SecurityConfig {
             .logout(logout -> logout.logoutUrl("/api/auth/logout").invalidateHttpSession(true).clearAuthentication(true)
                 .deleteCookies("JSESSIONID").logoutSuccessHandler((request, response, auth) -> response.setStatus(204)))
             .addFilterBefore(new AuthFilters.RequestId(), SecurityContextHolderFilter.class)
+            .addFilterBefore(new com.couple.privatespace.memory.MemoryUploadGate(), org.springframework.security.web.csrf.CsrfFilter.class)
             .addFilterBefore(new AuthFilters.Traffic(limiter), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new AuthFilters.CurrentAccount(accounts), AuthorizationFilter.class)
             .headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(

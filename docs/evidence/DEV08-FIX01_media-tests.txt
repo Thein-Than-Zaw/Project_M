@@ -1,0 +1,15 @@
+✔ video requests real audio/video and voice requests no camera (4.426ms)
+✔ pending permission times out, and a late camera stream is stopped (24.5917ms)
+✔ cancel immediately rejects pending setup and stops all late tracks (3.8233ms)
+✔ already cancelled setup never opens a device (0.9178ms)
+✔ busy hardware gives actionable feedback without retrying as voice (0.8413ms)
+✔ permission refusal preserves its reason and does not claim hardware failure (0.4015ms)
+✔ slow setup signals progress and late rejection after timeout is handled (23.6797ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 254.3811

@@ -1,3 +1,5 @@
+> Current status (1 November 2026): DEV-08 native call increment and V21 local upgrade are recorded in DEV-08_Checkpoint.md. Latest DEV-08/DEV-07 addenda supersede historical foundation/planning descriptions. Actual browser/media/relay verification remains pending.
+
 # Unresolved business rules — draft decision register
 
 Source: v1.1 §§1, 5, 6.2. D01–D06 are settled and are not repeated as questions. DEV-02 Login/Sign Up continuation uses setup-token→partner-registration-code, with local defaults explicitly recorded in DEV-02_Working_Spec.md. This scoped continuation is not full F01/F02 approval. Remaining proposed defaults below are not approved merely by implementation. Password recovery/email/change/logout-all remain deferred. Owner confirmed Myanmar Standard Time (Asia/Yangon, UTC+06:30) on1 November2026; timezone-dependent date behavior can use this confirmed zone in DEV-03, without implying approval of other proposed date policies.
@@ -25,3 +27,9 @@ DEV-03 continuation: owner confirms pairing happens once and persists through la
 | F09 [P] | Persistent inbox/catch-up, preview privacy, typing5s, heartbeat20s/offline60s, event eligibility | DEV-09: D06 only settles notification channel, not all delivery/retention rules |
 
 Hosting/provider/budget and production storage/TURN/mail configuration are deliberately deferred by D05, not DEV-01 blockers. Do not reinterpret missing detail as approval, and do not ask the owner to reconfirm D01–D06. Take the relevant decisions in the next feature task, with concrete UI/API behavior to review.
+# DEV-07 decision status — 1 November 2026
+
+The owner confirmed mixed10 attachments per memory, JPG/JPEG/PNG/WebP10MB, MP4<=180s/100MB, PDF/DOCX/XLSX/PPTX20MB, shared72h Trash/Restore and confirmed immediate Empty Trash. These items are no longer open; older table planning/no-implementation text is historical. See DEV-07_Working_Spec.md, current API/schema addenda and DEV-07_Checkpoint.md. Working title/caption/date/favorite/version defaults remain engineering defaults, not newly invented owner confirmations. Overall quota, backup-copy disposition, avatar and account lifecycle/notification retention remain unresolved. Do not infer production storage, unlimited capacity or backup erasure from local memory support.
+# DEV-08 confirmed call rules
+
+Direct owner answer on1 November2026 confirms ring30 seconds→Missed, recovery15 seconds, one call at a time→Busy and one accepting tab→other tabs stop ringing. Voice/Video is explicitly requested. These are settled, superseding older F06[P] rows; no repeated approval needed. Initial negotiation30s, heartbeat5s, current selected-socket/token binding, transient signal bounds, local-only ICE and expiring TURN credential details are recorded engineering choices in DEV-08_Working_Spec.md. Provider/hosting/production HTTPS/real device networks and persistent missed-call inbox remain separate. No closed-site ringing, recording or media storage added.

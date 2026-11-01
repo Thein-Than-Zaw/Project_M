@@ -1,0 +1,24 @@
+database=couple_private_space schema=public migrations=21
+app_user=2
+couple_membership=2
+chat_message=9
+memory=3
+memory_asset=3
+memory_favorite=1
+call_session=0
+call_command_receipt=0
+gift_catalog=363
+live_calls=0
+temporary_failure_constraints=0
+database=couple_private_space_test schema=dev07_fresh_20261101 migrations=21
+app_user=0
+couple_membership=0
+chat_message=0
+memory=0
+memory_asset=0
+memory_favorite=0
+call_session=0
+call_command_receipt=0
+gift_catalog=363
+live_calls=0
+temporary_failure_constraints=0

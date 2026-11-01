@@ -86,6 +86,87 @@ class MemoryIntegrationTest {
  @Test void malformedSpoofedAndMacroDocumentsRejectAndFileNamesNeverChooseStoragePaths()throws Exception{
   Path bad=MemoryFixtures.root.resolve("bad.docx");Files.write(bad,MemoryFixtures.office("docx",true));assertEquals(400,upload(f.a,UUID.randomUUID(),bad,"macro.docx",MemoryFiles.TYPES.get("docx")).statusCode());
   assertEquals(400,upload(f.a,UUID.randomUUID(),MemoryFixtures.root.resolve("moment.png"),"fake.pdf","application/pdf").statusCode());assertEquals(400,upload(f.a,UUID.randomUUID(),MemoryFixtures.root.resolve("moment.jpg"),"fake.png","image/png").statusCode());assertEquals(400,upload(f.a,UUID.randomUUID(),MemoryFixtures.root.resolve("note.pdf"),"run.exe","application/octet-stream").statusCode());
+  Path playlist=MemoryFixtures.root.resolve("indirect.png");Files.writeString(playlist,"ffconcat version 1.0\nfile '"+MemoryFixtures.root.resolve("moment.png").toAbsolutePath().toString().replace('\\','/')+"'\n");var indirect=upload(f.a,UUID.randomUUID(),playlist,"indirect.png","image/png");assertEquals(400,indirect.statusCode());assertEquals("FILE_TYPE_MISMATCH",f.transport.tree(indirect).get("code").asText());
   var ok=upload(f.a,UUID.randomUUID(),MemoryFixtures.root.resolve("note.docx"),"../../private.docx",MemoryFiles.TYPES.get("docx"));assertEquals(201,ok.statusCode(),ok.body());var a=f.transport.tree(ok);assertEquals("private.docx",a.get("name").asText());assertTrue(Files.exists(files.path(UUID.fromString(a.get("id").asText()),false)));assertEquals(0,f.transport.tree(f.a.get("/api/memories")).get("items").size());
+ }
+
+ @Test void tenMixedAttachmentsPersistReorderedButElevenAndStaleDeleteReject()throws Exception{
+  var uploads=new ArrayList<JsonNode>();
+  for(int i=0;i<11;i++)uploads.add(asset(f.a,i%2==0?"moment.png":"note.pdf"));
+  assertEquals(400,f.a.post("/api/memories",body(uploads,"Too many",null),UUID.randomUUID()).statusCode());
+  var kept=new ArrayList<>(uploads.subList(0,10));var memory=create(f.a,kept,"Ten files together");String id=memory.get("id").asText();
+  assertEquals(10,memory.get("assets").size());Collections.reverse(kept);
+  var edited=change(f.b,"PATCH","/api/memories/"+id,body(kept,"Reordered by partner",0L));assertEquals(200,edited.statusCode(),edited.body());
+  for(int i=0;i<10;i++)assertEquals(kept.get(i).get("id"),f.transport.tree(edited).get("assets").get(i).get("id"));
+  assertEquals(409,change(f.a,"DELETE","/api/memories/"+id+"?version=0",null).statusCode());
+  assertEquals(200,f.a.get("/api/memories/"+id).statusCode());
+ }
+
+ @Test void concurrentCreateRetriesCommitOneMemory()throws Exception{
+  var a=asset(f.a,"note.pdf");var command=body(List.of(a),"Concurrent same save",null);UUID key=UUID.randomUUID();
+  var other=f.transport.new Browser();other.login(f.prefix+"a@example.invalid");
+  var pool=Executors.newFixedThreadPool(2);var start=new CountDownLatch(1);
+  try{
+   var first=pool.submit(()->{start.await();return f.a.post("/api/memories",command,key);});
+   var second=pool.submit(()->{start.await();return other.post("/api/memories",command,key);});start.countDown();
+   var x=first.get(15,TimeUnit.SECONDS);var y=second.get(15,TimeUnit.SECONDS);assertEquals(201,x.statusCode(),x.body());assertEquals(201,y.statusCode(),y.body());assertEquals(f.transport.tree(x).get("id"),f.transport.tree(y).get("id"));
+   assertEquals(1,jdbc.queryForObject("SELECT count(*) FROM memory WHERE space_id=?",Integer.class,f.space));
+   assertEquals(1,jdbc.queryForObject("SELECT count(*) FROM memory_receipt WHERE actor_id=? AND operation='CREATE'",Integer.class,f.aId));
+  }finally{pool.shutdownNow();}
+ }
+
+ @Test void storageFailureKeepsDurableUnrestorablePurgeAndMaintenanceRetries()throws Exception{
+  var a=asset(f.a,"note.pdf");var memory=create(f.a,List.of(a),"Retry physical removal");String id=memory.get("id").asText();
+  UUID assetId=UUID.fromString(a.get("id").asText());Path original=files.path(assetId,false),held=original.resolveSibling(assetId+".held");
+  Files.move(original,held);Files.createDirectory(original);Path blocker=original.resolve("test-owned-blocker");Files.writeString(blocker,"Synthetic deletion failure");
+  try{
+   assertEquals(200,change(f.b,"DELETE","/api/memories/"+id+"?version=0",null).statusCode());var preview=f.transport.tree(f.a.get("/api/memories/trash/preview"));
+   var result=f.a.post("/api/memories/trash/empty",Map.of("snapshot",preview.get("snapshot").asText(),"confirmed",true),null);assertEquals(202,result.statusCode(),result.body());assertEquals(1,f.transport.tree(result).get("pending").asInt());
+   assertEquals("PURGING",jdbc.queryForObject("SELECT state FROM memory WHERE id=?",String.class,UUID.fromString(id)));
+   assertEquals(404,f.b.get(a.get("url").asText()).statusCode());assertEquals(404,f.a.post("/api/memories/"+id+"/restore",Map.of("version",2),null).statusCode());
+  }finally{Files.deleteIfExists(blocker);Files.deleteIfExists(original);Files.move(held,original);}
+  maintenance.runOnce();assertFalse(Files.exists(original));assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM memory WHERE id=?",Integer.class,UUID.fromString(id)));
+ }
+
+ @Test void abandonedUploadsAndUnreferencedPrivateFilesExpireAfter24Hours()throws Exception{
+  var old=asset(f.a,"moment.png");UUID assetId=UUID.fromString(old.get("id").asText());
+  jdbc.update("UPDATE memory_asset SET created_at=clock_timestamp()-INTERVAL '25 hours' WHERE id=?",assetId);
+  assertEquals(404,f.a.get(old.get("url").asText()).statusCode());
+  Path orphan=files.path(UUID.randomUUID(),false);Files.writeString(orphan,"Synthetic unreferenced object");Files.setLastModifiedTime(orphan,java.nio.file.attribute.FileTime.from(Instant.now().minus(Duration.ofHours(25))));
+  maintenance.runOnce();assertFalse(Files.exists(orphan));assertFalse(Files.exists(files.path(assetId,false)));assertFalse(Files.exists(files.path(assetId,true)));
+  assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM memory_asset WHERE id=?",Integer.class,assetId));
+ }
+
+ @Test void officeNamespaceSpoofAndExternalEntityAreRejected()throws Exception{
+  for(String xml:List.of("<document xmlns='https://invalid.example/wordprocessingml/2006/main'/>","<!DOCTYPE document [<!ENTITY external SYSTEM 'file:///not-readable-by-test'>]><w:document xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'><w:body>&external;</w:body></w:document>")){
+   Path bad=MemoryFixtures.root.resolve("unsafe.docx");
+   try(var source=new java.util.zip.ZipInputStream(new java.io.ByteArrayInputStream(MemoryFixtures.office("docx",false)));var output=new java.util.zip.ZipOutputStream(Files.newOutputStream(bad))){
+    java.util.zip.ZipEntry entry;while((entry=source.getNextEntry())!=null){output.putNextEntry(new java.util.zip.ZipEntry(entry.getName()));output.write(entry.getName().equals("word/document.xml")?xml.getBytes(StandardCharsets.UTF_8):source.readAllBytes());output.closeEntry();}
+   }
+   assertEquals(400,upload(f.a,UUID.randomUUID(),bad,"unsafe.docx",MemoryFiles.TYPES.get("docx")).statusCode());
+  }
+  assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM memory_asset WHERE space_id=?",Integer.class,f.space));
+ }
+
+ @Test void cursorPaginationHasNoDuplicatesAndDoesNotExposeOtherDrafts()throws Exception{
+  var ids=new HashSet<String>();for(int i=0;i<25;i++)ids.add(create(f.a,List.of(asset(f.a,"note.pdf")),"Page memory "+i).get("id").asText());
+  var first=f.transport.tree(f.b.get("/api/memories"));assertEquals(24,first.get("items").size());assertFalse(first.get("nextCursor").isNull());
+  var seen=new HashSet<String>();for(var m:first.get("items"))assertTrue(seen.add(m.get("id").asText()));
+  var second=f.transport.tree(f.b.get("/api/memories?before="+first.get("nextCursor").asText()));assertEquals(1,second.get("items").size());assertTrue(second.get("nextCursor").isNull());
+  assertTrue(seen.add(second.get("items").get(0).get("id").asText()));assertEquals(ids,seen);
+  assertEquals(400,f.b.get("/api/memories?before="+UUID.randomUUID()).statusCode());
+ }
+
+ @Test void onlyCommittedNewPublicationNotifiesPartnerAndRetriesDoNotNotifyTwice()throws Exception{
+  try(var receiver=f.b.socket(true,"http://127.0.0.1:18080")){
+   receiver.await("CONNECTED");receiver.send("SUBSCRIBE\nid:memory\ndestination:/user/queue/pairing\n\n\0");
+   long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);boolean subscribed=false;
+   while(System.nanoTime()<until){var user=registry.getUser(f.prefix+"b@example.invalid");if(user!=null&&user.getSessions().stream().anyMatch(s->s.getSubscriptions().stream().anyMatch(sub->sub.getDestination().equals("/user/queue/pairing")))){subscribed=true;break;}Thread.sleep(10);}assertTrue(subscribed);
+   var a=asset(f.a,"note.pdf");assertFalse(receiver.frames.stream().anyMatch(frame->frame.contains("memory.published")),"Drafts must not notify");
+   UUID key=UUID.randomUUID();var command=body(List.of(a),"One publication notice",null);var saved=f.a.post("/api/memories",command,key);assertEquals(201,saved.statusCode());
+   String first=receiver.await("memory.published");assertTrue(first.contains(f.transport.tree(saved).get("id").asText()));
+   for(int i=0;i<3;i++)assertEquals(201,f.a.post("/api/memories",command,key).statusCode());
+   assertNull(receiver.frames.poll(300,TimeUnit.MILLISECONDS),"No further event is emitted by create replay");
+  }
  }
 }

@@ -1,3 +1,5 @@
+> Current status (1 November 2026): DEV-08 native call increment and V21 local upgrade are recorded in DEV-08_Checkpoint.md. Latest DEV-08/DEV-07 addenda supersede historical foundation/planning descriptions. Actual browser/media/relay verification remains pending.
+
 # Database schema / migration plan v0.1 — DRAFT
 
 Source: requirements v1.1 §5.11.3, D01–D06 and DEV-01/02/03 authorization. Executable scope: V1–V3 foundation, V4–V6 identity, V7–V9 pairing. Other entities remain draft. Full-feature schema is NOT READY FOR DEVELOPMENT pending relevant decisions; implemented increments are separately testable.
@@ -77,3 +79,22 @@ V15 adds chat_message.type default TEXT and nullable gift_code FK→catalogue, g
 ## DEV-07 planning amendment — no new migration applied
 
 Owner confirms videos<=180s/100MB and PDF/DOCX/XLSX/PPTX documents<=20MB per file (DEV-07_Working_Spec.md). Future memory asset design must support DOCUMENT with verified format/byte size/private storage reference and safe original filename; video duration applies only to VIDEO. Owner also confirms3-day Trash/Restore followed by permanent removal, or immediate permanent removal on Empty Trash. Future deletion/expiry/audit/version/purge-retry metadata must support shared authorization, immediate access revocation and actual file/thumbnail cleanup, retaining D03/D04. Backup-copy handling remains a separate decision. No memory tables, document BLOBs, retention job or schema migration are introduced by this documentation-only update. Applied V1–V15 remain unchanged.
+# DEV-07 current migration addendum — 1 November 2026
+
+V16–V19 implement MEM-01–03; see actual SQL in `src/main/resources/db/migration` and the current API addendum. Earlier proposed table names below are historical design notes for this module.
+
+| Migration | Table / responsibility | Key constraints and lifecycle |
+|---|---|---|
+| V16 | memory | UUID, same-space creator/updater/deleter membership, nonblank title/caption limits, memory_date, ACTIVE/TRASHED/PURGING, deletion+expiry timestamps exactly72h apart, version; keyset and expiry indexes. |
+| V17 | memory_asset | Private UUID-keyed files, metadata/hash/MIME/size/duration/resolution, READY/DISCARDED, optional memory association; composite space+memory FK cascade and uploader membership FK; positions0–9 unique per memory, deferrable for reorder; per-kind size/type/duration/null checks. No binary BLOB or user path. |
+| V18 | memory_receipt | Actor+operation+request UUID, request hash and target UUID. UPLOAD/CREATE idempotency serialized by space row lock. No target FK: retained minimal receipt prevents retry resurrecting a permanently removed target. No title/caption/binary retained here. |
+| V19 | memory_favorite | Per-user/per-memory composite PK; membership authorization enforced by service, memory FK cascade removes preferences on permanent purge. |
+
+Files are promoted before asset commit; known rollback removes promoted bytes, uncertain/orphan outcomes reconcile after24h. Memory publication and asset association commit together. Trash first hides content; irrevocable purge is durably claimed before filesystem work. Purger locks the memory row, removes original/thumbnail files, then deletes memory metadata and cascaded assets/favorites. I/O failure keeps PURGING for idempotent retry; it cannot be restored. Empty Trash snapshot protects against silently including concurrent new deletions.
+
+Total quota, historical backup-copy policy and production object storage remain unresolved. Real development upgrade/evidence status belongs to DEV-07_Checkpoint.md; generated SQL alone is not proof of application.
+# DEV-08 physical increment — V20/V21
+
+V20 call_session stores metadata/outcomes, modeVOICE/VIDEO, caller/callee same-space membership, selected socket/raw random page-client binding, connected reports, negotiation UUID, authoritative timestamps/deadlines/version. No SDP/ICE/media BLOB. Partial unique(space_id) over nonterminal states enforces one live call; lifecycle/audit CHECKs protect terminal/connected states. V21 call_command_receipt PK(actor_id,event_id) stores command/intent hash/call FK for durable idempotency; cascade only when test-owned call rows or a separately authorized lifecycle deletes the parent.
+
+Space row lock serializes competing invites and accepts. Caller creates ringDeadline+30s; accept records selected callee/connectDeadline+30s; both current reports record connectedAt; recovery uses first15s cutoff. Terminal rows retain outcomes. Selected sockets are internal routing only; public Views project client-token hashes, never tokens/session IDs. Startup/maintenance reconciles persisted stale live calls with fresh socket state; SDP remains ephemeral and is renegotiated. Actual device/restart/relay readiness is separate from schema/native tests; see DEV-08_Checkpoint.md.

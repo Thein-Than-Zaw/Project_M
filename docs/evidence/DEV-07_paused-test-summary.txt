@@ -1,0 +1,9 @@
+Tests run: 8, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 53.06 s <<< FAILURE! -- in com.couple.privatespace.MemoryIntegrationTest
+com.couple.privatespace.MemoryIntegrationTest.realFormatsPersistPrivatelyAndSupportRangesAndDownloadIdentity -- Time elapsed: 2.156 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: {"code":"INVALID_FILE","message":"This file could not be validated. Check its format or try another file.","fieldErrors":{},"requestId":"fd9780ca-341e-42fa-a67f-504b1c2a15e5"} ==> expected: <201> but was: <400>
+com.couple.privatespace.MemoryIntegrationTest.bothMembersEditButCreatorAndFavoritePreferencesStayCorrectAndStaleWritesReject -- Time elapsed: 0.939 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: {"code":"INVALID_FILE","message":"This file could not be validated. Check its format or try another file.","fieldErrors":{},"requestId":"0b07aa42-d6be-42d7-a316-4499b54dc6eb"} ==> expected: <201> but was: <400>
+com.couple.privatespace.MemoryIntegrationTest.emptyTrashSnapshotDoesNotSilentlyIncludeConcurrentDeletionOrActiveMemories -- Time elapsed: 0.899 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: {"code":"INVALID_FILE","message":"This file could not be validated. Check its format or try another file.","fieldErrors":{},"requestId":"191cb20b-49ee-49ca-92ce-3ebd1512c2b7"} ==> expected: <201> but was: <400>
+com.couple.privatespace.MemoryIntegrationTest.malformedSpoofedAndMacroDocumentsRejectAndFileNamesNeverChooseStoragePaths -- Time elapsed: 1.056 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: {"code":"INVALID_FILE","message":"This file could not be validated. Check its format or try another file.","fieldErrors":{},"requestId":"98ca6750-7468-452a-b0f0-da120a2e6fd0"} ==> expected: <201> but was: <400>

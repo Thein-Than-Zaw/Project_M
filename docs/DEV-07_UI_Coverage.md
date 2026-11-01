@@ -1,0 +1,26 @@
+# DEV-07 UI coverage and task review — 1 November 2026
+
+Scope: v1.1 F07 MEM-01–03, AC-F07-01–08, UI fields/workflow and explicit owner photo/video/document/Trash decisions. This is AI source self-review, not independent human approval. Original v1.1 proposed120s/30day defaults are superseded by confirmed180s/72h. Existing `docs/UIs.pdf` is the supplied visual reference; graphical comparison of the new build has not run.
+
+Eight parent AC are accounted for below. All eight require user-visible representation, with backend responsibilities alongside the UI. Four additional rows explicitly map the field/workflow and owner additions. Twelve mapped rows, all source representation inspected; **graphical runtime verification0 PASS,12 NOT_TESTED**. Native test results are a separate denominator; no whole-feature completion percentage is asserted.
+
+| Source | Actor/journey and actual UI/API mapping | Required states / source inspection | Graphical verification |
+|---|---|---|---|
+| AC-F07-01 | Both members: Home/sidebar/mobile → `/memories.html`, Add memory → editor → detail. `memories.js` load/openEditor/processUploads/openDetail, private upload/create/download endpoints | Real file selector, progress/checking, playable video controls, download, reload persistence represented | NOT_TESTED |
+| AC-F07-02 | Both: editor file selection and server MemoryFiles | Unsupported/oversize/invalid real bytes reject, retained draft, per-file Retry/Remove represented | NOT_TESTED |
+| AC-F07-03 | Guest/unpaired/member: page and every asset/thumbnail route guarded by current membership | Private bytes; no permanent public link; expired-session redirect/forbidden flow represented. Native denied access tests PASS | NOT_TESTED |
+| AC-F07-04 | Editor upload/save failure, cancel/close | Unpublished uploads, Save disabled while checking, failure message and retained inputs, cancelled new uploads discarded represented | NOT_TESTED |
+| AC-F07-05 | Member B opens A's detail → Edit / Move to Trash | Same controls for either partner, preserved creator/updater audit; destructive confirmation defaults Cancel represented | NOT_TESTED |
+| AC-F07-06 | All/Photos/Videos/Documents/Favorites filters; favorite card/detail buttons; Load more | Per-user favorite, pressed states, 24-item cursor, empty/loading/error/reload represented | NOT_TESTED |
+| AC-F07-07 | Trash filter/detail → Restore / Empty Trash | 3-day restore deadline, no trashed bytes, irreversible confirmation, pending physical retry, batch-changed review represented | NOT_TESTED |
+| AC-F07-08 | Stale detail/editor writes | Version passed to PATCH/DELETE/restore, 409 feedback, explicit Reload latest (discard edits), Reload memory represented | NOT_TESTED |
+| F07 form/workflow | Editor title, date, optional story, asset list; detail date/author/updater | Title1–120/caption2,000 Unicode code points, today-or-earlier Myanmar date,1–10 ready assets, server identifiers hidden represented | NOT_TESTED |
+| Owner mixed-file/photo/document decision | Same editor/select/download journey | Mixed10; JPG/JPEG/PNG/WebP10MB, PDF/DOCX/XLSX/PPTX20MB, filename/type/size, document attachment download represented | NOT_TESTED |
+| Owner video decision | Editor and detail video | MP4 H.264 optional AAC,180s/100MB; native duration/size checks, original preserved, browser controls/mobile playsInline represented | NOT_TESTED |
+| F07 notification/Home integration | Partner own queue → notice; Home newest3 → memory deeplink; Chat Memories link | New committed publication only, reload after missed socket, unavailable target message, desktop/mobile links represented | NOT_TESTED |
+
+Safe fixture: use a dedicated empty schema in `couple_private_space_test`, synthetic paired members and generated files under `target/memory-test-fixtures`; never write samples into the real users' memories. Follow the table journeys in separate authenticated browser contexts, reload/relogin and compare actual DB/file contents. Exercise valid/invalid uploads, cancel/retry, per-user filters, partner edit/delete, stale conflict, Restore and Empty Trash plus unchanged active memory. Test390px mobile and desktop, real video playback/seek/download, focus/keyboard/overflow and session expiry. Preserve screenshots and exact final JAR/source identity. Clean only named synthetic fixtures.
+
+Source review findings repaired: rejected standard Office namespaces; missing Home mobile Memories entry and five-link width allocation; late private detail response after page navigation; stale private labels in back-forward cache; unbounded concurrent pre-validation multipart spooling; indirect media references rejected before probing. Memory favorite/upload action minimum targets changed to44px; their actual size/focus still requires graphical review. No claims of accessibility certification, physical mobile playback or all-file malware scanning.
+
+Runtime blocker: CUA browser inventory reports `Local browser use is disabled in Work settings`. No browser test or screenshot was fabricated or substituted with DOM/native assertions. UI implementation review readiness remains NOT_READY until affected real graphical journeys are verified. Backend test and local run readiness can progress independently. Human UAT/visual acceptance and release remain pending.

@@ -1,5 +1,7 @@
 # DEV-07 — private memories: current owner decisions
 
+> RESUMED 1 November 2026 by owner instruction. Namespace validation defect corrected; expanded native regression53 PASS. See [DEV-07_Checkpoint.md](DEV-07_Checkpoint.md) for current build/runtime/verification status. [Pause checkpoint](DEV-07_Pause_Checkpoint.md) is historical. Planning-only statements below describe the earlier decision record and do not establish current implementation/test status.
+
 1 November2026, Asia/Yangon. Working addendum to requirements v1.1 F07 MEM-01–03, Q03/Q05 and D03/D04/D06. Owner now authorizes implementation after accepting the photo and batch limits below. DEV-07 IN_PROGRESS; runtime verification remains pending until recorded. The v1.1 source remains historical; explicit decisions below supersede conflicting proposed defaults.
 
 ## Confirmed by owner in chat

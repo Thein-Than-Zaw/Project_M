@@ -2,6 +2,10 @@
 .local/
 target/
 .env
+.env.*
+!.env.example
+node_modules/
+.neon/
 *.log
 .idea/
 *.iml

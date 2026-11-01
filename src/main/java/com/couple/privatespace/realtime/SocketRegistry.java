@@ -18,7 +18,9 @@ public class SocketRegistry {
     private final ConcurrentMap<String,Entry> entries=new ConcurrentHashMap<>();
     private final AccountStore accounts;
     private final PairingService pairing;
-    public SocketRegistry(AccountStore accounts,PairingService pairing){this.accounts=accounts;this.pairing=pairing;}
+    public record Revoked(java.util.Set<String> socketIds) { }
+    private final org.springframework.context.ApplicationEventPublisher events;
+    public SocketRegistry(AccountStore accounts,PairingService pairing,org.springframework.context.ApplicationEventPublisher events){this.accounts=accounts;this.pairing=pairing;this.events=events;}
     public void add(WebSocketSession socket){
         if(socket.getPrincipal() instanceof Authentication auth && auth.getPrincipal() instanceof AccountPrincipal actor
                 && socket.getAttributes().get(HTTP_SESSION) instanceof HttpSession http) entries.put(socket.getId(),new Entry(socket,http,actor));
@@ -33,10 +35,11 @@ public class SocketRegistry {
             boolean alive=idle<=0 || Instant.now().toEpochMilli()-entry.http().getLastAccessedTime()<idle*1000L;
             boolean identity=accounts.byId(entry.actor().accountId()).filter(a->a.enabled()&&a.revision()==entry.actor().securityRevision()).isPresent();
             if(alive&&identity&&(!requireMembership||pairing.member(entry.actor().accountId())))return true;
+            if(!alive||!identity)events.publishEvent(new Revoked(java.util.Set.of(id)));
         } catch(IllegalStateException invalidated){ /* invalid/expired HTTP session */ }
         close(id);return false;
     }
-    public void closeHttp(String httpId){entries.forEach((id,entry)->{try{if(entry.http().getId().equals(httpId))close(id);}catch(IllegalStateException invalid){close(id);}});}
+    public void closeHttp(String httpId){entries.forEach((id,entry)->{try{if(entry.http().getId().equals(httpId)){events.publishEvent(new Revoked(java.util.Set.of(id)));close(id);}}catch(IllegalStateException invalid){events.publishEvent(new Revoked(java.util.Set.of(id)));close(id);}});}
     private void close(String id){var entry=entries.remove(id);if(entry!=null)try{entry.socket().close(CloseStatus.POLICY_VIOLATION);}catch(java.io.IOException ignored){ /* already closing */ }}
     @Scheduled(fixedDelay=2000)
     public void sweep(){entries.keySet().forEach(id->valid(id,false));}

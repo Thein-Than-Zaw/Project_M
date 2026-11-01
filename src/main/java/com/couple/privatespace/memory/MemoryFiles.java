@@ -52,6 +52,17 @@ public class MemoryFiles {
             Double duration=null;Integer width=null,height=null;
             if(kind.equals("DOCUMENT"))validateDocument(staged(id,false),ext);
             else{
+                // Reject indirect playlists before invoking any demuxer that can open local references.
+                byte[] magic;
+                try(var in=Files.newInputStream(staged(id,false))){magic=in.readNBytes(12);}
+                boolean signature=magic.length>=12&&switch(mime){
+                    case "image/jpeg" -> (magic[0]&255)==255&&(magic[1]&255)==216&&(magic[2]&255)==255;
+                    case "image/png" -> Arrays.equals(Arrays.copyOf(magic,8),new byte[]{(byte)137,80,78,71,13,10,26,10});
+                    case "image/webp" -> new String(magic,0,4,java.nio.charset.StandardCharsets.US_ASCII).equals("RIFF")&&new String(magic,8,4,java.nio.charset.StandardCharsets.US_ASCII).equals("WEBP");
+                    case "video/mp4" -> new String(magic,4,4,java.nio.charset.StandardCharsets.US_ASCII).equals("ftyp")&&!new String(magic,8,4,java.nio.charset.StandardCharsets.US_ASCII).equals("qt  ");
+                    default -> false;
+                };
+                if(!signature)throw failure("FILE_TYPE_MISMATCH","The media content does not match its extension.");
                 var data=json.readTree(run(id,List.of(ffprobe,"-v","error","-protocol_whitelist","file,pipe","-show_entries","stream=codec_name,codec_type,width,height,pix_fmt,duration:format=duration,format_name","-of","json",staged(id,false).toString()),20));
                 var streams=data.get("streams");if(streams==null||!streams.isArray())throw failure("INVALID_MEDIA","This media file could not be read.");
                 int videoCount=0;String codec="";
@@ -99,7 +110,7 @@ public class MemoryFiles {
             if(!linked)throw failure("INVALID_DOCUMENT","The Office package does not contain its main document relationship.");
             var sax=javax.xml.parsers.SAXParserFactory.newInstance();sax.setNamespaceAware(true);sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);sax.setFeature("http://xml.org/sax/features/external-general-entities",false);sax.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
             String expectedRoot=ext.equals("docx")?"document":ext.equals("xlsx")?"workbook":"presentation";
-            try(var in=zip.getInputStream(zip.getEntry(main))){sax.newSAXParser().parse(in,new org.xml.sax.helpers.DefaultHandler(){boolean first=true;public void startElement(String uri,String local,String q,org.xml.sax.Attributes attrs)throws org.xml.sax.SAXException{if(first){first=false;String suffix=ext.equals("docx")?"wordprocessingml/main":ext.equals("xlsx")?"spreadsheetml/main":"presentationml/main";if(!local.equals(expectedRoot)||!uri.endsWith(suffix))throw new org.xml.sax.SAXException("Wrong document root");}}});}
+            try(var in=zip.getInputStream(zip.getEntry(main))){sax.newSAXParser().parse(in,new org.xml.sax.helpers.DefaultHandler(){boolean first=true;public void startElement(String uri,String local,String q,org.xml.sax.Attributes attrs)throws org.xml.sax.SAXException{if(first){first=false;String family=ext.equals("docx")?"wordprocessingml":ext.equals("xlsx")?"spreadsheetml":"presentationml";if(!local.equals(expectedRoot)||!Set.of("http://schemas.openxmlformats.org/"+family+"/2006/main","http://purl.oclc.org/ooxml/"+family+"/main").contains(uri))throw new org.xml.sax.SAXException("Wrong document root");}}});}
         }
     }
     public void promote(Validated file)throws IOException{Files.move(staged(file.id(),false),path(file.id(),false),StandardCopyOption.ATOMIC_MOVE);if(!file.kind().equals("DOCUMENT"))Files.move(staged(file.id(),true),path(file.id(),true),StandardCopyOption.ATOMIC_MOVE);}

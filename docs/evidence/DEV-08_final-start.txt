@@ -1,0 +1,4 @@
+2026-11-01T15:41:50.588+06:30  INFO 31208 --- [couple-private-space] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 21 migrations (execution time 00:00.101s)
+2026-11-01T15:41:50.635+06:30  INFO 31208 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 21
+2026-11-01T15:41:50.647+06:30  INFO 31208 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-11-01T15:41:56.735+06:30  INFO 31208 --- [couple-private-space] [           main] c.c.p.PrivateSpaceApplication            : Started PrivateSpaceApplication in 22.678 seconds (process running for 24.125)

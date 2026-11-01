@@ -1,0 +1,8 @@
+2026-11-01T14:28:00.331+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 19 migrations (execution time 00:00.119s)
+2026-11-01T14:28:00.378+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 15
+2026-11-01T14:28:00.436+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "16 - create memory"
+2026-11-01T14:28:00.736+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "17 - create memory asset"
+2026-11-01T14:28:00.798+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "18 - create memory receipt"
+2026-11-01T14:28:00.832+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "19 - create memory favorite"
+2026-11-01T14:28:00.869+06:30  INFO 19620 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v19 (execution time 00:00.337s)
+2026-11-01T14:28:07.036+06:30  INFO 19620 --- [couple-private-space] [           main] c.c.p.PrivateSpaceApplication            : Started PrivateSpaceApplication in 23.113 seconds (process running for 24.69)

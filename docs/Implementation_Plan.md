@@ -1,3 +1,5 @@
+> Current status (1 November 2026): DEV-08 native call increment and V21 local upgrade are recorded in DEV-08_Checkpoint.md. Latest DEV-08/DEV-07 addenda supersede historical foundation/planning descriptions. Actual browser/media/relay verification remains pending.
+
 # Implementation plan / bounded work register
 
 Source: requirements v1.1 §§5.11, 6 and owner instructions. Draft v0.3; D01–D06 confirmed. DEV-01 and scoped DEV-02 Login/Sign Up verified; current increment DEV-05 private Chat (DEV-05_Checkpoint.md); DEV-03 pairing and DEV-04 core verified with their documented limits. Owner confirmed Asia/Yangon and persistent one-time pairing (login/offline/logout never reset membership). See DEV-03_Working_Spec.md. Other business defaults remain separate; full-product readiness is not asserted.
@@ -30,3 +32,11 @@ Inputs/minimum context on resume: requirement v1.1 SHA in checkpoint, this plan,
 Risks: unsupported assumption promotion; private route exposure before membership checks; cap race; environment drift; existing-data misuse; external Figma limit. Mitigations: explicit draft labels, closed private surfaces, native constraints/tests, pinned build/portable tools, no baseline/clean. Engineering setup is independent of unresolved feature choices.
 
 Review states remain separate: implementation, verification, AI self-review, human business/UI/technical acceptance, external record sync and release. CI provider/workflow absent; local tests are not a CI run. Future account lifecycle changes may require forward schema work; no deletion policy is implied by slot constraints.
+# DEV-07 resumed work — 1 November 2026
+
+User resumed DEV-07 after the account handoff pause. Bounded outcomes: (A) correct real-file validation and native lifecycle/access/concurrency tests; (B) reconcile UI entry points, contracts and coverage; (C) build and protected local upgrade/run with actual evidence. Existing stack/data and confirmed owner rules remain unchanged. No calls, avatar, custom stickers or general notification inbox added.
+
+Current state: source IMPLEMENTED, verification IN_PROGRESS. Namespace bug fixed; initial8 native memory tests PASS, subsequent49 regression tests PASS but initial packaging failed on Windows running-JAR lock. Final gate/native/build evidence supersedes these intermediate results when recorded in DEV-07_Checkpoint.md. Graphical browser verification currently unavailable: Computer Use browser inventory reports local browser use disabled in Work settings. Keep UI verification NOT_TESTED rather than inherit previous screenshots.
+# DEV-08 current task update
+
+Owner explicitly starts Voice/Video while personally reviewing DEV-07 and confirms ring30s/recovery15s/Busy/first-tab rules. Source IMPLEMENTED for the bounded call increment; native state/signaling/auth/concurrency/credential tests and local V19→V21 upgrade/run recorded in DEV-08_Checkpoint.md. Graphical actual media, physical two-device/two-network, forced TURN relay and hardware-release qualifications remain NOT_TESTED; Docker absent/WSL not installed and browser automation disabled. Full F06/DEV-08 is not COMPLETE. Continue those checks when runtime/browser access is available; do not silently promote native signaling into real-media acceptance or begin unrelated DEV-09 scope.

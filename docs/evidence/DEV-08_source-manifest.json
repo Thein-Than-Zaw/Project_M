@@ -1,0 +1,2549 @@
+{
+  "task": "DEV-08",
+  "baseCommit": "658251c9c12dcf10092d9f0cabfe6ca4efa34a69",
+  "predecessor": "DEV-07_source-manifest.json",
+  "sourceIdentity": "90b3155eda2f58c453d8b0a5cef5f1e6c3534d920ab13fa403ffe5a2732836d5",
+  "jarSha256": "fae2aac3c53943c04b765d76fd12eb767a965efab66581326d1207d808843eea",
+  "nativeEvidence": "DEV-08_reviewed-tests.txt",
+  "graphical": "NOT_TESTED - browser disabled in Work settings",
+  "changed": [
+    {
+      "path": ".env.example",
+      "before": "837a528ad0372946867fda2461ba7c08e472d8622f74aaf5fc7478d9309601c7",
+      "after": "d9caf1585b42845bc9439269e3e78148d154623187f1df2c96e9a3ed71ae75cb",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "ops/turn/compose.yml",
+      "before": null,
+      "after": "acf8fa81af45cb63265cd14f732eb2aa967f9ed2c0a4a51bc7d8d385780179a1",
+      "state": "ADDED"
+    },
+    {
+      "path": "README.md",
+      "before": "6b34b4ad10bd6a055ab1a706fad97442f6519015385f9754c26c4026cabc79fa",
+      "after": "db03b96b6760587e6ba82bd3ea35c3bac79fd29537004c820004ec57b2b9ec38",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "scripts/local-env.ps1",
+      "before": "db48ac60dd46f9d9cf21aca61f93f47df70a258317472c737dd093649df95890",
+      "after": "f0dea764ad3ccf9f173d963e1d1cd6d4ca847fb683736dc8f7938056258b6395",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "scripts/start-turn-local.ps1",
+      "before": null,
+      "after": "b1ecef23c9c99b298c9ee08f89356f1fc85f5451d1a659ddbf1eaeb45e7da631",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallController.java",
+      "before": null,
+      "after": "5277e781fc328e5d300107937d60db09629a614dbab2867922efbd2f017f3946",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallEvents.java",
+      "before": null,
+      "after": "bb247ed7a14c54044bfa69ebfa9e0654da4b0ed0a2bba2dd8ea38b47a25df6e1",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallMaintenance.java",
+      "before": null,
+      "after": "9eedfd5e7582ee5a11f7e0dd19bb92045089246f1e73ff1ca9879514d43b83ea",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallService.java",
+      "before": null,
+      "after": "710058f0b141c8b7ac94c894eeb2b5d7166d8c874f0e2a642e58d1f1948e9a4d",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/RtcConfiguration.java",
+      "before": null,
+      "after": "f554d946fad5953b991a8ebc6b08ef3141d1b805a1ccd56b2f5a3760a2ab4b9d",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/config/SecurityConfig.java",
+      "before": "0986a7523b1b08b55375d9f08953a9e624606a7f90aab63bf5ed45829638438f",
+      "after": "7811b8f2b8369669333e4aa42003af96238da24a4875d8bec5af0060504ebe7c",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/PairingSocketConfig.java",
+      "before": "f3b6ae6e2da869097e18e0009d3d4c6c273f35b8a25084c713883beaf91973b6",
+      "after": "7eade2ee0f8e8cf93448136e33003bdd3f5759b33a0b0a199b9118fc0a8726e6",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/SocketRegistry.java",
+      "before": "f3c8f70f41fce33f7c2148a2bbfbde0c37891ca54d5957b30444fb3eb015d54d",
+      "after": "a4851d3fc057238cc27a1a3e145faaa3f8b21b4585be4bc491ab1ef7653d3a31",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/main/resources/application.yml",
+      "before": "cbdfcab17f3f8db85587c8161ece3b6ebd8dce61894219d4c6bc114898a61ba4",
+      "after": "90dee3f59034eeca645c657287f90066de88bdf87e56772033ce7ce764afefec",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/main/resources/db/migration/V20__create_call_session.sql",
+      "before": null,
+      "after": "3debd4d3c19ee99f3b46904178668b2933f3a6e00e82a54a5f04ed5d53659927",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/resources/db/migration/V21__create_call_command_receipt.sql",
+      "before": null,
+      "after": "68e4a3dc9386bd3f1a655a154be73f27e2c204152573671f834cc60631968db4",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/resources/static/call-socket.js",
+      "before": null,
+      "after": "2a7404e051a120827f763cd1d36debd43592be9ee3cefa62a6be84559f2ecd0a",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/resources/static/call-widget.js",
+      "before": null,
+      "after": "5469aca1f437ebb856c05e633458e9187c605ba0cc44542f9df3ddd9653204c0",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/resources/static/calls.css",
+      "before": null,
+      "after": "19fbb1529110e76ca22e25d36bba06b4eb7a8e389cacf13ebfdeb838ffba7054",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/main/resources/static/chat.html",
+      "before": "beb34a82da66c89be960fd88ed547e1b0edbb2c4d90e7c308a08911809dfe7d6",
+      "after": "a63e5ef4349b6bb9169335a1fb7c431093b1daa3f7b372b42596ac4be7465ca2",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/main/resources/static/home.html",
+      "before": "3e62524a43de8d62e0c0183e0faaf11430e1915783eed5d101254e04384b71d0",
+      "after": "6437e7fb2473db7623508b77dcd91fef558c77b737110b453990ba8426c945f5",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/main/resources/static/memories.html",
+      "before": "ac1c9c83b468c12847f20eeee13a2443cccc098cd468bdbb59896e4010c53fcc",
+      "after": "7fe4cc453c70c818207647b4384b9ac32d4d6d05be52085376ca23ec68d0c083",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/CallIntegrationTest.java",
+      "before": null,
+      "after": "4d44db20adf6d95aeb291f844a5869ca51e47720f8319fb3493560025832830c",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/FoundationIntegrationTest.java",
+      "before": "5bf655ed09a35b97edd2df1aa49fbb487c62dd909bdda3dbe913a421f4a105a2",
+      "after": "cd998be976ff6406abbe0c2e3941cf120da3ed5b485c78e7d0156fd775b77a0c",
+      "state": "MODIFIED"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/RtcConfigurationTest.java",
+      "before": null,
+      "after": "ca83020ac2ceabb30c10b89356775d765080e03ba80cfe3a5825966d8ee7a5ac",
+      "state": "ADDED"
+    },
+    {
+      "path": "src/test/resources/application-test.yml",
+      "before": "0d5c3201fde3486d87257b61df917307b5e1050b202c09b5627ddb1f86a2c4da",
+      "after": "def88ddd427aef2598e30b3a514614f87cd1de25fc12fcc8347f7f89863b09ac",
+      "state": "MODIFIED"
+    }
+  ],
+  "files": [
+    {
+      "path": ".env.example",
+      "bytes": 876,
+      "sha256": "d9caf1585b42845bc9439269e3e78148d154623187f1df2c96e9a3ed71ae75cb"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 57,
+      "sha256": "c1ce5fa2f33c092583641db4b96c82be5a47d4272608900124f99dec9d34bbbe"
+    },
+    {
+      "path": ".mvn/maven.config",
+      "bytes": 30,
+      "sha256": "149c61fc57ea014600bba4c9cfe0a959ce1f838097c2b3682ddf217c6c91bdad"
+    },
+    {
+      "path": ".mvn/wrapper/maven-wrapper.properties",
+      "bytes": 259,
+      "sha256": "c736d2eca5cb41965652ba11f0b7b18b5baa60b5de8fde5b5683cac6a76b72d3"
+    },
+    {
+      "path": "mvnw",
+      "bytes": 11790,
+      "sha256": "cae96cef89ebea3531221f4ae17c23cf8edf67d00eae8306d4186ae1bbed4d02"
+    },
+    {
+      "path": "mvnw.cmd",
+      "bytes": 8481,
+      "sha256": "46eedb8419bd14fe70d5bb2916d7b6f51806e51b39d5b76a42610384ca929c1c"
+    },
+    {
+      "path": "ops/turn/compose.yml",
+      "bytes": 748,
+      "sha256": "acf8fa81af45cb63265cd14f732eb2aa967f9ed2c0a4a51bc7d8d385780179a1"
+    },
+    {
+      "path": "pom.xml",
+      "bytes": 2929,
+      "sha256": "2fd56f8a3a33712e32c209170210238b86013808b7dc7f4453edb8f9eb5d32d2"
+    },
+    {
+      "path": "README.md",
+      "bytes": 10500,
+      "sha256": "db03b96b6760587e6ba82bd3ea35c3bac79fd29537004c820004ec57b2b9ec38"
+    },
+    {
+      "path": "scripts/bootstrap-tools.ps1",
+      "bytes": 2883,
+      "sha256": "c24deaba31950ca7893f3538b011d92e72352f3c8fc22027e4d1adfc89dc63a3"
+    },
+    {
+      "path": "scripts/init-local.ps1",
+      "bytes": 3367,
+      "sha256": "3f66e36c9cd80fe659b766fef12c1ce7584df4529a6654529cfd22ec01b3da1c"
+    },
+    {
+      "path": "scripts/issue-setup-token.ps1",
+      "bytes": 300,
+      "sha256": "94e0dc55415c94073ca99c7130842a6e8ca412ff3f174ac9e88d9703bbefd857"
+    },
+    {
+      "path": "scripts/IssueSetupToken.java",
+      "bytes": 1993,
+      "sha256": "45e20f257c98baf417a9dbc46d3ac5335654de0417a834692eb16cf0f2177f2b"
+    },
+    {
+      "path": "scripts/local-env.ps1",
+      "bytes": 1623,
+      "sha256": "f0dea764ad3ccf9f173d963e1d1cd6d4ca847fb683736dc8f7938056258b6395"
+    },
+    {
+      "path": "scripts/ProvisionLocalDatabase.java",
+      "bytes": 2701,
+      "sha256": "322581f9f2b30fcc1882584268f6182bf2c36ad5753eaf10c394c0f8fcee7ec3"
+    },
+    {
+      "path": "scripts/setup-media-tools.ps1",
+      "bytes": 1044,
+      "sha256": "374604b2528c17135617de22093c3c0bd3a81a5b6270e0bf420918411d675317"
+    },
+    {
+      "path": "scripts/start-local.ps1",
+      "bytes": 126,
+      "sha256": "2a00858511f3ec50d0e4613be1856561ed8bbac389fe5a0a397db7e8ad518da1"
+    },
+    {
+      "path": "scripts/start-turn-local.ps1",
+      "bytes": 1220,
+      "sha256": "b1ecef23c9c99b298c9ee08f89356f1fc85f5451d1a659ddbf1eaeb45e7da631"
+    },
+    {
+      "path": "scripts/stop-local-db.ps1",
+      "bytes": 532,
+      "sha256": "964d4d88a77816c7d24b17aedeadd8751b7b665add609409f0b387766b659b93"
+    },
+    {
+      "path": "scripts/test-local.ps1",
+      "bytes": 125,
+      "sha256": "b95bbc4815bd2d35190d8d63cf3c515338b271c11794740f2e9241a523389af5"
+    },
+    {
+      "path": "scripts/VerifyLocalDatabase.java",
+      "bytes": 1483,
+      "sha256": "ca0bfbf62e03b20a2f8b022f8800b92850e06f9a43007e4941b922f3d18c76f2"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallController.java",
+      "bytes": 3262,
+      "sha256": "5277e781fc328e5d300107937d60db09629a614dbab2867922efbd2f017f3946"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallEvents.java",
+      "bytes": 1997,
+      "sha256": "bb247ed7a14c54044bfa69ebfa9e0654da4b0ed0a2bba2dd8ea38b47a25df6e1"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallMaintenance.java",
+      "bytes": 1123,
+      "sha256": "9eedfd5e7582ee5a11f7e0dd19bb92045089246f1e73ff1ca9879514d43b83ea"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/CallService.java",
+      "bytes": 19347,
+      "sha256": "710058f0b141c8b7ac94c894eeb2b5d7166d8c874f0e2a642e58d1f1948e9a4d"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/call/RtcConfiguration.java",
+      "bytes": 2370,
+      "sha256": "f554d946fad5953b991a8ebc6b08ef3141d1b805a1ccd56b2f5a3760a2ab4b9d"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatController.java",
+      "bytes": 4610,
+      "sha256": "a91f35755e0b84d5b42a7d16b7503269a7823d50a5fdbde18201b07e8fc57a33"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatLimiter.java",
+      "bytes": 1295,
+      "sha256": "46ab442ed6ec498e7924b3ef0d225244257312bca4397ab3224e897b636681ef"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatNotifications.java",
+      "bytes": 2021,
+      "sha256": "8f4b0598a9e4234b4981b0994a0e3fe66a0387503fbb8c6dfdc9ad5a8f373112"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatService.java",
+      "bytes": 12791,
+      "sha256": "ba054edbe948d458e0be98978bbc493dc40067047c0c08e4b0bb6506b72ea3fc"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/config/SecurityConfig.java",
+      "bytes": 7186,
+      "sha256": "7811b8f2b8369669333e4aa42003af96238da24a4875d8bec5af0060504ebe7c"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/home/DatePolicy.java",
+      "bytes": 1105,
+      "sha256": "33107a90634c0db120c1c3b99b577401a733c14dae9f661a4563ac697ee416bd"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/home/HomeController.java",
+      "bytes": 2181,
+      "sha256": "f05553431a840faf9bb40d8118680e9f2df779f54c464914dac2de3efda62bfe"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/home/HomeService.java",
+      "bytes": 10994,
+      "sha256": "b06b0093f3b6dc9fb02fb057a9153f0b42bdc3637990fde6dc85d9491e0b6148"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AccountPrincipal.java",
+      "bytes": 750,
+      "sha256": "0d7211bfcc6672ff395ad35d53d30a6396c6ca08eed84c718b8ef80348679408"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AccountStore.java",
+      "bytes": 1453,
+      "sha256": "602b6b480a16848441cfa50a530a8efd8837729db93f926f98f1c3bdf79ed91f"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/ApiFailure.java",
+      "bytes": 1377,
+      "sha256": "79ad6f5696644da5421835cea7eed4f5065cec1f9924d3046f8fc9cc849b41f6"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthController.java",
+      "bytes": 2294,
+      "sha256": "d290ddedf456aeb8921c0c69056d962b8ebc36640cd2caf0909a6a0945c6056e"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthErrorHandler.java",
+      "bytes": 1744,
+      "sha256": "8ce8c17aaa23d4d4a394cc43d2fa94b8c991cb5fb7a115c55ddf7b1cef2a4475"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthFilters.java",
+      "bytes": 5163,
+      "sha256": "b8d1e89f5dd3b6e647c03e5fb806ae6e1f9b93d21997878af1168756178108c6"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthRateLimiter.java",
+      "bytes": 2187,
+      "sha256": "859071f207805590dc07a5c5507ff8ce4b231ba09d05576f82c75bdcb9c7d7df"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/RegistrationService.java",
+      "bytes": 6258,
+      "sha256": "0fc8711a077c8a2c52806e479e5c51386bef153b9f0dfa1a9bf7189d9b437638"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryController.java",
+      "bytes": 5288,
+      "sha256": "f962163796ae1b908ba3a6ce9e528fa82b4829a662c6a67cf6ccf426e6b64ea3"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryFiles.java",
+      "bytes": 15166,
+      "sha256": "a242050215aa34b21dd15679dae3418b8d29512df7e7c46db895fadcba6b985c"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryMaintenance.java",
+      "bytes": 2609,
+      "sha256": "b0cdccae6c539f426f4dd28f7e4844f9c80c8506228a107321fc269907824ffb"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryNotifications.java",
+      "bytes": 1377,
+      "sha256": "e440a723b304ee8678aa3ab5018df9493349da11756981b15530603e46a5fae5"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryPurger.java",
+      "bytes": 2175,
+      "sha256": "2914bbd154a804eba34a14a0b618780088f160339aa32fec10f4fe59999888c9"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryService.java",
+      "bytes": 17186,
+      "sha256": "9b597b2604f82fd1fc516104a8a29e191be113c5b81bc435578d2bc812007c5c"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/memory/MemoryUploadGate.java",
+      "bytes": 2079,
+      "sha256": "0c087873eadcfc131e5958f9abfd7f6f00d033349e286aa4410e5af1715fc3ec"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/pairing/PairingController.java",
+      "bytes": 1809,
+      "sha256": "12f9c90b96ab3e750a9a4b82c540a2ad1aaf23aa86ede2b7f1a58d1bb7475d39"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/pairing/PairingService.java",
+      "bytes": 11610,
+      "sha256": "17e9aaeaa735ca263136b7c65347d3a593481b37c723216c1042283dc4e058ec"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/PrivateSpaceApplication.java",
+      "bytes": 338,
+      "sha256": "48026755256f8e29141b260efded9f7e56c5ec339d461cb38c3be5e51b19b7ad"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/PairingNotifications.java",
+      "bytes": 2051,
+      "sha256": "f1a5e532eeb37360e29622e99e0e9d96413712f08b00089a4d635489c8688f08"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/PairingSocketConfig.java",
+      "bytes": 6369,
+      "sha256": "7eade2ee0f8e8cf93448136e33003bdd3f5759b33a0b0a199b9118fc0a8726e6"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/SocketRegistry.java",
+      "bytes": 3160,
+      "sha256": "a4851d3fc057238cc27a1a3e145faaa3f8b21b4585be4bc491ab1ef7653d3a31"
+    },
+    {
+      "path": "src/main/resources/application.yml",
+      "bytes": 2275,
+      "sha256": "90dee3f59034eeca645c657287f90066de88bdf87e56772033ce7ce764afefec"
+    },
+    {
+      "path": "src/main/resources/db/migration/V1__create_app_user.sql",
+      "bytes": 866,
+      "sha256": "a5a14835bc02b3f57603fbbfe5c8b71c5c90b76e37a74399adc397e810e51fdf"
+    },
+    {
+      "path": "src/main/resources/db/migration/V10__create_special_date.sql",
+      "bytes": 1092,
+      "sha256": "05eccedcdc3552e10a7016dff7422d24674ac36ecc69a0d9ef137c0ad6d57db4"
+    },
+    {
+      "path": "src/main/resources/db/migration/V11__create_special_date_creation_receipt.sql",
+      "bytes": 631,
+      "sha256": "21c9dab4637b1460525d7c31c3ce90f117112b0b75b1619312a9f96b8f477b6c"
+    },
+    {
+      "path": "src/main/resources/db/migration/V12__create_chat_conversation.sql",
+      "bytes": 314,
+      "sha256": "5e2ffcc32d051d4947be5dd64244266d6031f97559a1bf52920e95ff08a11fa4"
+    },
+    {
+      "path": "src/main/resources/db/migration/V13__create_chat_message.sql",
+      "bytes": 855,
+      "sha256": "fbc8948ca11ea37a18b05fd8626673d5734bc161b520ae8cdcca41da6ab4cd06"
+    },
+    {
+      "path": "src/main/resources/db/migration/V14__create_gift_catalog.sql",
+      "bytes": 37115,
+      "sha256": "c7d622e4ecefac215c5410e258fb1530cc3119f045c6bcc2e376f2c1ac876411"
+    },
+    {
+      "path": "src/main/resources/db/migration/V15__add_gift_message_payload.sql",
+      "bytes": 984,
+      "sha256": "7091f84833c98de6c636750761356bdf891b047c86bcf06465e97e34d109e6bc"
+    },
+    {
+      "path": "src/main/resources/db/migration/V16__create_memory.sql",
+      "bytes": 1343,
+      "sha256": "6bcf4ab94e25f80e88f4a457b7704336e74fa5a0f2bbc80b429529be29dd5bcf"
+    },
+    {
+      "path": "src/main/resources/db/migration/V17__create_memory_asset.sql",
+      "bytes": 1965,
+      "sha256": "34dac63cf502dc979a81790f765d8fbda1213b2083bde4deadfb3f97ab9cdf1d"
+    },
+    {
+      "path": "src/main/resources/db/migration/V18__create_memory_receipt.sql",
+      "bytes": 442,
+      "sha256": "b1dbe109b4e27a21a7f842c9b8cdccddb3c90b2acfc6eb98ab4d64e53d9cdc8f"
+    },
+    {
+      "path": "src/main/resources/db/migration/V19__create_memory_favorite.sql",
+      "bytes": 335,
+      "sha256": "a7f3edd073d2929ed1fc42cd6ba286bfd0f3aeb21655027c38bdbc53397ba517"
+    },
+    {
+      "path": "src/main/resources/db/migration/V2__create_couple_space.sql",
+      "bytes": 500,
+      "sha256": "6a301359adcf76c9564993687f7f35c89ae86fb64485c4f38a7dbb1b52813edc"
+    },
+    {
+      "path": "src/main/resources/db/migration/V20__create_call_session.sql",
+      "bytes": 2011,
+      "sha256": "3debd4d3c19ee99f3b46904178668b2933f3a6e00e82a54a5f04ed5d53659927"
+    },
+    {
+      "path": "src/main/resources/db/migration/V21__create_call_command_receipt.sql",
+      "bytes": 445,
+      "sha256": "68e4a3dc9386bd3f1a655a154be73f27e2c204152573671f834cc60631968db4"
+    },
+    {
+      "path": "src/main/resources/db/migration/V3__create_couple_membership.sql",
+      "bytes": 438,
+      "sha256": "2a5dc83f43426c6b5dd4e95db05ffbd70b03fdc97231696184ec49dddbdd5639"
+    },
+    {
+      "path": "src/main/resources/db/migration/V4__add_account_security_state.sql",
+      "bytes": 259,
+      "sha256": "f681a4def45b4680da5ff5a54926130bff5ef08bf64b1e2a088008e636f2c512"
+    },
+    {
+      "path": "src/main/resources/db/migration/V5__create_registration_gate.sql",
+      "bytes": 204,
+      "sha256": "89ca4d76a469dcbf3fcb62e24976f0073c879cadbe3250fc712f6ce88d15572c"
+    },
+    {
+      "path": "src/main/resources/db/migration/V6__create_registration_token.sql",
+      "bytes": 736,
+      "sha256": "ab30d7acea8adf0370181b1ddbd55b39c73c46ae9c0eefa2a179b6d6a6a5b786"
+    },
+    {
+      "path": "src/main/resources/db/migration/V7__create_pairing_invitation.sql",
+      "bytes": 958,
+      "sha256": "30604a8d7122c133c06a86298bd4663b5da333fa5a8439f3a698443b8b6d6eec"
+    },
+    {
+      "path": "src/main/resources/db/migration/V8__create_pairing_confirmation.sql",
+      "bytes": 460,
+      "sha256": "3920e6b080d8b223bead50c0b6b2ae7443c5e8b9665262892517cb81d34ffb8b"
+    },
+    {
+      "path": "src/main/resources/db/migration/V9__create_pairing_join_receipt.sql",
+      "bytes": 426,
+      "sha256": "6f2d0fb2183ae72760fc9e02daa2495e5828263d63912df6d3a091efae935635"
+    },
+    {
+      "path": "src/main/resources/static/auth.css",
+      "bytes": 6524,
+      "sha256": "600b9d483e513a611cc75cae974a8fb5ef84a58cb25508e27590f285d01a8b28"
+    },
+    {
+      "path": "src/main/resources/static/auth.js",
+      "bytes": 5407,
+      "sha256": "410ee267d3c5b7b7e05b4b1772c5b573f6b8e74820fb3a8f38e38e94a7ea3a0b"
+    },
+    {
+      "path": "src/main/resources/static/call-socket.js",
+      "bytes": 4855,
+      "sha256": "2a7404e051a120827f763cd1d36debd43592be9ee3cefa62a6be84559f2ecd0a"
+    },
+    {
+      "path": "src/main/resources/static/call-widget.js",
+      "bytes": 21841,
+      "sha256": "5469aca1f437ebb856c05e633458e9187c605ba0cc44542f9df3ddd9653204c0"
+    },
+    {
+      "path": "src/main/resources/static/calls.css",
+      "bytes": 3521,
+      "sha256": "19fbb1529110e76ca22e25d36bba06b4eb7a8e389cacf13ebfdeb838ffba7054"
+    },
+    {
+      "path": "src/main/resources/static/chat-socket.js",
+      "bytes": 3760,
+      "sha256": "eb230bdfd594010106ba77fef1239cdec4c80f28f79633185b43a0ba0453e054"
+    },
+    {
+      "path": "src/main/resources/static/chat.css",
+      "bytes": 11614,
+      "sha256": "c0fe2d70f5dab4b1fefaae6caea1adb36188a999b0f10dbed8e53da7e6dfbd09"
+    },
+    {
+      "path": "src/main/resources/static/chat.html",
+      "bytes": 6998,
+      "sha256": "a63e5ef4349b6bb9169335a1fb7c431093b1daa3f7b372b42596ac4be7465ca2"
+    },
+    {
+      "path": "src/main/resources/static/chat.js",
+      "bytes": 22289,
+      "sha256": "e5c4a05fca466e9c785ada97422210dcf945b473260224ad136fe8703ba3052c"
+    },
+    {
+      "path": "src/main/resources/static/home.css",
+      "bytes": 9063,
+      "sha256": "e68fec1d77e3c1e8bf104d7cc785cad06ba19701f9700fc3a018f084480b3a27"
+    },
+    {
+      "path": "src/main/resources/static/home.html",
+      "bytes": 7079,
+      "sha256": "6437e7fb2473db7623508b77dcd91fef558c77b737110b453990ba8426c945f5"
+    },
+    {
+      "path": "src/main/resources/static/home.js",
+      "bytes": 12611,
+      "sha256": "97da605f8b94fadc0f675bf7243942017fd1e8bbbf8da729d1d663c962ea6d95"
+    },
+    {
+      "path": "src/main/resources/static/index.html",
+      "bytes": 5136,
+      "sha256": "e3cd05e8894ede9b8e29be19d0de80bdff54d547c41b17d7bf26cd1665ffe841"
+    },
+    {
+      "path": "src/main/resources/static/memories.css",
+      "bytes": 7449,
+      "sha256": "d6fdf71cf7cae7c6cc1f92f313b8dfe07b2f29f141ab566ecf81f85d0449e687"
+    },
+    {
+      "path": "src/main/resources/static/memories.html",
+      "bytes": 6309,
+      "sha256": "7fe4cc453c70c818207647b4384b9ac32d4d6d05be52085376ca23ec68d0c083"
+    },
+    {
+      "path": "src/main/resources/static/memories.js",
+      "bytes": 21087,
+      "sha256": "bc76689217f19a5217efc593853922396c2897b03f234448e54d4076d69dc97c"
+    },
+    {
+      "path": "src/main/resources/static/pairing-socket.js",
+      "bytes": 2271,
+      "sha256": "d5fe5278be9ce29b0ac74dc837e29e48c8d40383cbad781749bdf38756892127"
+    },
+    {
+      "path": "src/main/resources/static/pairing.css",
+      "bytes": 3058,
+      "sha256": "83ac23d8cc983182e30980fa914a17f912b29d46ebe2ec9ebebdae9d68e0b291"
+    },
+    {
+      "path": "src/main/resources/static/space.html",
+      "bytes": 5180,
+      "sha256": "44d6c6622ef7b23cc108025d7b91c58902677464aada7b62cbb5184597b1e869"
+    },
+    {
+      "path": "src/main/resources/static/space.js",
+      "bytes": 6591,
+      "sha256": "7c0996013db26ffd7b7eb393c58e29d8163cbde4748eebf6f8963c93848833b8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/Apache-2.0.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxbongo.png",
+      "bytes": 9376,
+      "sha256": "cb43c8bc990bc6eb295e6e0b46ecf42d04d2698aa8da94580f8b834d13dc6df8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxbongohyper.png",
+      "bytes": 9376,
+      "sha256": "34eec770fa5cc1ee17c76524d4c65c56811f05a919047c268c0318392433fe1e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxbongoterrified.png",
+      "bytes": 10612,
+      "sha256": "44929c38d795ffbba361443858222d2a492d4b473c820e6479bfe6c2898d67ca"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxdundundun.png",
+      "bytes": 235875,
+      "sha256": "8b0534984e71cd72105a1d9f907de0b5d7356f4b7e5e9dd88ba969937b780da0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxdundundunowo.png",
+      "bytes": 279448,
+      "sha256": "a8f1d519cd73b90d26b6cf61a4cef2d9bbdedbcc9254ddf726b5d2359e9f08f9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxhyper.png",
+      "bytes": 9488,
+      "sha256": "f2b4baf56d798d4ec7ceffcea71b2f270d133129859db62a9d41cd309b04efea"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxhypercofe.png",
+      "bytes": 361291,
+      "sha256": "f12879d58169debc0ca0a6ebf4ea1f4bafacc61418e07093b6987d34a0af0497"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxhyperowo.png",
+      "bytes": 317444,
+      "sha256": "56779064d1ecb74295329266582bdb2272904edafe6888a5b9911533427bb62c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxhypersnugowo.png",
+      "bytes": 369127,
+      "sha256": "192d1d61c75f49a235e82d9fd91aae04a81a43d38337333f54ef75c52b7207b0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxhyperthinking.png",
+      "bytes": 326828,
+      "sha256": "f1dfa01fc8c1ad55e8d12f26874355928f35e83d58fdb7b822fd4003beefbc2d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxhyperwhaaaat.png",
+      "bytes": 297991,
+      "sha256": "eb00eae78ab9efd80f480b4e86e06760d5ec88294150759aa266632c18a56ca9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxloading.png",
+      "bytes": 149684,
+      "sha256": "030e35d22875826e025bd986a1296ef350c3345886e1521a0dfd85fa224a73eb"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/ablobfoxree.png",
+      "bytes": 307409,
+      "sha256": "1f6c1afa605a7955eff967702c9161a367d1f3e4b8e2f523d1684144e5927864"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfox_w_.png",
+      "bytes": 3679,
+      "sha256": "ebd2fb2b20da173ce571fa9802b7c965c3730c37cdba9084a32914cb925b0fb1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfox.png",
+      "bytes": 3713,
+      "sha256": "259a1e2b735d1e3d0a48e1d7cbd56b4c3a9c763a09eb422b9df2fcd912e34439"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfox0_0.png",
+      "bytes": 3720,
+      "sha256": "e3a626fd97f3b9e14d0ca9f9dcdb19027bf0e3a528e6f9893640aa2e811b19d2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfox3c.png",
+      "bytes": 3890,
+      "sha256": "9cb2fe7731435a70fd3d924387814c521db545183f4e09d024aef455f9540251"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfox3cevil.png",
+      "bytes": 3847,
+      "sha256": "a8944569eec198f7870c44102dff9b6cae9fa0ec9ebe80ea06a0fb8fc085f3a4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxangry.png",
+      "bytes": 4083,
+      "sha256": "65e318330cc715887548d48e9c0ccd641ec8031db89f0fb5e8422cd7c2889af7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxangrylaugh.png",
+      "bytes": 4300,
+      "sha256": "bb635d13ceed46b6da0bf353aa232e8c95fa6d05d9fc9debebcb34991682c4a8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxannoyed.png",
+      "bytes": 3537,
+      "sha256": "2f2fc08ee554d149b5182febd7f0bab4a67e82ce7e95dc197940a6090f444143"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxartist.png",
+      "bytes": 4001,
+      "sha256": "1023668297782639ab125281f18b37fe4dd271b30a8d1639a43e367a43f64723"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxastronout.png",
+      "bytes": 4563,
+      "sha256": "acbf400e0679ffdcd03d092c6ec7cf9ca39c583a34f5c6f1d60dea80f13cef71"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxastronoutgun.png",
+      "bytes": 5325,
+      "sha256": "c9f936ba5a97f37d0c7934144730bf3afd384753db7507bb1702bbd3f6b2ac13"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxaww.png",
+      "bytes": 4363,
+      "sha256": "30cf1aea5f1dc2e16babaf57e4316d3e69ed025a2c69ac74f48dee95da3e34d4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxblush.png",
+      "bytes": 4593,
+      "sha256": "35c8a772b5c8a7c394c82ea3f018643217a675d2538cd437f04724b8939f35b6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxblushmore.png",
+      "bytes": 5827,
+      "sha256": "df4f003503c3bb5d213d57d77ac6b555ec9468d305dedf62cc8e94fb62d74ded"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbongo.png",
+      "bytes": 4191,
+      "sha256": "fe3f19040e7fb38fb53506570571306ca4279e1aeced3347e860f99578288f72"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbongostart.png",
+      "bytes": 3786,
+      "sha256": "92e9e6ef2b62340634cb47a18a6dd971fd815b6bb6a6eeed53beb8c6d10f407f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbongoterrified.png",
+      "bytes": 4625,
+      "sha256": "1b870bdfb4425cd62f5e4f14af058f4a19b8ed615c54e75f9b4a2d5582cccfc6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbongoterrifiedstart.png",
+      "bytes": 4218,
+      "sha256": "56cf7ef6392b1526bd947280811fb65e29e7b38e7f517124239ee711052c738c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbonk.png",
+      "bytes": 3476,
+      "sha256": "982ea5e6b3e76dbaeb687910edbbed6706ff71d87950189ed6275ef542de3b78"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboop_w_.png",
+      "bytes": 3801,
+      "sha256": "a4d30058d23b2649543a57476724f78b21012c66d65dd79dcb8e4a2eb400c548"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboop.png",
+      "bytes": 3834,
+      "sha256": "925c0f122b706aead38a2b5080f2e2c2b9384da17e1b402f0a1fae8d3ebdb27f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopblush.png",
+      "bytes": 4281,
+      "sha256": "811a34bc838a38142802c62c103a9e202ef1c2d314a73cb320599092d90efc13"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopcute.png",
+      "bytes": 4079,
+      "sha256": "acb35bc9480cc02b20959861a654e8fe0e2fd12baee8217ad6bef1016c92d989"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopfloof.png",
+      "bytes": 4350,
+      "sha256": "2a42ae4790ec6efcf0ff016bc9234a9c7b1a6ffeb02f10bb79a882f19fcfa9eb"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopglare.png",
+      "bytes": 3915,
+      "sha256": "861f6d8eebfe1dfbf64c3b3110e89b74d0f1d39a9e0a80f0f75e38545f6c4881"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopgoogly.png",
+      "bytes": 4118,
+      "sha256": "965a042c2912adb2819921ad6f548422e3dd1bf69c6397778b2e927bc11b4056"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboophappy.png",
+      "bytes": 3804,
+      "sha256": "150943cff5b8582bf5fea6d01d5d221ac9fe2f5d2b4224a4cbc3dc4df4394d3a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopmelt.png",
+      "bytes": 3582,
+      "sha256": "1f7e0f686b089fc1735e3a70c1caaec357c26a7c9fcdaf79b6fa18c3fdd14c6b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopmelthappy.png",
+      "bytes": 3560,
+      "sha256": "d751a9c9ddb6eca5abd28c993bdc64ab0131454e35729afdb8eba87fb60ed576"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopmlem.png",
+      "bytes": 3865,
+      "sha256": "7272e40bfb5a6f51e48a583b89037aaab9b1df5a16fc889bcfc24473dbef96ad"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopowo.png",
+      "bytes": 4114,
+      "sha256": "55fa37182be17c06cac3bd507f847b3ca7ffb47b133f5cb6e286b7e0e748f211"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxboopterrified.png",
+      "bytes": 4014,
+      "sha256": "6f141df517f08e7c9baa51ea60f2a9d5e4887a6e1a55192cd0ad90911bc918d2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbox.png",
+      "bytes": 4127,
+      "sha256": "cd7157bb97626a6d6c1f2f7046edbab7999895e615f5bcad86a280bdce946f09"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbreadpeek.png",
+      "bytes": 2960,
+      "sha256": "05601d5f65be82b184257296d15f0bb5463d938643c0ea5631f34db869c4412f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbreadsnoot.png",
+      "bytes": 4882,
+      "sha256": "3644d96b054d2e155ae976870caa768a80d3f683656f84f5e5247c5c74c9f9aa"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbreadsnoot2.png",
+      "bytes": 4902,
+      "sha256": "ca6c94c23c0bce434efd1437e3e3f0f06a7bc331c4d2065693295c261e007c50"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbreadsnoot2googly.png",
+      "bytes": 5635,
+      "sha256": "d88340659b287f2010541b957e1ad48f54f7a6fd6dbc24e59bf23955019d7af3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxbreadsnootgoogly.png",
+      "bytes": 5591,
+      "sha256": "44f05a58e57b82ba37c9d5984236f6861b9db9f3beafa462e632ab56200034d2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcactus.png",
+      "bytes": 4048,
+      "sha256": "d932a00649991b73ee9f825aea9ce1e8a72065ab4bdaca72968fd01e0ed15cde"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcamera.png",
+      "bytes": 4822,
+      "sha256": "d1e9aa613606e95db9c59f200b32ba18d8abb02cf2b151d627f83211794640b9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcat.png",
+      "bytes": 5762,
+      "sha256": "0d9b700c52941fc6a16abd464a14b608e3583ee6017f528d054d2eb63544bce0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcatsnuggle.png",
+      "bytes": 3776,
+      "sha256": "1bd273275c628fc8746202a93d37c9d9afe333118b53acabc50c29eaafd00bdb"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcatterrified.png",
+      "bytes": 4633,
+      "sha256": "5f462ddc7ca9ba41bef1e14c57cd14a4c31e284dd0b1f3d51435f087d80f77b4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcheck.png",
+      "bytes": 3650,
+      "sha256": "841d9e9dd33bda89bb07ed6e7fdbdc8d790dd71033a31238652ac39a8bd37e61"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcheer.png",
+      "bytes": 3998,
+      "sha256": "8ac7dafdf4826e62f540ae1ba364dde68b88ae2b6d55e391b6a45dbe7fcff6fa"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofe_w_.png",
+      "bytes": 4054,
+      "sha256": "0de6f57efc79285133bd9273f61ca09ec236afc69cb137c2cabdce9e309e2c4b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofe.png",
+      "bytes": 4072,
+      "sha256": "09cc197b3d6f969fd5b33b9691a935f9a41aad4c6b35eadcff89204d6e6491d3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofecute.png",
+      "bytes": 4351,
+      "sha256": "bda5f8d19f9d41990b98ffa030ed1b59fed930e3cb731ad2bb39fe2f024fdfa7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofeglare.png",
+      "bytes": 4265,
+      "sha256": "3ce6d687699a14a3cbf8c459c9366d8460fedaf163c07cea5c3e071b9f28bac6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofemlem.png",
+      "bytes": 4030,
+      "sha256": "d883a6ac91cf68cf8e14a01a37ac0dbdf8971f083b340d926b869c2993f8e72e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofeowo.png",
+      "bytes": 4382,
+      "sha256": "328b55f7fb18e6877dc5f9e56e2089ee9084da7ec5810665ceab3c6b6598ae8b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcofeterrified.png",
+      "bytes": 4409,
+      "sha256": "02a102d26d331ea8e7dcbe1479b092111192e374ac3e7d8bed448af226a72bbd"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfy.png",
+      "bytes": 4429,
+      "sha256": "486307ad309a711a42b14f99cd7326678fb59568ef2e2e93fc77f8b06dbd3d1b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfycofe.png",
+      "bytes": 4714,
+      "sha256": "6d50734f50101675afcc3e1dc368e5ceaaad6bd755296f624cddf8dcdd4ff32d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfycomputer.png",
+      "bytes": 4684,
+      "sha256": "1c3c4343aaeb99620f9bf17605da4a5d5b25ebdd9ba1f681522181f1c1963a26"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfyevil.png",
+      "bytes": 4390,
+      "sha256": "33025c648351f72d2a1bae4f7d0620b28cfb8d8e3617fd2f8f8e2363bd52261b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfyglare.png",
+      "bytes": 4451,
+      "sha256": "89f6250a8c2ac537db937bc6a049addc8c88379feeb6e99a2be54749161e2250"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfyhappy.png",
+      "bytes": 4410,
+      "sha256": "de6f3fdfaa6b8ac634d266481437e3c6dbcb3f571863de512d98328583786e03"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfymelt.png",
+      "bytes": 4129,
+      "sha256": "48f80671bc363bcde4319f07450d2ff27c5af266d94b03a48fc1b77f45397d3d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfymelthappy.png",
+      "bytes": 4139,
+      "sha256": "a1c67ffb804cc8669679619b70733240c0444d77356f7edb74441ffa2acbc92f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfyowo.png",
+      "bytes": 4611,
+      "sha256": "2072f6ecb3c2bcfeac773fea3f40d532f58ca4a03b02755bbf110eaa8a4a1a40"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfysip.png",
+      "bytes": 4516,
+      "sha256": "7294103cee289c930d775bd004ed4c142100b5fe96ac8626425e60e0dce09b1e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfysleepy.png",
+      "bytes": 4393,
+      "sha256": "0d3db4f9af29eef8e06faa03390294b34b6193ad2142f443f883ecded6080de9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfysmirk.png",
+      "bytes": 4431,
+      "sha256": "19d24d7092c629732380cebb192dcc4f30748bdaaef7da2098643c20ce24eb48"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfysmug.png",
+      "bytes": 4409,
+      "sha256": "e38d63ffb9c873028ff4665ab74304499e81af2ceb6fafaac3180c94c6c96f22"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfytea.png",
+      "bytes": 4586,
+      "sha256": "dc41c48bedfc23bb0d43685d71c7e4f551d1f143a53a611eb9fa4b4d13e6c37d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomfyterrified.png",
+      "bytes": 4477,
+      "sha256": "d51f2a462b2183e718c9723201887b068f1483231b1a4cf7ee87a129903cbbd4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomputer.png",
+      "bytes": 3705,
+      "sha256": "bb71fd2c413d224436a2feb70173a841f5a608beebb8b51d0d8a82d92e133968"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomputerowo.png",
+      "bytes": 3787,
+      "sha256": "7ecebc2334a01ca3269774f2b4af6fd08bbb5c7eb23f10197e65e243c43352c2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcomputerowonotice.png",
+      "bytes": 4011,
+      "sha256": "0aeba0e9e2faa436f39e443dbea1c42f6e3a2149136c8d9307fd9a7f15dea1e9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxconfused.png",
+      "bytes": 4043,
+      "sha256": "8a91d3ff6fae40c63f7a29a69bd829494e2fe5d059467e366dad3cf7720c1904"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcookie.png",
+      "bytes": 4797,
+      "sha256": "624c8c95c74d07427e40991598640136fb12456a7e972eb89786c9c857f1a82f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcookienomfox.png",
+      "bytes": 4585,
+      "sha256": "53be1c29198f754a1e31bad7f4316cfd308b0147b2b1d34fe3117e66a60802ce"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcry.png",
+      "bytes": 3790,
+      "sha256": "ae33dc88f4f2f5070199e9f1b53d35cc49cdad8c856b66945747350e603a65ad"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcry2.png",
+      "bytes": 3566,
+      "sha256": "ac7a356674a7599c6a25a7006735c58ce9f5267e798a77df7cd827073dd44bb5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcrylaugh.png",
+      "bytes": 4049,
+      "sha256": "6f6c8d1830547995d16717024b5bcc692034dd4c01deae973704fc238f49d876"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcryreach.png",
+      "bytes": 4122,
+      "sha256": "e703dac341401efc02e1ba86fe4d90c5c5dcca68fdbdd52ca922d2a7e6b8dec7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcursedowo.png",
+      "bytes": 4277,
+      "sha256": "ba492e4188df6a8370d866dd6c0b0bdb874eb0cff5a8cc713e85c21dc9cdc249"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxcute.png",
+      "bytes": 3974,
+      "sha256": "27db06f689668040818db4132c05b69f5622c348c1eedf151bf962aaa655dbcc"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdab.png",
+      "bytes": 3960,
+      "sha256": "4c4b823817b8585a40bfe1877e0244e24d21660e8724eee8013dd827016a3ff6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdarkghost.png",
+      "bytes": 3700,
+      "sha256": "0cc6e1bdf6c0d72a3b40ce624bf44861a667a9ce04233fde97e382fd3185e767"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdarkghostfloof.png",
+      "bytes": 4420,
+      "sha256": "8e9b6afc96f4ddc9ab6dd3215cb1b516c9d6042f3bac7aad8d8a116534ea2ff8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdarkghostspooky.png",
+      "bytes": 3624,
+      "sha256": "7fd8598e57232284ba004e23e3a0b529d23a5e0ae037a243a33bc34ae1a64d74"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdead.png",
+      "bytes": 3651,
+      "sha256": "56dd2488684b36572187e89b48a05c4458795adac6a50fe75044034ba5d0f47a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdeadinside.png",
+      "bytes": 4640,
+      "sha256": "d446a960af72b28c7470131abd7b540a6f2374aaf1e3a0f218c187db356a4572"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdealwithit.png",
+      "bytes": 4234,
+      "sha256": "6c0f629d015e699b7d06b36252ab8db93c07918d6d73c740e2f4bc74dc96cd31"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdealwithitfingerguns.png",
+      "bytes": 4751,
+      "sha256": "2ccacf39f140ab7ee18187d0d477dec22a1b1d189ef28e769bda83fbe2a8a500"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdetective.png",
+      "bytes": 4615,
+      "sha256": "3cc1bb197f6bca5f2052bf9fd3029d5a27edaf18bf60ecbb721bbc3aa53fc86c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdetermined.png",
+      "bytes": 4174,
+      "sha256": "61fa6a62fee4e1235bb770ceb199e95d6e34f15752d171bbd992f8a2ed05a479"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdevil.png",
+      "bytes": 3983,
+      "sha256": "e326245fdb13e0d3ba1bbe5132604d6ba29ac4c381cac36d0b6f0f41281722d0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdisapprove.png",
+      "bytes": 3948,
+      "sha256": "10173947a6197c3c57019c1d80218faff11f2a9a78fa03fbad8dfbcfd8ff7cac"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdisgust.png",
+      "bytes": 4255,
+      "sha256": "f2b7a7281c8fe5e47b91c9c27b07196764fb5283a5623c6f02f266f5e2c3b9b0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdisputed.png",
+      "bytes": 3600,
+      "sha256": "7eab1684b1a1f50c072131f7e5b1507dc4f66a2302dd734e5f00fdc8f16e9519"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdizzy.png",
+      "bytes": 3902,
+      "sha256": "3cac2a7b90fbcb5cdb19b8fc586fedf879b663b25c501c731c454719c28e03d1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdoubt.png",
+      "bytes": 3826,
+      "sha256": "e78f7345930c982bb45e991c234b0b04f05219fe6ea738356368a37b033b44cc"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdrakedislike.png",
+      "bytes": 3800,
+      "sha256": "7514dd52148c0402ab80d87de607b6ea43de953458f4a1de65898110c439fb8d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdrakelike.png",
+      "bytes": 3846,
+      "sha256": "bc953499a2e4202c649a02eed62d0910270ebd3ddc71ba349850cda659afc31b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxdrool.png",
+      "bytes": 3879,
+      "sha256": "38d0119b98d396ce94bd389d9baca80656e24bc07b8765a08cdd1d0604a7d440"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxevil.png",
+      "bytes": 3683,
+      "sha256": "d599a5bea454d2b4eb7a1a6cc72f4358af63b7ed938a442a9c437eb3100cd342"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxeyes.png",
+      "bytes": 3664,
+      "sha256": "0a1da80070525d28792a7b0308d2e82a637a701d59cdb91ad4f193f78e0c6d14"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfacepalm.png",
+      "bytes": 3806,
+      "sha256": "da1890fb51381813e3154ab46fe702b09c2673b8f1e907134a3c1e2e52f90390"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfake.png",
+      "bytes": 5213,
+      "sha256": "e64cd1695d0a493d933fac04095bc0b68f8ca4ce4121a69784fe3d16ec4300d7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfingerguns.png",
+      "bytes": 4279,
+      "sha256": "fd4acdd37ed1b5eb4e3927ce74064e4870c7363017ae8f173a0536cfd93efbaf"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloof_w_.png",
+      "bytes": 4590,
+      "sha256": "69d003c5d3479952c7483a5413e450cb54f45d8bd185732efa25ac596958081c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloof.png",
+      "bytes": 4578,
+      "sha256": "ea71d62a5cd019e09c2e12802d8822250afd3089df11278786aeba0d82d30e28"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofcofe.png",
+      "bytes": 4910,
+      "sha256": "79dc114dd469a186648c2d20c061c66c0907bccf6c37ca32798d5cb54ba1ffa2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofcute.png",
+      "bytes": 4799,
+      "sha256": "f75d3f05eba906c16d60e40d70a447015153596ad33bfed100d1d91bea200ffa"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofdevil.png",
+      "bytes": 4253,
+      "sha256": "bf0e8b04bb355f7f5d79f21348e3bfd06ecd4e17b8c386bfaed4c3dba63aed3e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofevil.png",
+      "bytes": 4552,
+      "sha256": "85fb156b87a85fd0c61e0ffef13c47864e2aa522f29e00b859729156a92b9ce3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofhappy.png",
+      "bytes": 4574,
+      "sha256": "793f3196bd1cb29c704490238d985d10c8630b1d8b3f1251b43ae211bd2361ba"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofowo.png",
+      "bytes": 4784,
+      "sha256": "6e43e3a71ee3ba212dcd21c2307faeb1713c324c95445bd86d9f803f6fbcbfc7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxfloofreach.png",
+      "bytes": 4724,
+      "sha256": "573352dc8849427c2c66f1edf1409a2df36b2232687838610a0f5c6cb15cf7f1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxflooftea.png",
+      "bytes": 4912,
+      "sha256": "0cf9c29e525a87db0705f44fe5a4a9ef9a836e86ee947c243b98e2e335f4453b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxflower.png",
+      "bytes": 4346,
+      "sha256": "b9de5b54b41c9381c20fbfbaac8ae0e6c4f08aacdcb3987ac96811ecb6186e5c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxflowerhair.png",
+      "bytes": 4133,
+      "sha256": "a072c2cd81b7a87a9af41400ddde9cfda744f1972d1e1517d5e1078ebd067989"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxghost.png",
+      "bytes": 3890,
+      "sha256": "fee24302d75f072d1e84ed58bf2f2a497874d5b80780b6e1d681b04d3e9aa4fd"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxghostfloof.png",
+      "bytes": 4540,
+      "sha256": "299618a21b03dc201b43a36f25ba63e76ff34389064e023dadbd810ee3f842fc"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxghostspooky.png",
+      "bytes": 3867,
+      "sha256": "016b3d64e75e97d36277f7e52b8427c6b3bcd2c9781fa72e434e17cb29e8cc02"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxglare.png",
+      "bytes": 3764,
+      "sha256": "b39df46c2e7852f7f41d9528e92ab7e82220adc601b511f91be14421e469dd9f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxgoogly.png",
+      "bytes": 4048,
+      "sha256": "447ce8af253e3c01bd3e8620cf9cde10a3041b67e8c1c840dc3b81918f29aec9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxgooglycry.png",
+      "bytes": 4008,
+      "sha256": "069368d6786424e7a1a2a68e53b1cd320aa380cc64c5065f068ee0476c394265"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxgooglymlem.png",
+      "bytes": 4090,
+      "sha256": "42e062017ee0354f4758e4639efa98588b0c1dff31e4b8008f8f903ce2d2f937"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxgooglynomlog.png",
+      "bytes": 4597,
+      "sha256": "f7a52bee85cd92390c4529c31028828bba0f69f2c8676cee2f9410e2fd63354c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxgooglytrash.png",
+      "bytes": 3119,
+      "sha256": "32b07b2ad8eaa7b095d9e9c7e3d75f7f46116ba8d1b6d17c3f9f4c2d609ec53b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxhappy.png",
+      "bytes": 3670,
+      "sha256": "f5782a92f22f1849a52c4e2ef6617629e523b1ca1ce228f9028c9a1d0c6ab668"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxhappymlem.png",
+      "bytes": 3699,
+      "sha256": "0b21bf6d37a6a1be9977f40a72ad1102c4afe4dfc63f63c222b50bff63f3b4b4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxheadphones.png",
+      "bytes": 4064,
+      "sha256": "6bf66e661c05db951c2eeefcf401d683f5adb69a04ba63423adc7b245deca65d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxheart.png",
+      "bytes": 4064,
+      "sha256": "0e8f625548386f93d902bb421fd76552494eea2057182fe8885d8f9c334c2dba"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxheartcute.png",
+      "bytes": 4225,
+      "sha256": "89f4da224afc99120a6204220d95f0905cd571841459b8f4effdb70d19e23b7c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxhyper.png",
+      "bytes": 5731,
+      "sha256": "205b8b4150fef94b55394167b4c2fa49d714ca0203a8107ccd7087a06a82eaa8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxhyper2.png",
+      "bytes": 7480,
+      "sha256": "550ab6fc582067c5fca1c52e50d2296eae7b25cae568a82fa32efa20a8985ea5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxinnocent.png",
+      "bytes": 3961,
+      "sha256": "62339d9ba8e27cb0026daa8f5f1a1c7cb8336d3dd6053996b8247a7357883170"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxinnocentcute.png",
+      "bytes": 4221,
+      "sha256": "eb4bb31e8c803129e5941dfd8dc8a05a37d3269df792e63e7dd86957d7e0d1fd"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxinnocentmlem.png",
+      "bytes": 3991,
+      "sha256": "c04bf8d3b7e7a1e6aff4811ece7c36599ff686561432cab2c0e33dfb60cb1372"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxkirby.png",
+      "bytes": 3659,
+      "sha256": "d0c89776e615215992a5981db516d79beea8e6fd8ee1bf9dd2ec1b68834c1010"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxkirbyinhale.png",
+      "bytes": 4832,
+      "sha256": "3bfb1cd0f26ceb01a6c10e3acbbfe338da3cc89dc948c658067d7cea71a4b500"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxknife.png",
+      "bytes": 3995,
+      "sha256": "ea655c54df559c2b1d257faee7d53eb621cb43f52c9ae4b72db8ae051c4f3c24"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlaugh.png",
+      "bytes": 3529,
+      "sha256": "8bedcad5ea86c396bb40c79f9f0e5add531802c109f19129f5fab0123c721c9a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlaughsweat.png",
+      "bytes": 3663,
+      "sha256": "550f47e1d7e53c24f3849477cef4750c6874f0f00842674cecac1dc360a8594a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlewd.png",
+      "bytes": 4552,
+      "sha256": "77d21b9cdd6c757c1658f0033c3528274733314855d6c418e3248653865fa492"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlul.png",
+      "bytes": 3795,
+      "sha256": "b1c5ba9a13dcca041e6c3a4984ada00fb7d120edb6610470b556e5b4db9be598"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurk.png",
+      "bytes": 2853,
+      "sha256": "d156fe509170c86efb14c86d7eda8e9a4fc0f9ec38c4c1fa4a98aa15f299a8c8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurk2.png",
+      "bytes": 3069,
+      "sha256": "a68d3687c6076d32e600a79da45a2f19d233278c7496fe03ef0f1e6336019de6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurk2glare.png",
+      "bytes": 3251,
+      "sha256": "6c77e8f3a37f9f8280b31544c6f6e1e6e1a2890df0c46334c7f713b99ff33a5f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurk2owo.png",
+      "bytes": 3274,
+      "sha256": "b99622d66da2a89adb7b4865a6a7204440af381c63ca080770b8be6d1e545b70"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurk2owonotice.png",
+      "bytes": 3729,
+      "sha256": "d918b7b25a2740e503f6dfdec96280949b45c1379113b422347089f125fa30ce"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurkaww.png",
+      "bytes": 3086,
+      "sha256": "3b9dffbad629249d035803da6b1e72a31f2e15a6b9314d60baada88a2e24c9cd"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurkglare.png",
+      "bytes": 3046,
+      "sha256": "47be86989950f7a0a3c43f89a9b3732dd50a089d848cada76c96b2a70de93bf6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurkowo.png",
+      "bytes": 3129,
+      "sha256": "81b78afc2c1d7527554c392f5a7d2f163241085060f453dea61fcd9b2ab84306"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxlurkowonotice.png",
+      "bytes": 3550,
+      "sha256": "d03faee5bfbe3a0184a29c3642a518bcd5b8a9202e0b76259fb86ca219bc0b27"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmegumin.png",
+      "bytes": 4451,
+      "sha256": "486f91953a1ba6bf608c8e00d14f6c18e1808fb430c7fc61f48a9052e327b070"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmelt.png",
+      "bytes": 3412,
+      "sha256": "1f9ecd8aeca763e2262b72fc3041ae0bd01afbfe5940c565fe2b21695ad873a4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmelt2.png",
+      "bytes": 3035,
+      "sha256": "b37d676c89f9322993f9fb6973e6c9e4e53774d4f557d36531d252bfb9f33f5e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmelt3.png",
+      "bytes": 2610,
+      "sha256": "c58f6867e289eae40a70ce67ec45c5cb77692a8ff926faccc3a37c9042588cf5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmeltblush.png",
+      "bytes": 4149,
+      "sha256": "f2589a68a7bf01557d14a4c1c5d2441d913ab19a232b608d537e5aa91b22b903"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmelthappy.png",
+      "bytes": 3422,
+      "sha256": "0d14c31c183ab381cf27c6fc92f8bde2bcc1ab15ad36bf2eb7776a480e22ee05"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmeltmlem.png",
+      "bytes": 3447,
+      "sha256": "7e97bd7ed583c2ae8a25e5e8f71cede4f1c6e08244acb356e7485f51c3bf5979"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmeltreach.png",
+      "bytes": 3693,
+      "sha256": "357255bd0b35e13eeafc841395a22b1e881e8c2fceed3367062c72d3ddc1f3ed"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmeltsob.png",
+      "bytes": 3585,
+      "sha256": "08875d4c7fa71cb039dfa32a10dd2126daa906bb1a64b4f136a4b860c7b7d03f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmeltsoblove.png",
+      "bytes": 3824,
+      "sha256": "2c803429756e572e6c6c94f94828cac43d6efa248e727bad2342caffb26e7518"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmischievous.png",
+      "bytes": 3953,
+      "sha256": "b65466e26170c17d6509a6975de7ee6b9b9d0fc2d7111d2751d4f2954765ca43"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmlem.png",
+      "bytes": 3761,
+      "sha256": "00e5423868345b10ab77acefacfbd20c8cf07daf0f187091eb9b93c7968caaf8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnugglecentercat.png",
+      "bytes": 3780,
+      "sha256": "7164c069fb14467b13122213ea667841e8a291e8e42911a93e0901cefde37421"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnugglecenterfox.png",
+      "bytes": 4046,
+      "sha256": "d2a5b2e996f18771841374b2388aa283210c21f3ad4a01b894328afe69d07ace"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnuggleleftcat.png",
+      "bytes": 3070,
+      "sha256": "92a2dcf157ead7481990bc880a40d484d2a6271a264b28effa605c9057a0492a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnuggleleftfox.png",
+      "bytes": 3329,
+      "sha256": "f5a276fb760ccbcb2f30da4791790c3aa580ccd773ac6914105a8b5a7bc215ce"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnugglerightcat.png",
+      "bytes": 3099,
+      "sha256": "b311fb9d2b2f57d9dfffa69b2ea5cae5b14c22d5d6fe1644b48d8be3b4522064"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnugglerightfox.png",
+      "bytes": 3381,
+      "sha256": "a6e16d104486f95ea374f1bf094eea7654f9199471f553272cdfedfc331db22e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxmsnugglerightnone.png",
+      "bytes": 1924,
+      "sha256": "9786fb082237ad3b823134cc8fe8d6a3e18902e8faf9b2e73819a8b34e3566f9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnauseated.png",
+      "bytes": 4134,
+      "sha256": "5130aaa4cfa8cff4f537a87a824a9a1240b0126d201c62d85079df9b5087ed87"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnerd.png",
+      "bytes": 4316,
+      "sha256": "2a6d3ff8761ce2133c52356814368adaed3fbf485a232d26d6a441b016c0392d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxninja.png",
+      "bytes": 3654,
+      "sha256": "533cedb1bd4fcc681aebcc4cad0d5838403a347bacb883ea8651dad27efc47f5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomball.png",
+      "bytes": 4193,
+      "sha256": "a594c402b6b5c9ca30287b3b03010b71e2714e29c10a4fc72ca6b036939b5196"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnombook.png",
+      "bytes": 4046,
+      "sha256": "a2d47b79fc7fa5c1e1111763b693e8f69a2c55635de584baa4bb8b7fef0a03b4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnombread.png",
+      "bytes": 4090,
+      "sha256": "622958324d69e145ec38c4fd50a447c2d17a16a6ff97f2cddbe4ad10c68b8b79"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomburger.png",
+      "bytes": 4402,
+      "sha256": "e6853715ce44e65edd9716c24a86090f3c3ec0526d45303b4ea8685704888212"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomcake.png",
+      "bytes": 4331,
+      "sha256": "fd60cee6420bb87816557c7dec7e7dd9631a8b941eeb731eb505eb8aa315a2a4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomcat.png",
+      "bytes": 4049,
+      "sha256": "52aaf521cf463d0e3d266b46758f3893e77dcb432d33638bc68a017b08ba0f16"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomcookie.png",
+      "bytes": 4226,
+      "sha256": "fe481da46c79dc67bde3c06aae4e659ed68af4967c7c5c20ab679ab1da4d6715"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomcorndog.png",
+      "bytes": 4840,
+      "sha256": "a322489a38405bbded2fd7b77545a62f9d1f6c1334de5dd32b30d6fa65e05073"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomcroutons.png",
+      "bytes": 4396,
+      "sha256": "a7b1baa4114092bcdfc87af91d9a673ef95210d97d6a942e4db528a47be10bf5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomdonut.png",
+      "bytes": 4814,
+      "sha256": "a457bf623490f5245ea6599ca2b25edc2996ad16ffc947cd20273cffce69d623"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomdonutpolice.png",
+      "bytes": 5037,
+      "sha256": "214c0ae16c98079f1d1b8783036552edac0bae608353cd8c7243321a7c2d778b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomdonutterrified.png",
+      "bytes": 4871,
+      "sha256": "70100cd4875cec536d536e0a70cc8e0a388a5ce740ffa500972bf9fa4a00c5da"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomegg.png",
+      "bytes": 4135,
+      "sha256": "31e3a647a9418a8916b77ef28221eb9fd9271abe045ba948f143c92d24dc6863"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomfox.png",
+      "bytes": 4418,
+      "sha256": "b7631d643f948730bc0ecfbc75aa595d2e36f4ff6ca755a914729a6718ae17b6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomfoxburger.png",
+      "bytes": 4940,
+      "sha256": "cd8b83da293cc9e51a7c229bf12d141ecc02ab865024ade328dc53d082ffe52b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomfoxcookie.png",
+      "bytes": 5045,
+      "sha256": "909983296877b4e22a75fb2c0565656817a942f2bccb5e6f061866780aff26cf"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomfoxterrified.png",
+      "bytes": 4842,
+      "sha256": "235f3f00da9faaee57900a8be99c70827f9035becbf04156816e80e6c6cd3a53"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomhotdog.png",
+      "bytes": 4340,
+      "sha256": "801c4dfe107f9ac51232a9f192ca163782afe598bab11d0045e61421546a210e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomicecream.png",
+      "bytes": 4122,
+      "sha256": "0b5426cfb7b52cdc65d51225f5e5a42705198aab5dd2ab1d93910cc39c9960b7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomlog.png",
+      "bytes": 4478,
+      "sha256": "ee9ebbc68ddbbf11c29a952fef751d200617df389fbc78ff1526240ec1523831"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnommelon.png",
+      "bytes": 4586,
+      "sha256": "3ef52cbf016b55bb6e78b702fc0e409b23a11991053e8a06be92891c32f5e7f1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnommobile.png",
+      "bytes": 4236,
+      "sha256": "55ae6d24b86f6a52deb24172e0f90823ebfbb6ac15af9710cfc7b441d6d975d2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnompizza.png",
+      "bytes": 4168,
+      "sha256": "d9615a05705f38c0e014b7105b6bcafaa00d2f891e2bf0c2f7a898626f2a46f0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnompizzaterrified.png",
+      "bytes": 4344,
+      "sha256": "197a25d890ab9b0bafca9629d1f77389ceb58710b689c3ae6f8c0b11009be830"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomshoe.png",
+      "bytes": 4376,
+      "sha256": "4b9387052e5e70c069708b476f466816faab90b68a855550cd4fe023ecf8a9d7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomstrawberry.png",
+      "bytes": 4211,
+      "sha256": "794e0afa872b228277aa0bd1fcda292e7a266c428bd8c90fbf7d6e5364a57b4e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnomtomato.png",
+      "bytes": 4075,
+      "sha256": "606014688f50a5cdbe5c524ca59365bba88d637ee1f6de805cbfce5f99b57547"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnotamused.png",
+      "bytes": 3557,
+      "sha256": "538e88f531e763b16f10843cd0d389b01af40f6ecd87308071004b32a008e3b3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxnotlikethis.png",
+      "bytes": 4288,
+      "sha256": "7eeb3b2a7610a6f31b70adcc687695aa3be45b6847e67ef185921735d55f8b6c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxo_o.png",
+      "bytes": 3860,
+      "sha256": "60bb60e6a3d699531e55fdfd688596bba632162d723c5f6653516c99ecf9cda0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxonepunch.png",
+      "bytes": 5542,
+      "sha256": "800214e8e81d847fb7cf91ee0b926a23b9a3ea7a195f80280b12d20c5861efb3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxoutage.png",
+      "bytes": 3573,
+      "sha256": "35cef9414fee202cc740669b4e106c32a3714a8ab2d932da0c94a3e584bd6f24"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxowo.png",
+      "bytes": 4001,
+      "sha256": "509fab8ddd2ee72d5f70d972317dd9b3425c1e1cc3eb32b6370f0069fa33507e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxowomlem.png",
+      "bytes": 4026,
+      "sha256": "09d2c5b90f79fc3b6715f47bd95cc643970d5be7003aba0287c73b1000a8c2c4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxowonotice.png",
+      "bytes": 4178,
+      "sha256": "d0ab2de133006229317130be1652396350420d0df36327bb649ebf9371d6f249"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpat.png",
+      "bytes": 4137,
+      "sha256": "07a93b8e45da6dbd3a3468104f30ca637e44944c744d667e1154f62bff31bbe8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatdeny.png",
+      "bytes": 3865,
+      "sha256": "23688bb2adae05571191190ed178a5158b3106dd194a183189f4233686870e28"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatghost.png",
+      "bytes": 4546,
+      "sha256": "283598d8ff45eaa5134f638641dbb74234f8d9a44e318b591e369814b7447f49"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatgoogly.png",
+      "bytes": 4294,
+      "sha256": "979a201542d667eb7a139747549861c40f88196bf50590b9fd6b451188f6c280"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatmelt.png",
+      "bytes": 3740,
+      "sha256": "22e064b219eb28f75801960675c3cf46f23cbd9420322ebfedda6d8c7e6e8230"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatmelt2.png",
+      "bytes": 3429,
+      "sha256": "7b1e4fdf9246196e95efadb9fcca53583ba378326a12bd8cdee615a880da11b1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatmelt3.png",
+      "bytes": 3041,
+      "sha256": "05dcc6c4c8c764c052f748bb739f38a4e53903c7c3b92a5e38e9e32952fd0822"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatneutral.png",
+      "bytes": 3996,
+      "sha256": "e7b31fed269b1ab8c000e867496a9c389e8b4e595690743601c85d172105ba38"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpatsad.png",
+      "bytes": 4230,
+      "sha256": "2b7db969c0d8a55f3e927d88e36c67fabe7c7c76dfd55797d708c4ff50d1dbc0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpeek.png",
+      "bytes": 2461,
+      "sha256": "664750611b386273ef9ab7af1479ca524a2707c790774892e0765cd83100dcdd"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpeekcomfy.png",
+      "bytes": 3215,
+      "sha256": "b48b68552968d5edc8b7a7b2177140ccead3cdb5f9ceec0bbba1bf2e07bc13dc"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpeekknife.png",
+      "bytes": 2968,
+      "sha256": "bf2bf99e0752da0f2165947fa36f39115a1e2dd86f03ac9c123461811f47c208"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpeekowo.png",
+      "bytes": 2803,
+      "sha256": "6d50a4a2fc84a1fb884e12a458fd41eefb96ef0a23cf1e88a9a1af095e5c63d9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpeekpolice.png",
+      "bytes": 3194,
+      "sha256": "209a6182b888fc2493b505a1c6cf5e2e6d4dbab617545c0472c96e3f37e9fd58"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpirate.png",
+      "bytes": 3891,
+      "sha256": "37c3e5644be80c73e2364aeafc03051be80f8750dccbf2896f1292fd8d04d805"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpleading.png",
+      "bytes": 3776,
+      "sha256": "f9efdaf0140db66c903413d260a59ef870c364fd4c051d9b8f7d063f0ffbe64d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxpolice.png",
+      "bytes": 4335,
+      "sha256": "a735e95a483f39d159442654bb73f292eb00264eb358aaf45268a7bb739a9572"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxprelurkcofe.png",
+      "bytes": 2652,
+      "sha256": "2bd90e242666e639d410cd45cb589cc1b550b88e0e459bdb335962894cea26a1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxprelurkcroutons.png",
+      "bytes": 2678,
+      "sha256": "563b0db3bd529556fff2039a8f82cdeebf1ad94339465a18ee26a76e9c2b1a0e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxprelurkdonut.png",
+      "bytes": 3132,
+      "sha256": "a9b5f42b978d9fac3aaea7f6a49a335aa8b4edb460830568658095629f4a38ee"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxrage.png",
+      "bytes": 3367,
+      "sha256": "6f384adbabf272266255a8b42546fde9942833d0f517bca4c26cd207347acbd7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxragelarge1.png",
+      "bytes": 2156,
+      "sha256": "d84926c0ba7e7d6156c2edf248df44f1e48ed09277c55440ec22e487949228f7"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxragelarge2.png",
+      "bytes": 2071,
+      "sha256": "b1052afea46db5a3641feedf00c034545851fceaa44bc4f10cfee51acff925b6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxragelarge3.png",
+      "bytes": 2259,
+      "sha256": "a8661bcfde42c286f7ca3faaf8c1f5177c95d935ea765809568fa97949279961"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxragelarge4.png",
+      "bytes": 2267,
+      "sha256": "db0dd1f1ec993005d77a29cf957803b93d4b421525b2cd43cf45dccae9f8a1a0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxreach.png",
+      "bytes": 3975,
+      "sha256": "9c8895be2455a5c4db5c78f5f4362e904a2dfd218b119b1a6835d1977382fd53"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxreachaww.png",
+      "bytes": 4195,
+      "sha256": "19f39f08cf825e89b7e801716564e72b6ab3d8c4b32e4ae7914ab690543fc2f3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxread.png",
+      "bytes": 4455,
+      "sha256": "6932bddd98c9b271414ff0e2747f0f019fa6f2e040f12257b134c5bf21b446ed"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxreinderp.png",
+      "bytes": 4367,
+      "sha256": "d1192799553dc9e4339817c363bdf39fd0c36d96be000a4b872ac8614dc632fe"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxretsuko.png",
+      "bytes": 5971,
+      "sha256": "ee946a02996defccc2afc5f2b5d4f7816ff7746bb584e196ba36f4949a655d1c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsad.png",
+      "bytes": 3411,
+      "sha256": "3597e3495534ffa1d78d6aadc712c0772dfbbdacf7454c4830b808ab5b141032"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsanta.png",
+      "bytes": 3587,
+      "sha256": "5d1312524651444adedff175629451a9571aec2c37a7947c74a7f4162c7dcaa6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxscared.png",
+      "bytes": 4051,
+      "sha256": "c27dbb4d2393ec3965257f6edb69d3ba358350cdd07190377526e90f64d05b54"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxscience.png",
+      "bytes": 4727,
+      "sha256": "879d030eacfc950d10ab5470fc27f194fe46fe5116900b1f07a92cac1bd88243"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxshocked.png",
+      "bytes": 4272,
+      "sha256": "a5884d40b73db84522c031e41ccc342f210377ae67855135e9ff912c29260f67"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxshy.png",
+      "bytes": 4536,
+      "sha256": "2baf6d9702efa830c3600893403b5fbd609d67d46386a315e01264ea69521bf2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignbaka.png",
+      "bytes": 5020,
+      "sha256": "22abcde24e3d096f0e466efcf9653db9aa2f4931e94013c6004de0ec1b56592b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignbigfan.png",
+      "bytes": 5049,
+      "sha256": "feac657b4230b90fc2875903057305fc3af6e005d85c0761ea804e023bfb6924"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignforbidden.png",
+      "bytes": 4303,
+      "sha256": "a87a674554520fbd922b5d27d0fbebe2182b2cfb935cc41735445bd1aa162f63"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsigngenau.png",
+      "bytes": 4757,
+      "sha256": "c16d2b5a87f9c14a2aa821671737ece13e9cc77b1a28d69f3b3ca0b3e0efe5c9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignno.png",
+      "bytes": 4492,
+      "sha256": "441c1e60255cfd2c46e5072a0b4f5e786647b1d42d4153843c577c2e1cb3d02d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignnou.png",
+      "bytes": 4497,
+      "sha256": "7d63910d7d97f2a54211c15df980da407392d7295c8594e96b136a9fe189f5d5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignnoublush.png",
+      "bytes": 5009,
+      "sha256": "21022c848946e70c4a4b74d58f02c157d97b19ba48f06b3b6dc2bccfd0d34831"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignsrcpls.png",
+      "bytes": 4751,
+      "sha256": "af13f1b5cb7389679b1557f58964bf7c4b09d66e043e108c9963b208a919e7b8"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignthx.png",
+      "bytes": 4491,
+      "sha256": "fcc8baf01ae261c2c1ae8cf4fca29672075c4972be237c33ac1e7fe69cbe3bd5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignyes.png",
+      "bytes": 4501,
+      "sha256": "556582b8ed4c99e701a40d030bb2e8d0020a90fe3377fcce4d95b25a8edbf352"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsignyip.png",
+      "bytes": 4414,
+      "sha256": "4861d7c54217a315e4da646e31592329d9f209d5611f77f3533961ea659cbdcc"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsip.png",
+      "bytes": 3971,
+      "sha256": "e443f35cae53af04187d54621d66f8449ffccdc31958eced926c0762f2c98c00"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsipglare.png",
+      "bytes": 4182,
+      "sha256": "257e818b78cedd256efce151f57fd67a36a511af156b4f6591d4d8c10bc1cb2c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsipowo.png",
+      "bytes": 4265,
+      "sha256": "fc6902585c9e775da5e0a34327ed45c45c85613171c1a453b24fb6d31ae85a72"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsipsmug.png",
+      "bytes": 3942,
+      "sha256": "6b5c8ed007bb7d19e75f1ea26f7cf23edd4333ad79523773f18ab6a37d9ebc8a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsipterrified.png",
+      "bytes": 4407,
+      "sha256": "ef02d64e5eeae5f406047265f5d7ed51c0cbf1081ffcbe763da59d6e11c677ca"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsleep.png",
+      "bytes": 4417,
+      "sha256": "bd0ccd7358150e086e9729765df90b12d0020db1ae127a8349bc60e1a607dc48"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsleepdab.png",
+      "bytes": 4247,
+      "sha256": "0c062c84ff2f243ae5f43aeb1db1c4e6b77e26810174279987ef3422af9a0ff1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsmirk.png",
+      "bytes": 3729,
+      "sha256": "cab4ae37bb9c416dd6012d63b794f9741518f23f7abfeaecb7f92deded0ff223"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsmug.png",
+      "bytes": 3681,
+      "sha256": "b5a312ce1e370a4d07699b9615ff687531425fc3e89b5e96d3f3ed92380b8847"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsnug.png",
+      "bytes": 4153,
+      "sha256": "2b858a23883c1c5cab26cca4e473a162cc9c66d9c166f8fada27cbc91792c22b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsnugglare.png",
+      "bytes": 4365,
+      "sha256": "c86211ad0af6d49819a8b92950cb0abd32a46cbb255267d864411b96c3c4722a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsnuggle.png",
+      "bytes": 3971,
+      "sha256": "0ee13e1039d313d8db6e5d351b3bd63ff74d441fb0856919ce34371a73f6ecde"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsnugowo.png",
+      "bytes": 4528,
+      "sha256": "c47836f6b283fe387e89e70cddc28e7b5153e34e1c9e496cf170b6f682fabf6c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsnugterrified.png",
+      "bytes": 4519,
+      "sha256": "9b5c2a142c44529039afb850b5d44b4e05d659abdc222cb8f011e1f789fd9895"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxstabbed.png",
+      "bytes": 4119,
+      "sha256": "00eb0d06168f4642d857fb6e49617c9a04eea4031f725d57eafa9f926d14fc2a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsurprised.png",
+      "bytes": 3966,
+      "sha256": "2875cb05b23d716e3dc6a3e24fcce5537b319bf7d2ce2cd859c5fa579bb816b0"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxsweating.png",
+      "bytes": 3971,
+      "sha256": "85fcc450e178ceea5a47a5efce400208cd9dbf8726b977c6513b0c6751aed6e1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxtableflip.png",
+      "bytes": 4210,
+      "sha256": "737616e7141b2539ec4005c1aef8f5bc9bb3de65bd61bbaed274bc5ad5f987b3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxtea_w_.png",
+      "bytes": 4058,
+      "sha256": "d89597d12d9f828284b9e9b5fb40a7ab1a9512062fcbe7cdb806d4472e202fc3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxtea.png",
+      "bytes": 4063,
+      "sha256": "95df026153e992b8e7bfc41c7279a19434e9e0df53190de3dee51b1b508d6b07"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxteacute.png",
+      "bytes": 4344,
+      "sha256": "addbcea5342cf3daf72eb71d1c84c83d4e1951eea3606c112d6fe3a10be42931"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxteaglare.png",
+      "bytes": 4242,
+      "sha256": "fb8d070751bde532716b266d9ff13048754de07ee3a7425113086f629a7c3bf3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxteamlem.png",
+      "bytes": 4012,
+      "sha256": "7d219460bdea1faeca1ac538a410431b2726678ad1b9fabef5863acb77fd0916"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxteaowo.png",
+      "bytes": 4401,
+      "sha256": "641206adcfef27d98bc0b9d1f483147b9e0baf4e364a14eef8774b09b7e6f0db"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxteaterrified.png",
+      "bytes": 4409,
+      "sha256": "a1cbe18f1f6ffecc130dab0f61c3d6c8c3db9f68688c3832472482c447b9dc3b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxterrified.png",
+      "bytes": 4073,
+      "sha256": "707cd7f0ee3a0806f6e2468df3332acd847afe83c58fc5e350a4938d18785003"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthief.png",
+      "bytes": 3786,
+      "sha256": "fa764ac478ab2d9f8d2455e4226aed457ff09486289e99a8a8d5f3724e4048e4"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthink.png",
+      "bytes": 3856,
+      "sha256": "e634c90680fcae3599ec6c3041aeb286ed8d2cf8468460e986833e05171e93e3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthinkanime.png",
+      "bytes": 5807,
+      "sha256": "e96adfcc9cc3865a03d9e9129a4a9c064534e6b5646f7e6f999514bde8142a9d"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthinkgoogly.png",
+      "bytes": 4281,
+      "sha256": "78aeec5a7186ec9ddf9664dc5394590f8fdc8c1d9dac80faa803d26298dd8292"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthinking.png",
+      "bytes": 4036,
+      "sha256": "e9d46cc4a906441332bcde661027ffa372ae42f035505f20c76d29813fda12db"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthinkowo.png",
+      "bytes": 4261,
+      "sha256": "dd355164cb6207bf14952493169556a575ba3ca0727870fd7bce111c33a23a43"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthinksmart.png",
+      "bytes": 4274,
+      "sha256": "eb2ac18e68e666ba7abf6056c7c9c40bab20706733a9ac6b77f617c75c4411ca"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthinksmirk.png",
+      "bytes": 4010,
+      "sha256": "55ca36f08cc095bc76884638ec19569ba556c03b364628a211189c3d4baabfe9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthisisfine.png",
+      "bytes": 4630,
+      "sha256": "c81ae0fdf804c18929c147db628a639b198b9cff8f6403fa414fb7b00a65d707"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthonking.png",
+      "bytes": 4175,
+      "sha256": "fe6cf8c9d097ffa467f74a40e368131b95ea1f88ebaea5ea5f7e49a3e16b8aba"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthumbsdown.png",
+      "bytes": 3745,
+      "sha256": "483065495cde1b08eef4cdcbf69e9aeb7f1324a9a227fc19d3545811ecc1560f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxthumbsup.png",
+      "bytes": 3901,
+      "sha256": "513e4a57daa70e08c1ca15e2a504164dd3f7fd8ec7df5b94957d0f2962be5975"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxtrash.png",
+      "bytes": 3013,
+      "sha256": "eeef0702415f08a45836c28f770bcca2b9eac278a394e2b8e434dfa9e8586e04"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxtsundere.png",
+      "bytes": 5036,
+      "sha256": "7ff88dd022cf835b2d97a9979cd8c2a977138aa8436eadfae91ca235637878b6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxuno.png",
+      "bytes": 4997,
+      "sha256": "5ebb897a13e4c11a590714389ca124e48776a1a489def2072b62cff4933999ad"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxunoterrified.png",
+      "bytes": 5753,
+      "sha256": "2dceb02ef31bb23a4216c446659e59994aeb1239cc6ae243d1a6d0f165c90435"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxupset.png",
+      "bytes": 4124,
+      "sha256": "e710939fc265e44c31163614bbe1056614e82054131fd01226af538e9cdaa05f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxupsidedown.png",
+      "bytes": 3705,
+      "sha256": "4a89818828637864df998dd7d47ef3bef953bb1c720f2ba3c49de531b71a83b6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxupsidedowndizzy.png",
+      "bytes": 3961,
+      "sha256": "ba13b670f190db67bfbcf07cfb80249744145fc8c081bdb75b9b4fcebc11d642"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxuwu.png",
+      "bytes": 3805,
+      "sha256": "fe8d5bdbe5165373ab6ab1c8fd19f5392c92b822757789ad9f515e8605234d9f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwashingmachine.png",
+      "bytes": 4630,
+      "sha256": "6485bef0ca558b9b8fecdf836caf8f9879737b4873bba8f4ca65efb520f213ad"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwater.png",
+      "bytes": 4021,
+      "sha256": "15cc1b9f605801517201b6bb71e495d2034f3dcbee64fdc2ce4ce1399d912a3c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwave.png",
+      "bytes": 3537,
+      "sha256": "5f70fb4162c85448fc2cb95edf244b7f3b208580306e520ccd42ee08c6b04451"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwet.png",
+      "bytes": 3929,
+      "sha256": "b84a2da1913a4bab5c0de3dea0857cde17589e72e3ca136c632fa09c1ea2802f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwhaaaat.png",
+      "bytes": 3784,
+      "sha256": "4e07f9662323fad25bbd7c6e7ede526c3dc9d0fc698fb7d5ae6ffbc703ad50af"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwhoaa.png",
+      "bytes": 6147,
+      "sha256": "7db811e1073c8772cd3a020c009489661b2e6301179a3bc599efe9add9c3ff63"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwink.png",
+      "bytes": 3698,
+      "sha256": "14b72696d3adbd5904f598f78841bfb06f9aa393172c94b208a6abf8c28d5f4f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxwinkmlem.png",
+      "bytes": 3734,
+      "sha256": "4b6f6a0174d337eda67a678fdc58203f39f181941120c8126c0169b9f94f498b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxworried.png",
+      "bytes": 3174,
+      "sha256": "22bc2b8e373be2e2bb4816d63b1d3eade238a2be680a0c44fb5184144590f7d9"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxyandere.png",
+      "bytes": 3579,
+      "sha256": "953333948f64c863380bba2b91a417fb9938b7470fe3df0cc95ddabe724c3a7e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxyeet.png",
+      "bytes": 4157,
+      "sha256": "15cfb821eeb27903eed0804edbf3c8836eeaa8d449fa79cd8437be6e182f698e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxyoshieat.png",
+      "bytes": 3500,
+      "sha256": "f045bc211145e6770dc0fc650493ff11d29c89b575c0f9e361e3464a722816a1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxyoshieatpixel.png",
+      "bytes": 1417,
+      "sha256": "6093e5a8b9aa29b18196b4680c51b6e0fa2ac3ebbeadab89984414fa7ce9d586"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxyoshiend.png",
+      "bytes": 486,
+      "sha256": "ed3a2f4f0b5bb76f1f00737c817645b7fd05a5a9789188b2bae44fdd30d68d14"
+    },
+    {
+      "path": "src/main/resources/static/stickers/blobfox/blobfoxyoshimid.png",
+      "bytes": 213,
+      "sha256": "dd23aa04b10e12ac309c8a1057eb29626a8003cc08ca93eda189181e7a42a3c2"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhd.png",
+      "bytes": 11980,
+      "sha256": "610c3fe58df66ca15a1c2caba7081f984c4724d9694df848e4e02512abfb46dd"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhdcry.png",
+      "bytes": 12356,
+      "sha256": "64bfe470f555c9aad0b12cab6a4d1c56abfb327bfba7612bb738c6277d7154b1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhdhappy.png",
+      "bytes": 12325,
+      "sha256": "fde45f408f2f338507b676c0a1dfcbffddd2364748b43f96376442bc7d1ef4f1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhdhappyhop.png",
+      "bytes": 26678,
+      "sha256": "0b18a096adf6fe6da5ae39ff2f154596e6dc03a27209f751e29c8ef6f45f43e6"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhdhop.png",
+      "bytes": 26063,
+      "sha256": "c4c1521ad2ea9e83eec08dfcdab13ac8b0826aed742a647fb2f434d7c0612a82"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhdowohop.png",
+      "bytes": 27240,
+      "sha256": "694566acf8468a144ad92d88ae412bf1555e19082bdc0c40cc09f0306c1969fb"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/abunhdsadpat.png",
+      "bytes": 28343,
+      "sha256": "bbf86146003a7d010fdb8a6ee9cbd2649356a3a95b7218a1aa6f376a767ffa5e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhd.png",
+      "bytes": 8753,
+      "sha256": "ae60fb36738319168746b66f5801675f403cc6fdd487ba7873613dbb5f45fa69"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdangry.png",
+      "bytes": 9369,
+      "sha256": "7980777f7a9fc9b38adea640f0327fbc41f52e1e4c16d49ec59580d6bda8059e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdaww.png",
+      "bytes": 9496,
+      "sha256": "b1142c5c5ab0a2d033b2c5873949d51d3673b7be2f9e6577d375e76c1f532374"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdcomfy.png",
+      "bytes": 8689,
+      "sha256": "b57a46925bc5f7b3921aaad04a074e93e494a3bd96717244f14a90fd3c2b12ab"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdcomfyhappy.png",
+      "bytes": 8930,
+      "sha256": "34cb8182205014cdcd9c83c1ea929420aede473526948a3ab5497a67aeb2d9eb"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdcomfyidle.png",
+      "bytes": 8470,
+      "sha256": "8a815770f0e7220d82dc00d0c98f819941b73b9d7a00e68f1efb1ac9549d2282"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdcomfysleep.png",
+      "bytes": 9723,
+      "sha256": "c2842a6f6775b56c0d9107b922be6c769ec42f56f43b7377df17463830734290"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdcry.png",
+      "bytes": 9023,
+      "sha256": "ba45dba2ff8bd58b2e39e86d461ff212823c0f07048a55cd7e7365cba7f04315"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdgoogly.png",
+      "bytes": 10071,
+      "sha256": "2ff6de13efb5a9fc7a1ce3545c0dcd49997281850c0fb5052644c33273af32ac"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdgrumpy.png",
+      "bytes": 9621,
+      "sha256": "c6027295f341632e688513bf2726e7e528e223100b14ee301061af42c4c38b98"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdhappy.png",
+      "bytes": 9161,
+      "sha256": "ad60616c95d54844f6225fabc91ecc9275770edb8d3cecc4ed171971c8b54f29"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdheart.png",
+      "bytes": 10009,
+      "sha256": "510a06ac9073c7f622f38d087d1ea53d653f03e5f634e3673697355848b92797"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdidle.png",
+      "bytes": 8565,
+      "sha256": "f6c4e97022ae0126b77f0b5556041f7440a4d1fbc0c7d55293a6ecdb505dbdc3"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdknife.png",
+      "bytes": 9195,
+      "sha256": "3a950fae0a55cd4967ee6e353761d5ed911f9fa8d4d204a4fb4322154f8b319a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdlurk.png",
+      "bytes": 7342,
+      "sha256": "2d96b4dcb263ac9bc2b7ec2617588279d782a39a5bb4abefa70131c69e8281f5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdlurkaww.png",
+      "bytes": 8151,
+      "sha256": "c7ad84040115f26f40a6c615351f845eed592c0b8d899f35178feddd60f3a0d5"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdmlem.png",
+      "bytes": 9427,
+      "sha256": "1c03a75264d458d41fd2275e0de74312a00e7f4963fa829fceb8444cbed6777a"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdowo.png",
+      "bytes": 9383,
+      "sha256": "3c6f0c4296ff5ea98ae85c7be2453f0c94f5b4714c4f1815467f6276ef66758b"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdpeek.png",
+      "bytes": 6348,
+      "sha256": "c41863043c1a64a262eb71512ae3d2e25c02c004c1e57cf367fc00938979213c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdprelurkcofe.png",
+      "bytes": 4273,
+      "sha256": "62c310bf1cacb6d10f2e349c396ce38dc53fd3f60d04ab4de50a86513f372ef1"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdprelurkcroutons.png",
+      "bytes": 5002,
+      "sha256": "fd357020276e74d3d8f15f7afac3263ed373edd0827fc5dae025b154d9ef713e"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdprelurkdonut.png",
+      "bytes": 6014,
+      "sha256": "731a09d6542e3bf32412a06c20365aaadeda37450099f56def63afbe90671148"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdsad.png",
+      "bytes": 9171,
+      "sha256": "094d5f4a4d63ef3eff5224a11354b34d52d6ad962a07d2fcdad7e1fef60f606f"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdsleep.png",
+      "bytes": 9818,
+      "sha256": "abdc8d550d6ca6b4c6459efa6430342507ac7758d67f5085bbc4cc8bfea0118c"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdsmug.png",
+      "bytes": 9276,
+      "sha256": "af28ee6d96160e8f7fbb013eff62205cc30b4f007f4ff032244ef0b7188cbf54"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdthink.png",
+      "bytes": 9901,
+      "sha256": "cb1bda2f6fde6ef06d99dda3cdc9263ea0b17fb0e37e47761a68d748db16a2ca"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhdthinking.png",
+      "bytes": 10645,
+      "sha256": "fffee715c0c6c5726582e33c3a484bb859e21cd5d152d0d8796361a787512c39"
+    },
+    {
+      "path": "src/main/resources/static/stickers/bunhd/bunhduwu.png",
+      "bytes": 9763,
+      "sha256": "5436e5f6b0e235e68f58ee0cec5f5210001751df3fe24f3f9e5a6b502eb93699"
+    },
+    {
+      "path": "src/main/resources/static/stickers/NOTICE.txt",
+      "bytes": 626,
+      "sha256": "c88c0e30b8e060628fc910e8f7f264837ff769e43da8f1d4fa9e941e3f1bfd80"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/AuthenticationIntegrationTest.java",
+      "bytes": 13560,
+      "sha256": "021707906600299c24ff3d028e6c7ec37eae0d084a94701bee9a27c0bb8c1f5a"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/CallIntegrationTest.java",
+      "bytes": 15945,
+      "sha256": "4d44db20adf6d95aeb291f844a5869ca51e47720f8319fb3493560025832830c"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/ChatIntegrationTest.java",
+      "bytes": 13575,
+      "sha256": "2910d285954256e7aabc602393fe2b413923ccaaeaf9c9edc7b1b8a1451b940c"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/DatePolicyTest.java",
+      "bytes": 2105,
+      "sha256": "d3440d16847f493dc69b31e80863f927916b7653363606edbd1c04d246637a85"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/FoundationIntegrationTest.java",
+      "bytes": 7847,
+      "sha256": "cd998be976ff6406abbe0c2e3941cf120da3ed5b485c78e7d0156fd775b77a0c"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/GiftIntegrationTest.java",
+      "bytes": 8480,
+      "sha256": "d88d881d4f831803f047d85e294ed374e05b0a0f81b4ad564f14677ca5fb02c8"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/GiftMigrationTest.java",
+      "bytes": 3993,
+      "sha256": "652a6afefe353493d8e44a1842dc49a42225c60fcf3793882aed1018ca7eca17"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/HomeIntegrationTest.java",
+      "bytes": 14100,
+      "sha256": "3c4e07614ccb2c156dc9d810602f390af8455f72a2cea926a2775ea772320847"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/MemoryFixtures.java",
+      "bytes": 4971,
+      "sha256": "c34b5e4d2f8ddbf132f79d11cd4cbf2c82391ced91c8dbe59ea09a7df9b5f365"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/MemoryIntegrationTest.java",
+      "bytes": 23719,
+      "sha256": "897f0c3f2bd9475b833c79a3705c90e885f9d4e69f21a7e27c1453c20bd10fa4"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/MemoryUploadGateTest.java",
+      "bytes": 2980,
+      "sha256": "6413f92525106fbc3f531c5a94973afc6876d748ccbecc8a729583af5d1787fd"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/PairingIntegrationTest.java",
+      "bytes": 16682,
+      "sha256": "646beaca3207e9757ab66dcf21c5fe1b6f637caf081282bc21489648fe02bea9"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/RtcConfigurationTest.java",
+      "bytes": 1861,
+      "sha256": "ca83020ac2ceabb30c10b89356775d765080e03ba80cfe3a5825966d8ee7a5ac"
+    },
+    {
+      "path": "src/test/resources/application-test.yml",
+      "bytes": 403,
+      "sha256": "def88ddd427aef2598e30b3a514614f87cd1de25fc12fcc8347f7f89863b09ac"
+    }
+  ]
+}

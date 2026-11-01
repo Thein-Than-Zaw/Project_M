@@ -42,6 +42,11 @@ server:
   tomcat:
     max-http-form-post-size: 16KB
 app:
+  calls:
+    turn-urls: ${TURN_URLS:}
+    stun-urls: ${STUN_URLS:}
+    turn-secret: ${TURN_SHARED_SECRET:}
+    maintenance-ms: 2000
   memories:
     storage-root: ${MEMORY_STORAGE_ROOT:.local/uploads}
     ffprobe: ${FFPROBE_PATH:.tools/ffmpeg/ffmpeg-8.1.2-essentials_build/bin/ffprobe.exe}

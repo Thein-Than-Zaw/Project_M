@@ -1,0 +1,197 @@
+WARNING: Final field _cipher in class org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher has been mutated reflectively by class org.eclipse.sisu.bean.BeanPropertyField in unnamed module @161479c6 (file:/C:/Projects/Project_M/.tools/maven-user/wrapper/dists/apache-maven-3.9.12/59fe215c0ad6947fea90184bf7add084544567b927287592651fda3782e0e798/lib/org.eclipse.sisu.inject-0.9.0.M4.jar)
+WARNING: Use --enable-final-field-mutation=ALL-UNNAMED to avoid a warning
+WARNING: Mutating final fields will be blocked in a future release unless final field mutation is enabled
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.couple:private-space >----------------------
+[INFO] Building Couple Private Space 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ private-space ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 401 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ private-space ---
+[INFO] Recompiling the module because of added or removed source files.
+[INFO] Compiling 29 source files with javac [debug parameters release 21] to target\classes
+[INFO] /C:/Projects/Project_M/src/main/java/com/couple/privatespace/memory/MemoryFiles.java: C:\Projects\Project_M\src\main\java\com\couple\privatespace\memory\MemoryFiles.java uses or overrides a deprecated API.
+[INFO] /C:/Projects/Project_M/src/main/java/com/couple/privatespace/memory/MemoryFiles.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ private-space ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ private-space ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /C:/Projects/Project_M/src/test/java/com/couple/privatespace/AuthenticationIntegrationTest.java: Some input files use or override a deprecated API.
+[INFO] /C:/Projects/Project_M/src/test/java/com/couple/privatespace/AuthenticationIntegrationTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ private-space ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.couple.privatespace.AuthenticationIntegrationTest
+14:19:48.066 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.couple.privatespace.AuthenticationIntegrationTest]: AuthenticationIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:19:48.441 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.AuthenticationIntegrationTest
+14:19:48.675 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.couple.privatespace.AuthenticationIntegrationTest]: AuthenticationIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:19:48.681 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.AuthenticationIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.2)
+
+2026-11-01T14:19:58.333+06:30  INFO 14524 --- [couple-private-space] [           main] c.c.p.AuthenticationIntegrationTest      : Starting AuthenticationIntegrationTest using Java 27.0.1.0.3 with PID 14524 (started by USER in C:\Projects\Project_M)
+2026-11-01T14:19:58.336+06:30  INFO 14524 --- [couple-private-space] [           main] c.c.p.AuthenticationIntegrationTest      : The following 1 profile is active: "test"
+2026-11-01T14:20:01.465+06:30  INFO 14524 --- [couple-private-space] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-01T14:20:01.582+06:30  INFO 14524 --- [couple-private-space] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 82 ms. Found 0 JPA repository interfaces.
+2026-11-01T14:20:03.553+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 18080 (http)
+2026-11-01T14:20:03.583+06:30  INFO 14524 --- [couple-private-space] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-01T14:20:03.583+06:30  INFO 14524 --- [couple-private-space] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.27]
+2026-11-01T14:20:03.730+06:30  INFO 14524 --- [couple-private-space] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 5320 ms
+2026-11-01T14:20:04.571+06:30  INFO 14524 --- [couple-private-space] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-01T14:20:05.192+06:30  INFO 14524 --- [couple-private-space] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2db3675a
+2026-11-01T14:20:05.197+06:30  INFO 14524 --- [couple-private-space] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-01T14:20:05.254+06:30  INFO 14524 --- [couple-private-space] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:5432/couple_private_space_test?currentSchema=dev07_fresh_20261101 (PostgreSQL 18.6)
+2026-11-01T14:20:05.638+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 19 migrations (execution time 00:00.200s)
+2026-11-01T14:20:05.681+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "dev07_fresh_20261101": 19
+2026-11-01T14:20:05.693+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Schema "dev07_fresh_20261101" is up to date. No migration necessary.
+2026-11-01T14:20:06.902+06:30  INFO 14524 --- [couple-private-space] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-01T14:20:07.154+06:30  INFO 14524 --- [couple-private-space] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.13.Final
+2026-11-01T14:20:08.330+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-01T14:20:08.527+06:30  INFO 14524 --- [couple-private-space] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://127.0.0.1:5432/couple_private_space_test?currentSchema=dev07_fresh_20261101]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.6
+	Default catalog/schema: couple_private_space_test/dev07_fresh_20261101
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-01T14:20:09.453+06:30  INFO 14524 --- [couple-private-space] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-01T14:20:09.598+06:30  INFO 14524 --- [couple-private-space] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-01T14:20:10.519+06:30  INFO 14524 --- [couple-private-space] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name accountDetails
+2026-11-01T14:20:11.270+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-11-01T14:20:12.392+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-01T14:20:12.560+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-01T14:20:12.562+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5680228]]
+2026-11-01T14:20:12.564+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-11-01T14:20:12.601+06:30  INFO 14524 --- [couple-private-space] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 18080 (http) with context path '/'
+2026-11-01T14:20:12.620+06:30  INFO 14524 --- [couple-private-space] [           main] c.c.p.AuthenticationIntegrationTest      : Started AuthenticationIntegrationTest in 15.209 seconds (process running for 27.264)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Projects\Project_M\.tools\m2\net\bytebuddy\byte-buddy-agent\1.18.15\byte-buddy-agent-1.18.15.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-11-01T14:20:14.336+06:30  INFO 14524 --- [couple-private-space] [.1-18080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-01T14:20:14.336+06:30  INFO 14524 --- [couple-private-space] [.1-18080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-01T14:20:14.340+06:30  INFO 14524 --- [couple-private-space] [.1-18080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2026-11-01T14:21:12.453+06:30  INFO 14524 --- [couple-private-space] [MessageBroker-8] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 12, active threads = 1, queued tasks = 2, completed tasks = 30]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 96.64 s -- in com.couple.privatespace.AuthenticationIntegrationTest
+[INFO] Running com.couple.privatespace.ChatIntegrationTest
+2026-11-01T14:21:24.051+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.ChatIntegrationTest]: ChatIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:24.057+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.ChatIntegrationTest
+2026-11-01T14:21:24.061+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.ChatIntegrationTest]: ChatIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:24.064+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.ChatIntegrationTest
+2026-11-01T14:21:26.286+06:30 ERROR 14524 --- [couple-private-space] [.1-18080-exec-3] o.s.w.s.m.StompSubProtocolHandler        : Failed to send message to MessageChannel in session 1b931771-1b70-4619-aeab-edb52fbe43d4:Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]
+2026-11-01T14:21:26.338+06:30 ERROR 14524 --- [couple-private-space] [.1-18080-exec-8] o.s.w.s.m.StompSubProtocolHandler        : Failed to send message to MessageChannel in session 98fac27f-2a71-42ee-9d03-fd3dcd42b342:Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.850 s -- in com.couple.privatespace.ChatIntegrationTest
+[INFO] Running com.couple.privatespace.DatePolicyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.couple.privatespace.DatePolicyTest
+[INFO] Running com.couple.privatespace.FoundationIntegrationTest
+2026-11-01T14:21:31.921+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.FoundationIntegrationTest]: FoundationIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:31.926+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.FoundationIntegrationTest
+2026-11-01T14:21:31.929+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.FoundationIntegrationTest]: FoundationIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:31.932+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.FoundationIntegrationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.249 s -- in com.couple.privatespace.FoundationIntegrationTest
+[INFO] Running com.couple.privatespace.GiftIntegrationTest
+2026-11-01T14:21:32.172+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.GiftIntegrationTest]: GiftIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:32.177+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.GiftIntegrationTest
+2026-11-01T14:21:32.180+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.GiftIntegrationTest]: GiftIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:32.181+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.GiftIntegrationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.120 s -- in com.couple.privatespace.GiftIntegrationTest
+[INFO] Running com.couple.privatespace.GiftMigrationTest
+2026-11-01T14:21:37.291+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.GiftMigrationTest]: GiftMigrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:37.293+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.GiftMigrationTest
+2026-11-01T14:21:37.295+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.GiftMigrationTest]: GiftMigrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:37.297+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.GiftMigrationTest
+2026-11-01T14:21:37.341+06:30  INFO 14524 --- [couple-private-space] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:5432/couple_private_space_test?currentSchema=dev07_fresh_20261101 (PostgreSQL 18.6)
+2026-11-01T14:21:37.399+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.database.base.Schema   : Creating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" ...
+2026-11-01T14:21:37.409+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "dev06_upgrade_76e5f156ebce4df490300610c57f8824"."flyway_schema_history" ...
+2026-11-01T14:21:37.560+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824": null
+2026-11-01T14:21:37.574+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "1 - create app user"
+2026-11-01T14:21:37.626+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "2 - create couple space"
+2026-11-01T14:21:37.654+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "3 - create couple membership"
+2026-11-01T14:21:37.708+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "4 - add account security state"
+2026-11-01T14:21:37.729+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "5 - create registration gate"
+2026-11-01T14:21:37.760+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "6 - create registration token"
+2026-11-01T14:21:37.805+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "7 - create pairing invitation"
+2026-11-01T14:21:37.848+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "8 - create pairing confirmation"
+2026-11-01T14:21:37.874+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "9 - create pairing join receipt"
+2026-11-01T14:21:37.896+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "10 - create special date"
+2026-11-01T14:21:37.941+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "11 - create special date creation receipt"
+2026-11-01T14:21:37.981+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "12 - create chat conversation"
+2026-11-01T14:21:38.008+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "13 - create chat message"
+2026-11-01T14:21:38.053+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 13 migrations to schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824", now at version v13 (execution time 00:00.291s)
+2026-11-01T14:21:38.110+06:30  INFO 14524 --- [couple-private-space] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:5432/couple_private_space_test?currentSchema=dev07_fresh_20261101 (PostgreSQL 18.6)
+2026-11-01T14:21:38.168+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 20 migrations (execution time 00:00.040s)
+2026-11-01T14:21:38.178+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824": 13
+2026-11-01T14:21:38.214+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "14 - create gift catalog"
+2026-11-01T14:21:38.265+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "15 - add gift message payload"
+2026-11-01T14:21:38.295+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "16 - create memory"
+2026-11-01T14:21:38.344+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "17 - create memory asset"
+2026-11-01T14:21:38.388+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "18 - create memory receipt"
+2026-11-01T14:21:38.413+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824" to version "19 - create memory favorite"
+2026-11-01T14:21:38.434+06:30  INFO 14524 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 6 migrations to schema "dev06_upgrade_76e5f156ebce4df490300610c57f8824", now at version v19 (execution time 00:00.144s)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.425 s -- in com.couple.privatespace.GiftMigrationTest
+[INFO] Running com.couple.privatespace.HomeIntegrationTest
+2026-11-01T14:21:38.721+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.HomeIntegrationTest]: HomeIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:38.725+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.HomeIntegrationTest
+2026-11-01T14:21:38.728+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.HomeIntegrationTest]: HomeIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:38.731+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.HomeIntegrationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.519 s -- in com.couple.privatespace.HomeIntegrationTest
+[INFO] Running com.couple.privatespace.MemoryIntegrationTest
+2026-11-01T14:21:44.239+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.MemoryIntegrationTest]: MemoryIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:44.241+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.MemoryIntegrationTest
+2026-11-01T14:21:44.243+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.MemoryIntegrationTest]: MemoryIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:21:44.245+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.MemoryIntegrationTest
+2026-11-01T14:21:49.160+06:30  WARN 14524 --- [couple-private-space] [1-18080-exec-10] c.c.p.memory.MemoryMaintenance           : Memory removal pending; will retry. Memory 5113de8e-9a1d-49c7-853a-3f2caf846d8b
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.96 s -- in com.couple.privatespace.MemoryIntegrationTest
+[INFO] Running com.couple.privatespace.MemoryUploadGateTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.couple.privatespace.MemoryUploadGateTest
+[INFO] Running com.couple.privatespace.PairingIntegrationTest
+2026-11-01T14:22:07.232+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.PairingIntegrationTest]: PairingIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:22:07.235+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.PairingIntegrationTest
+2026-11-01T14:22:07.238+06:30  INFO 14524 --- [couple-private-space] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.couple.privatespace.PairingIntegrationTest]: PairingIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-01T14:22:07.239+06:30  INFO 14524 --- [couple-private-space] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.couple.privatespace.PrivateSpaceApplication for test class com.couple.privatespace.PairingIntegrationTest
+2026-11-01T14:22:13.250+06:30 ERROR 14524 --- [couple-private-space] [.1-18080-exec-4] o.s.w.s.m.StompSubProtocolHandler        : Failed to send message to MessageChannel in session b62912ca-bed5-4922-840a-b9ea3e2c8d44:Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.513 s -- in com.couple.privatespace.PairingIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 53, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ private-space ---
+[INFO] Building jar: C:\Projects\Project_M\target\private-space-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:4.1.2:repackage (repackage) @ private-space ---
+[INFO] Replacing main artifact C:\Projects\Project_M\target\private-space-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Projects\Project_M\target\private-space-0.1.0-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:57 min
+[INFO] Finished at: 2026-11-01T14:22:20+06:30
+[INFO] ------------------------------------------------------------------------

@@ -1,0 +1,10 @@
+database=couple_private_space_test schema=dev07_fresh_20261101 migrations=19
+app_user=0
+couple_membership=0
+chat_message=0
+memory=0
+memory_asset=0
+memory_receipt=0
+memory_favorite=0
+gift_catalog=363
+temporary_failure_constraints=0

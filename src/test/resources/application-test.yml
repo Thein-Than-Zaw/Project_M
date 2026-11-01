@@ -7,6 +7,11 @@ server:
     session:
       timeout: 1m
 app:
+  calls:
+    maintenance-initial-ms: 900000
+    turn-urls: ''
+    stun-urls: ''
+    turn-secret: ''
   memories:
     storage-root: target/test-memory-assets
     maintenance-initial-ms: 900000

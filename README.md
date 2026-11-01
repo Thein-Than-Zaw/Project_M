@@ -1,6 +1,6 @@
 # Project_M — Couple Private Space
 
-A private responsive web application for one couple and two accounts. Built with Java/Spring Boot, Spring Security, PostgreSQL/Flyway, WebSocket/STOMP and same-origin HTML/CSS/JavaScript. WebRTC calls are planned.
+A private responsive web application for one couple and two accounts. Built with Java/Spring Boot, Spring Security, PostgreSQL/Flyway, WebSocket/STOMP and same-origin HTML/CSS/JavaScript. Voice/Video WebRTC implementation is available for local review; real media/TURN qualification remains pending.
 
 ## Current implementation
 
@@ -10,8 +10,10 @@ A private responsive web application for one couple and two accounts. Built with
 - **DEV-04 core:** Home, own display-name editing, shared relationship date, anniversary/countdown and Special Dates. Start date is Day1; Feb29 anniversaries fall on Feb28 in non-leap years. Calendar timezone is Asia/Yangon.
 - **DEV-05 core:** private text/emoji Chat (up to4000 Unicode code points), durable ordered history, unread badge, Sent/Delivered/Read receipts, duplicate-safe retry and reconnect recovery.
 - **DEV-06 core:**363 free Blobfox/BunHD character sticker gifts (20 animated), pack/search picker, preview with optional500-code-point note, private chat persistence and Sent/Received filters. Artwork attribution/license is bundled; no external asset service is needed at runtime. See [DEV-06 checkpoint](docs/DEV-06_Checkpoint.md).
+- **DEV-07 core:** private photo/video/document Memories, up to10 mixed files per memory, shared edits, own favorites, 24-item pagination, 3-day Trash/Restore and confirmed permanent Empty Trash. Native tests pass; browser verification remains pending. See [DEV-07 checkpoint](docs/DEV-07_Checkpoint.md).
+- **DEV-08 increment:** Voice/Video call widget on Home/Chat/Memories, private selected-tab signaling, one-live-call/races/retry,30s ring/15s recovery, real media track/PC code, local cleanup, outcomes and optional expiring TURN config. Native/backend evidence is separate from still-unverified browser/device media. See [call setup](docs/DEV-08_Local_Calls.md) and [checkpoint](docs/DEV-08_Checkpoint.md).
 
-Both members can edit/delete Special Dates. Both-member Memory edit/delete remains a confirmed requirement for the future Memory module. Memory/avatar uploads, calls, typing/presence, general notification inbox and authentication recovery/settings remain separate work. Custom sticker uploads/marketplace and paid gifts are outside the current increment. Chat message Edit/Delete is deferred. In-app notifications only; no browser push. Content is private through server-side authorization; E2EE is not implemented.
+Both members can edit/delete Special Dates and Memories. Avatar uploads, typing/presence, general notification inbox and authentication recovery/settings remain separate work. Calls still require real browser/two-device/relay verification. Custom sticker uploads/marketplace and paid gifts are outside the current increment. Chat message Edit/Delete is deferred. In-app notifications only; no browser push. Content is private through server-side authorization; no app-wide E2EE claim is made.
 
 This is a local development build, not a production release. Actual background/unfocused-tab Read qualification in real Chrome/Edge remains pending (DEV05-UI01); see the [DEV-05 checkpoint](docs/DEV-05_Checkpoint.md). Human UI/UAT approval is not asserted.
 
@@ -32,6 +34,16 @@ Current databases are `couple_private_space` and the isolated `couple_private_sp
 `.env.example` is documentation only: Spring does not load it automatically. A manually configured installation can export `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` and a separate `TEST_DB_URL`, then run `mvnw.cmd spring-boot:run`. Never use the development database for fixtures/tests.
 
 ## New checkout / portable bootstrap
+
+DEV-07 media setup on Windows (requires installed7-Zip):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-media-tools.ps1
+```
+
+Alternatively export `FFPROBE_PATH` and `FFMPEG_PATH` to installed compatible binaries. Keep `MEMORY_STORAGE_ROOT` private and outside static resources; preserve this directory together with the database for future backups. Accepted limits: JPG/JPEG/PNG/WebP10MB; MP4 H.2648-bit / optional AAC,180s/100MB; PDF/DOCX/XLSX/PPTX20MB;10 mixed files per memory. Documents download as attachments. Trash restore lasts72 hours; Empty Trash requires permanent-deletion confirmation. Primary-file purge does not prove old backup copies are erased. Total storage quota and backup-copy policy remain pending.
+
+Current DEV-07 regression command loads `scripts/local-env.ps1`, appends `?currentSchema=dev07_fresh_20261101` to `TEST_DB_URL`, then runs `mvnw.cmd -B -ntp test`. That isolated schema already exists on this machine; do not recreate it or point tests at the development database. Final results and graphical limitations: [DEV-07 checkpoint](docs/DEV-07_Checkpoint.md).
 
 Local credentials and installed-database selection are intentionally absent from Git. Do not copy another user's private `.local` folder into a checkout or reset an existing database to make setup work.
 
@@ -81,8 +93,9 @@ Flyway applies forward migrations and validates existing history; clean and auto
 ## Project layout and references
 
 - `src/main/java/com/couple/privatespace`: identity, pairing, home, chat, realtime and configuration.
+- `src/main/java/com/couple/privatespace/memory`: private memory uploads, lifecycle and physical cleanup.
 - `src/main/resources/static`: same-origin responsive UI.
-- `src/main/resources/db/migration`: V1–V15 append-only schema history.
+- `src/main/resources/db/migration`: V1–V21 append-only schema history.
 - `src/test/java`: native authentication, pairing, Home/date, Chat, sticker and predecessor migration verification.
 - `scripts`: local bootstrap/provision/start/test helpers.
 - `docs`: requirements, contracts, task/checkpoint records, UI reference and evidence.

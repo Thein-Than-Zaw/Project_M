@@ -1,0 +1,36 @@
+-- DEV-08 / CALL-01–03: metadata only; no SDP, ICE or recorded media.
+CREATE TABLE call_session (
+ id UUID PRIMARY KEY,
+ space_id UUID NOT NULL REFERENCES couple_space(id),
+ caller_id UUID NOT NULL,
+ callee_id UUID NOT NULL,
+ mode VARCHAR(5) NOT NULL CHECK(mode IN ('VOICE','VIDEO')),
+ state VARCHAR(12) NOT NULL CHECK(state IN ('RINGING','CONNECTING','ACTIVE','RECONNECTING','ENDED','DECLINED','MISSED','CANCELLED','FAILED')),
+ caller_client UUID NOT NULL,
+ callee_client UUID,
+ caller_socket VARCHAR(128) NOT NULL,
+ callee_socket VARCHAR(128),
+ caller_connected BOOLEAN NOT NULL DEFAULT FALSE,
+ callee_connected BOOLEAN NOT NULL DEFAULT FALSE,
+ negotiation_id UUID,
+ created_at TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),
+ ring_deadline TIMESTAMPTZ NOT NULL,
+ accepted_at TIMESTAMPTZ,
+ connect_deadline TIMESTAMPTZ,
+ connected_at TIMESTAMPTZ,
+ recovery_deadline TIMESTAMPTZ,
+ caller_seen TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),
+ callee_seen TIMESTAMPTZ,
+ ended_at TIMESTAMPTZ,
+ end_reason VARCHAR(40),
+ version BIGINT NOT NULL DEFAULT 0 CHECK(version>=0),
+ FOREIGN KEY(space_id,caller_id) REFERENCES couple_membership(space_id,user_id),
+ FOREIGN KEY(space_id,callee_id) REFERENCES couple_membership(space_id,user_id),
+ CHECK(caller_id<>callee_id),
+ CHECK(ring_deadline>created_at),
+ CHECK((state IN ('RINGING','CONNECTING','ACTIVE','RECONNECTING') AND ended_at IS NULL AND end_reason IS NULL) OR (state IN ('ENDED','DECLINED','MISSED','CANCELLED','FAILED') AND ended_at IS NOT NULL AND end_reason IS NOT NULL)),
+ CHECK(state='RINGING' OR state IN ('DECLINED','MISSED','CANCELLED','FAILED') OR (callee_client IS NOT NULL AND callee_socket IS NOT NULL AND accepted_at IS NOT NULL)),
+ CHECK(state NOT IN ('ACTIVE') OR (connected_at IS NOT NULL AND caller_connected AND callee_connected))
+);
+CREATE UNIQUE INDEX ux_call_one_live ON call_session(space_id) WHERE state IN ('RINGING','CONNECTING','ACTIVE','RECONNECTING');
+CREATE INDEX ix_call_recent ON call_session(space_id,created_at DESC,id DESC);

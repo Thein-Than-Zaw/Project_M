@@ -1,0 +1,25 @@
+# Loopback-only development relay. Provider/production settings are a separate deployment decision.
+services:
+  turn:
+    image: coturn/coturn:4.18.0-r0
+    restart: unless-stopped
+    command:
+      - --listening-port=3478
+      - --min-port=49160
+      - --max-port=49200
+      - --external-ip=127.0.0.1
+      - --realm=couple.local
+      - --use-auth-secret
+      - --static-auth-secret=${TURN_SHARED_SECRET:?Run scripts/start-turn-local.ps1}
+      - --fingerprint
+      - --no-cli
+      - --no-tls
+      - --no-dtls
+      - --no-multicast-peers
+      - --allow-loopback-peers
+      - --log-file=stdout
+      - --simple-log
+    ports:
+      - 127.0.0.1:3478:3478/udp
+      - 127.0.0.1:3478:3478/tcp
+      - 127.0.0.1:49160-49200:49160-49200/udp

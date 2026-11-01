@@ -1,0 +1,6 @@
+2026-11-01T15:28:29.864+06:30  INFO 31956 --- [couple-private-space] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 21 migrations (execution time 00:00.134s)
+2026-11-01T15:28:29.916+06:30  INFO 31956 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 19
+2026-11-01T15:28:29.980+06:30  INFO 31956 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "20 - create call session"
+2026-11-01T15:28:30.262+06:30  INFO 31956 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "21 - create call command receipt"
+2026-11-01T15:28:30.307+06:30  INFO 31956 --- [couple-private-space] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v21 (execution time 00:00.265s)
+2026-11-01T15:28:36.494+06:30  INFO 31956 --- [couple-private-space] [           main] c.c.p.PrivateSpaceApplication            : Started PrivateSpaceApplication in 23.11 seconds (process running for 24.59)
