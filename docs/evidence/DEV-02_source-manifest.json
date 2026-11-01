@@ -1,0 +1,173 @@
+﻿{
+    "checkpoint":  "DEV-02 Login Sign Up",
+    "files":  [
+                  {
+                      "sha256":  "7cb0457aefc44dab23683c1ba61933f8ef8235f9cca4cdad9577f327722702e5",
+                      "path":  ".env.example"
+                  },
+                  {
+                      "sha256":  "c1ce5fa2f33c092583641db4b96c82be5a47d4272608900124f99dec9d34bbbe",
+                      "path":  ".gitignore"
+                  },
+                  {
+                      "sha256":  "149c61fc57ea014600bba4c9cfe0a959ce1f838097c2b3682ddf217c6c91bdad",
+                      "path":  ".mvn/maven.config"
+                  },
+                  {
+                      "sha256":  "c736d2eca5cb41965652ba11f0b7b18b5baa60b5de8fde5b5683cac6a76b72d3",
+                      "path":  ".mvn/wrapper/maven-wrapper.properties"
+                  },
+                  {
+                      "sha256":  "cae96cef89ebea3531221f4ae17c23cf8edf67d00eae8306d4186ae1bbed4d02",
+                      "path":  "mvnw"
+                  },
+                  {
+                      "sha256":  "46eedb8419bd14fe70d5bb2916d7b6f51806e51b39d5b76a42610384ca929c1c",
+                      "path":  "mvnw.cmd"
+                  },
+                  {
+                      "sha256":  "c584a844479037ca630fb2b7b0f65b21c47b003434ef43dde3eafaa5f98d56b9",
+                      "path":  "pom.xml"
+                  },
+                  {
+                      "sha256":  "c24deaba31950ca7893f3538b011d92e72352f3c8fc22027e4d1adfc89dc63a3",
+                      "path":  "scripts/bootstrap-tools.ps1"
+                  },
+                  {
+                      "sha256":  "858949e86e7839833be00d4db0c625d40dc7c8b477aad59340be45932fc01e93",
+                      "path":  "scripts/init-local.ps1"
+                  },
+                  {
+                      "sha256":  "45e20f257c98baf417a9dbc46d3ac5335654de0417a834692eb16cf0f2177f2b",
+                      "path":  "scripts/IssueSetupToken.java"
+                  },
+                  {
+                      "sha256":  "94e0dc55415c94073ca99c7130842a6e8ca412ff3f174ac9e88d9703bbefd857",
+                      "path":  "scripts/issue-setup-token.ps1"
+                  },
+                  {
+                      "sha256":  "ad9942cd235e7927053dfcd6b6ab85572c959175347f7820a14a94f1ee61a470",
+                      "path":  "scripts/local-env.ps1"
+                  },
+                  {
+                      "sha256":  "9fdd69d83539f7c4dbf8ce9cfedfa0befd6e3d3b590d2978378bde2d6c445836",
+                      "path":  "scripts/ProvisionLocalDatabase.java"
+                  },
+                  {
+                      "sha256":  "2a00858511f3ec50d0e4613be1856561ed8bbac389fe5a0a397db7e8ad518da1",
+                      "path":  "scripts/start-local.ps1"
+                  },
+                  {
+                      "sha256":  "4a68f146b0a27550af55730a643a1783f4575e1888011e9c7c8b0cad04a2c98a",
+                      "path":  "scripts/stop-local-db.ps1"
+                  },
+                  {
+                      "sha256":  "b95bbc4815bd2d35190d8d63cf3c515338b271c11794740f2e9241a523389af5",
+                      "path":  "scripts/test-local.ps1"
+                  },
+                  {
+                      "sha256":  "d52a21c4cee090833ea1d9a4dcc7b3d15dcada1fa0f4c4fc989be5bdb25f8f5f",
+                      "path":  "src/main/java/com/couple/privatespace/config/SecurityConfig.java"
+                  },
+                  {
+                      "sha256":  "0d7211bfcc6672ff395ad35d53d30a6396c6ca08eed84c718b8ef80348679408",
+                      "path":  "src/main/java/com/couple/privatespace/identity/AccountPrincipal.java"
+                  },
+                  {
+                      "sha256":  "602b6b480a16848441cfa50a530a8efd8837729db93f926f98f1c3bdf79ed91f",
+                      "path":  "src/main/java/com/couple/privatespace/identity/AccountStore.java"
+                  },
+                  {
+                      "sha256":  "79ad6f5696644da5421835cea7eed4f5065cec1f9924d3046f8fc9cc849b41f6",
+                      "path":  "src/main/java/com/couple/privatespace/identity/ApiFailure.java"
+                  },
+                  {
+                      "sha256":  "d290ddedf456aeb8921c0c69056d962b8ebc36640cd2caf0909a6a0945c6056e",
+                      "path":  "src/main/java/com/couple/privatespace/identity/AuthController.java"
+                  },
+                  {
+                      "sha256":  "c8e97f554a0dc22e98b467080062bedcf205bd3dcd210d5feab40221e800bf36",
+                      "path":  "src/main/java/com/couple/privatespace/identity/AuthErrorHandler.java"
+                  },
+                  {
+                      "sha256":  "83c18799e3f578196bd85da59b18f7e453fb0a5867c08171705c301104510fe8",
+                      "path":  "src/main/java/com/couple/privatespace/identity/AuthFilters.java"
+                  },
+                  {
+                      "sha256":  "c4aba75ad5c8523dacfe24039f712ccb6892b8f24bd7ae0906135915360204b3",
+                      "path":  "src/main/java/com/couple/privatespace/identity/AuthRateLimiter.java"
+                  },
+                  {
+                      "sha256":  "0fc8711a077c8a2c52806e479e5c51386bef153b9f0dfa1a9bf7189d9b437638",
+                      "path":  "src/main/java/com/couple/privatespace/identity/RegistrationService.java"
+                  },
+                  {
+                      "sha256":  "48026755256f8e29141b260efded9f7e56c5ec339d461cb38c3be5e51b19b7ad",
+                      "path":  "src/main/java/com/couple/privatespace/PrivateSpaceApplication.java"
+                  },
+                  {
+                      "sha256":  "4a6d1857bda9eafd0ca75b26335cfac643a5f0ba8a64e743ba58b1e9e0792724",
+                      "path":  "src/main/resources/application.yml"
+                  },
+                  {
+                      "sha256":  "a5a14835bc02b3f57603fbbfe5c8b71c5c90b76e37a74399adc397e810e51fdf",
+                      "path":  "src/main/resources/db/migration/V1__create_app_user.sql"
+                  },
+                  {
+                      "sha256":  "6a301359adcf76c9564993687f7f35c89ae86fb64485c4f38a7dbb1b52813edc",
+                      "path":  "src/main/resources/db/migration/V2__create_couple_space.sql"
+                  },
+                  {
+                      "sha256":  "2a5dc83f43426c6b5dd4e95db05ffbd70b03fdc97231696184ec49dddbdd5639",
+                      "path":  "src/main/resources/db/migration/V3__create_couple_membership.sql"
+                  },
+                  {
+                      "sha256":  "f681a4def45b4680da5ff5a54926130bff5ef08bf64b1e2a088008e636f2c512",
+                      "path":  "src/main/resources/db/migration/V4__add_account_security_state.sql"
+                  },
+                  {
+                      "sha256":  "89ca4d76a469dcbf3fcb62e24976f0073c879cadbe3250fc712f6ce88d15572c",
+                      "path":  "src/main/resources/db/migration/V5__create_registration_gate.sql"
+                  },
+                  {
+                      "sha256":  "ab30d7acea8adf0370181b1ddbd55b39c73c46ae9c0eefa2a179b6d6a6a5b786",
+                      "path":  "src/main/resources/db/migration/V6__create_registration_token.sql"
+                  },
+                  {
+                      "sha256":  "600b9d483e513a611cc75cae974a8fb5ef84a58cb25508e27590f285d01a8b28",
+                      "path":  "src/main/resources/static/auth.css"
+                  },
+                  {
+                      "sha256":  "edb9f8fe0957c55bf2d186bbc07fcaf545bf31965d6712381e01ee05a3ef0169",
+                      "path":  "src/main/resources/static/auth.js"
+                  },
+                  {
+                      "sha256":  "e3cd05e8894ede9b8e29be19d0de80bdff54d547c41b17d7bf26cd1665ffe841",
+                      "path":  "src/main/resources/static/index.html"
+                  },
+                  {
+                      "sha256":  "f0a993446db3b3a37d8a9849204cdcb45634a6c7cc94becb65f11cde37c37e21",
+                      "path":  "src/main/resources/static/space.html"
+                  },
+                  {
+                      "sha256":  "f737f3a6b4c5d94e02ddf69cd1164dec174fa8fd108fd97b76a653c6491466d4",
+                      "path":  "src/main/resources/static/space.js"
+                  },
+                  {
+                      "sha256":  "021707906600299c24ff3d028e6c7ec37eae0d084a94701bee9a27c0bb8c1f5a",
+                      "path":  "src/test/java/com/couple/privatespace/AuthenticationIntegrationTest.java"
+                  },
+                  {
+                      "sha256":  "8d00e11918aa3a1213119d72b30550d730b249753144f26026d8d6454857515a",
+                      "path":  "src/test/java/com/couple/privatespace/FoundationIntegrationTest.java"
+                  },
+                  {
+                      "sha256":  "ed123ea4fad48883985701095bbb95b9c92ece992895fdd4ea0d4f3ae289e3d5",
+                      "path":  "src/test/resources/application-test.yml"
+                  }
+              ],
+    "uiReferenceSha256":  "508071809dfa653ddf0970e30eca3de4c0d7b74fbe2ba2038f31934efc5e895a",
+    "sourceIdentity":  "Local source; no Git repository",
+    "buildSha256":  "9a3eeed015f214fd0438c5c4f466882e2b77d69f2ffe38cc33ff48af5cff661f",
+    "requirementSha256":  "87cc044baac1b80dda1fee877ced605fa0059da4abbc0d953e6cf048be196ff6"
+}

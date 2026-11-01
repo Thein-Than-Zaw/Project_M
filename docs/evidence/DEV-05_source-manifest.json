@@ -1,0 +1,299 @@
+{
+  "task": "DEV-05",
+  "recordedAt": "2026-11-01T10:44:54.5310736+06:30",
+  "baseCommit": "31f978961dd13f6ee1aea75c5ccc40555e638903",
+  "finalHead": "31f978961dd13f6ee1aea75c5ccc40555e638903",
+  "branch": "main",
+  "sourceState": "uncommitted; preexisting README add/add conflict preserved",
+  "nativeTestCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File .local/dev05-final-tests.ps1; mvnw -B -ntp verify",
+  "testDatabase": "PostgreSQL18.6; couple_private_space_test; currentSchema=dev05_fresh_20261101",
+  "testResult": "30 passed;0 failures/errors/skips;10:27:56+06:30",
+  "initialNativeJarSha256": "c80ae95b10bc8a28cdcfaae5f90cae82d7f8a4807abee29d16b63023803641b0",
+  "finalTestedJarSha256": "0284e454f8d939aa3f60e9c6616ae4f84572b50069c1a04185b5a47f60c79839",
+  "runtimeEvidence": "DEV-05_runtime-jar-match.txt:99 files0 mismatch; scripts/start-local.ps1 on8080",
+  "browserEvidence": "DEV-05_chat-mobile-final.png, DEV-05_chat-desktop-final.png, DEV-05_retry-failed-final.png; background-tab qualification pending",
+  "sourceFilesChangedAfterFinalNativeRun": 0,
+  "backup": {
+    "path": ".local/backups/dev05-before-migrations.dump",
+    "bytes": 29403,
+    "sha256": "d44c1a43e348bda92a3ef49e70878524f7b55b6d0c6a2a7da5b8fadba5731229"
+  },
+  "files": [
+    {
+      "path": ".env.example",
+      "sha256": "cff56295f10a8dfeb63c67611e120dbbba4610139690849a3f71b7c8c8183bf0"
+    },
+    {
+      "path": "pom.xml",
+      "sha256": "d460372e39699622de6b71c461e56535a7e767ddac811cb3b2e67b698c82ca1f"
+    },
+    {
+      "path": "scripts/bootstrap-tools.ps1",
+      "sha256": "c24deaba31950ca7893f3538b011d92e72352f3c8fc22027e4d1adfc89dc63a3"
+    },
+    {
+      "path": "scripts/init-local.ps1",
+      "sha256": "3f66e36c9cd80fe659b766fef12c1ce7584df4529a6654529cfd22ec01b3da1c"
+    },
+    {
+      "path": "scripts/issue-setup-token.ps1",
+      "sha256": "94e0dc55415c94073ca99c7130842a6e8ca412ff3f174ac9e88d9703bbefd857"
+    },
+    {
+      "path": "scripts/IssueSetupToken.java",
+      "sha256": "45e20f257c98baf417a9dbc46d3ac5335654de0417a834692eb16cf0f2177f2b"
+    },
+    {
+      "path": "scripts/local-env.ps1",
+      "sha256": "db48ac60dd46f9d9cf21aca61f93f47df70a258317472c737dd093649df95890"
+    },
+    {
+      "path": "scripts/ProvisionLocalDatabase.java",
+      "sha256": "322581f9f2b30fcc1882584268f6182bf2c36ad5753eaf10c394c0f8fcee7ec3"
+    },
+    {
+      "path": "scripts/start-local.ps1",
+      "sha256": "2a00858511f3ec50d0e4613be1856561ed8bbac389fe5a0a397db7e8ad518da1"
+    },
+    {
+      "path": "scripts/stop-local-db.ps1",
+      "sha256": "964d4d88a77816c7d24b17aedeadd8751b7b665add609409f0b387766b659b93"
+    },
+    {
+      "path": "scripts/test-local.ps1",
+      "sha256": "b95bbc4815bd2d35190d8d63cf3c515338b271c11794740f2e9241a523389af5"
+    },
+    {
+      "path": "scripts/VerifyLocalDatabase.java",
+      "sha256": "ca0bfbf62e03b20a2f8b022f8800b92850e06f9a43007e4941b922f3d18c76f2"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatController.java",
+      "sha256": "574b425b66e71e16b590f1cce7f1ae6ba817793562e7ec3f8a10c727454f6505"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatLimiter.java",
+      "sha256": "46ab442ed6ec498e7924b3ef0d225244257312bca4397ab3224e897b636681ef"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatNotifications.java",
+      "sha256": "752c17476f0d369999e04f64366a4855014de704d7048c38bc5aa53bd6ea87c2"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/chat/ChatService.java",
+      "sha256": "ebf92f6735652b572d16ff4e9973bef7b3d89151d98e94cc27005c27f27a442a"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/config/SecurityConfig.java",
+      "sha256": "c686cc51176f324ca4ab0ff52700e7b2846c41ecb5fe977526c668ca77867273"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/home/DatePolicy.java",
+      "sha256": "33107a90634c0db120c1c3b99b577401a733c14dae9f661a4563ac697ee416bd"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/home/HomeController.java",
+      "sha256": "f05553431a840faf9bb40d8118680e9f2df779f54c464914dac2de3efda62bfe"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/home/HomeService.java",
+      "sha256": "b06b0093f3b6dc9fb02fb057a9153f0b42bdc3637990fde6dc85d9491e0b6148"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AccountPrincipal.java",
+      "sha256": "0d7211bfcc6672ff395ad35d53d30a6396c6ca08eed84c718b8ef80348679408"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AccountStore.java",
+      "sha256": "602b6b480a16848441cfa50a530a8efd8837729db93f926f98f1c3bdf79ed91f"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/ApiFailure.java",
+      "sha256": "79ad6f5696644da5421835cea7eed4f5065cec1f9924d3046f8fc9cc849b41f6"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthController.java",
+      "sha256": "d290ddedf456aeb8921c0c69056d962b8ebc36640cd2caf0909a6a0945c6056e"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthErrorHandler.java",
+      "sha256": "c8e97f554a0dc22e98b467080062bedcf205bd3dcd210d5feab40221e800bf36"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthFilters.java",
+      "sha256": "b8d1e89f5dd3b6e647c03e5fb806ae6e1f9b93d21997878af1168756178108c6"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/AuthRateLimiter.java",
+      "sha256": "859071f207805590dc07a5c5507ff8ce4b231ba09d05576f82c75bdcb9c7d7df"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/identity/RegistrationService.java",
+      "sha256": "0fc8711a077c8a2c52806e479e5c51386bef153b9f0dfa1a9bf7189d9b437638"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/pairing/PairingController.java",
+      "sha256": "12f9c90b96ab3e750a9a4b82c540a2ad1aaf23aa86ede2b7f1a58d1bb7475d39"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/pairing/PairingService.java",
+      "sha256": "17e9aaeaa735ca263136b7c65347d3a593481b37c723216c1042283dc4e058ec"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/PrivateSpaceApplication.java",
+      "sha256": "48026755256f8e29141b260efded9f7e56c5ec339d461cb38c3be5e51b19b7ad"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/PairingNotifications.java",
+      "sha256": "f1a5e532eeb37360e29622e99e0e9d96413712f08b00089a4d635489c8688f08"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/PairingSocketConfig.java",
+      "sha256": "f3b6ae6e2da869097e18e0009d3d4c6c273f35b8a25084c713883beaf91973b6"
+    },
+    {
+      "path": "src/main/java/com/couple/privatespace/realtime/SocketRegistry.java",
+      "sha256": "f3c8f70f41fce33f7c2148a2bbfbde0c37891ca54d5957b30444fb3eb015d54d"
+    },
+    {
+      "path": "src/main/resources/application.yml",
+      "sha256": "ae45f87cf764095a7b329ba7c0801aab7d4f114eabf1c2289aa3df8cf69085fc"
+    },
+    {
+      "path": "src/main/resources/db/migration/V1__create_app_user.sql",
+      "sha256": "a5a14835bc02b3f57603fbbfe5c8b71c5c90b76e37a74399adc397e810e51fdf"
+    },
+    {
+      "path": "src/main/resources/db/migration/V10__create_special_date.sql",
+      "sha256": "05eccedcdc3552e10a7016dff7422d24674ac36ecc69a0d9ef137c0ad6d57db4"
+    },
+    {
+      "path": "src/main/resources/db/migration/V11__create_special_date_creation_receipt.sql",
+      "sha256": "21c9dab4637b1460525d7c31c3ce90f117112b0b75b1619312a9f96b8f477b6c"
+    },
+    {
+      "path": "src/main/resources/db/migration/V12__create_chat_conversation.sql",
+      "sha256": "5e2ffcc32d051d4947be5dd64244266d6031f97559a1bf52920e95ff08a11fa4"
+    },
+    {
+      "path": "src/main/resources/db/migration/V13__create_chat_message.sql",
+      "sha256": "fbc8948ca11ea37a18b05fd8626673d5734bc161b520ae8cdcca41da6ab4cd06"
+    },
+    {
+      "path": "src/main/resources/db/migration/V2__create_couple_space.sql",
+      "sha256": "6a301359adcf76c9564993687f7f35c89ae86fb64485c4f38a7dbb1b52813edc"
+    },
+    {
+      "path": "src/main/resources/db/migration/V3__create_couple_membership.sql",
+      "sha256": "2a5dc83f43426c6b5dd4e95db05ffbd70b03fdc97231696184ec49dddbdd5639"
+    },
+    {
+      "path": "src/main/resources/db/migration/V4__add_account_security_state.sql",
+      "sha256": "f681a4def45b4680da5ff5a54926130bff5ef08bf64b1e2a088008e636f2c512"
+    },
+    {
+      "path": "src/main/resources/db/migration/V5__create_registration_gate.sql",
+      "sha256": "89ca4d76a469dcbf3fcb62e24976f0073c879cadbe3250fc712f6ce88d15572c"
+    },
+    {
+      "path": "src/main/resources/db/migration/V6__create_registration_token.sql",
+      "sha256": "ab30d7acea8adf0370181b1ddbd55b39c73c46ae9c0eefa2a179b6d6a6a5b786"
+    },
+    {
+      "path": "src/main/resources/db/migration/V7__create_pairing_invitation.sql",
+      "sha256": "30604a8d7122c133c06a86298bd4663b5da333fa5a8439f3a698443b8b6d6eec"
+    },
+    {
+      "path": "src/main/resources/db/migration/V8__create_pairing_confirmation.sql",
+      "sha256": "3920e6b080d8b223bead50c0b6b2ae7443c5e8b9665262892517cb81d34ffb8b"
+    },
+    {
+      "path": "src/main/resources/db/migration/V9__create_pairing_join_receipt.sql",
+      "sha256": "6f2d0fb2183ae72760fc9e02daa2495e5828263d63912df6d3a091efae935635"
+    },
+    {
+      "path": "src/main/resources/static/auth.css",
+      "sha256": "600b9d483e513a611cc75cae974a8fb5ef84a58cb25508e27590f285d01a8b28"
+    },
+    {
+      "path": "src/main/resources/static/auth.js",
+      "sha256": "410ee267d3c5b7b7e05b4b1772c5b573f6b8e74820fb3a8f38e38e94a7ea3a0b"
+    },
+    {
+      "path": "src/main/resources/static/chat-socket.js",
+      "sha256": "ab56eaeafcf9c5b834cd754b2682bf5e0e1aa4a833dbffaada59261f9e3e30bd"
+    },
+    {
+      "path": "src/main/resources/static/chat.css",
+      "sha256": "ea303bdb9b4b70970c153e3b47d7d8b6a67b26d51c799d9bf70bc04c1e7631c3"
+    },
+    {
+      "path": "src/main/resources/static/chat.html",
+      "sha256": "942c4b979b10e98f1133bbe9f97c9d793ab7fa8182987ebaa36ce9a7e01f2698"
+    },
+    {
+      "path": "src/main/resources/static/chat.js",
+      "sha256": "cc478034e3179ae8113bb247a265767777980c5b338368c7f3f737ff6580d938"
+    },
+    {
+      "path": "src/main/resources/static/home.css",
+      "sha256": "359bd58a0b27ae32debfaba39b4ba4e1658fb1647295121844a3d3370e7af280"
+    },
+    {
+      "path": "src/main/resources/static/home.html",
+      "sha256": "50a82a0de3fb87be1ce415707511e5226760383a7120717eb6fb5b9cbb9cc1d5"
+    },
+    {
+      "path": "src/main/resources/static/home.js",
+      "sha256": "ed454c5ac0adb38a101037bdcc7a864b5df6045120cbda10bd384f3dc5fdb702"
+    },
+    {
+      "path": "src/main/resources/static/index.html",
+      "sha256": "e3cd05e8894ede9b8e29be19d0de80bdff54d547c41b17d7bf26cd1665ffe841"
+    },
+    {
+      "path": "src/main/resources/static/pairing-socket.js",
+      "sha256": "30d70ffbbba3d909a74488ad11bc5e538075b22d74e0f1161d8a1073fd1cfc54"
+    },
+    {
+      "path": "src/main/resources/static/pairing.css",
+      "sha256": "83ac23d8cc983182e30980fa914a17f912b29d46ebe2ec9ebebdae9d68e0b291"
+    },
+    {
+      "path": "src/main/resources/static/space.html",
+      "sha256": "44d6c6622ef7b23cc108025d7b91c58902677464aada7b62cbb5184597b1e869"
+    },
+    {
+      "path": "src/main/resources/static/space.js",
+      "sha256": "7c0996013db26ffd7b7eb393c58e29d8163cbde4748eebf6f8963c93848833b8"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/AuthenticationIntegrationTest.java",
+      "sha256": "021707906600299c24ff3d028e6c7ec37eae0d084a94701bee9a27c0bb8c1f5a"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/ChatIntegrationTest.java",
+      "sha256": "2910d285954256e7aabc602393fe2b413923ccaaeaf9c9edc7b1b8a1451b940c"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/DatePolicyTest.java",
+      "sha256": "d3440d16847f493dc69b31e80863f927916b7653363606edbd1c04d246637a85"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/FoundationIntegrationTest.java",
+      "sha256": "6ad2e51c4cfa1306757635e56e2f7599dfaaa7a6aa2c5cc1bcb464bcd380778b"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/HomeIntegrationTest.java",
+      "sha256": "3c4e07614ccb2c156dc9d810602f390af8455f72a2cea926a2775ea772320847"
+    },
+    {
+      "path": "src/test/java/com/couple/privatespace/PairingIntegrationTest.java",
+      "sha256": "646beaca3207e9757ab66dcf21c5fe1b6f637caf081282bc21489648fe02bea9"
+    },
+    {
+      "path": "src/test/resources/application-test.yml",
+      "sha256": "f7676c50ea969cb29aa3ea1b0b79f6a2e74b6188e6f100d15830f3fb925bf9bd"
+    }
+  ]
+}

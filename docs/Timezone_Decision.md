@@ -1,0 +1,9 @@
+# Myanmar timezone decision / CUR-TZ-001
+
+Date:1 November2026,01:26 Asia/Rangoon. Source: owner's direct instruction to use Myanmar Standard Time in response to the DEV-03 timezone question. Q06 timezone portion CONFIRMED; other proposed business rules are not approved by this decision.
+
+Before: no configured couple timezone; Q06 timezone unresolved. After: `app.couple.timezone: Asia/Yangon` in src/main/resources/application.yml, matching UTC+06:30. Updated current open-rule register and engineering profile. This is a configuration/design-context increment; existing pairing/date/counter/reminder features are not implemented by it. Future DEV-03/04 uses this zone for couple-local dates. Event instants continue UTC; no existing LocalDate/date field conversion, DB migration, installed PostgreSQL switch, host timezone change or running-service restart performed.
+
+Verification: inspect scoped diff and validate ZoneId/offset with existing local Java runtime. No new test suite needed for this reversible config/documentation change; previous DEV-02 full-build evidence is historical and is not relabeled as testing this new source state. Git is now present with preexisting modified/untracked files and a README merge conflict; those unrelated changes/conflicts are preserved. No commit/merge attempted. Review: AI self-review; human timezone decision is the actual user instruction, not inferred UI approval.
+
+Code status: CONFIGURED for subsequent application startup/consumer implementation. Date-feature runtime: NOT IMPLEMENTED. Code record saved locally; external Drive sync remains pending because no authorized destination exists. Source package NOT_DUE. Recovery: revert this isolated setting/document decision if owner changes timezone; future persisted-space changes require explicit forward data handling. Next: continue DEV-03 using the confirmed timezone; no timezone reconfirmation needed.

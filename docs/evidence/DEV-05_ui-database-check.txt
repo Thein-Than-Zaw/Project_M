@@ -1,0 +1,2 @@
+Background fixture delivered=true read=true
+Synthetic UI messages=70 distinctKeys=70 latestSequence=70 queuedFixtureRows=1 readMessages=16

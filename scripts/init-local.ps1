@@ -1,6 +1,19 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 Set-Location $projectRoot
+$databaseSelectionPath = Join-Path $projectRoot '.local/database.json'
+if (Test-Path $databaseSelectionPath) {
+    $databaseSelection = Get-Content -Raw $databaseSelectionPath | ConvertFrom-Json
+    if ($databaseSelection.mode -eq 'installed') {
+        . "$PSScriptRoot/local-env.ps1"
+        $driver = Get-ChildItem '.tools/m2/org/postgresql/postgresql' -Filter 'postgresql-*.jar' -Recurse | Select-Object -First 1
+        if (!$driver) { throw 'Restore Maven dependencies first.' }
+        & java --class-path $driver.FullName scripts/VerifyLocalDatabase.java
+        if ($LASTEXITCODE -ne 0) { throw 'Installed database verification failed. Check the PostgreSQL Windows service; no portable fallback was started.' }
+        return
+    }
+    if ($databaseSelection.mode -ne 'portable' -or [int]$databaseSelection.port -ne 54329) { throw 'Invalid portable database selection.' }
+}
 $pgBin = Join-Path $projectRoot '.tools/pgsql/bin'
 $pgData = Join-Path $projectRoot '.local/pgdata'
 if (!(Test-Path "$pgBin/initdb.exe")) { throw 'Run scripts/bootstrap-tools.ps1 first.' }

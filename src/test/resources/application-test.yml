@@ -3,3 +3,12 @@ spring:
     url: ${TEST_DB_URL}
 server:
   port: 18080
+  servlet:
+    session:
+      timeout: 1m
+app:
+  pairing:
+    request-limit: 200
+  auth:
+    login-ip-limit: 200
+    registration-ip-limit: 100

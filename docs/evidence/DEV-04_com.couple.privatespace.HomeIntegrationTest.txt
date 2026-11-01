@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.couple.privatespace.HomeIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.324 s -- in com.couple.privatespace.HomeIntegrationTest

@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.UUID;
 import java.util.concurrent.*;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class FoundationIntegrationTest {
     @Autowired DataSource dataSource;
     private final HttpClient http = HttpClient.newHttpClient();
+
+    @BeforeEach void requireIsolatedTestDatabase() throws Exception {
+        try (var db = dataSource.getConnection(); var row = db.createStatement().executeQuery("SELECT current_database()")) {
+            assertTrue(row.next());
+            assertTrue(row.getString(1).endsWith("_test"), "Refusing fixture writes outside a dedicated _test database");
+        }
+    }
 
     @Test void healthAndPrivateAccessBoundary() throws Exception {
         var health = get("/actuator/health/readiness");
@@ -41,10 +49,13 @@ class FoundationIntegrationTest {
             db.setAutoCommit(false);
             try {
                 try (var rows = db.createStatement().executeQuery("SELECT count(*) FROM flyway_schema_history WHERE success AND version IS NOT NULL")) {
-                    assertTrue(rows.next()); assertEquals(3, rows.getInt(1));
+                    assertTrue(rows.next()); assertEquals(13, rows.getInt(1)); // DEV-05 adds V12–V13 forward migrations.
                 }
                 insertUser(db, UUID.randomUUID(), 1, "A@example.invalid", "2020-01-01");
                 insertUser(db, UUID.randomUUID(), 2, "B@example.invalid", "2020-01-02");
+                try (var row = db.createStatement().executeQuery("SELECT display_name FROM app_user WHERE account_slot=1")) {
+                    assertTrue(row.next()); assertEquals("စမ်းသပ် 🌸", row.getString(1));
+                }
                 expectSqlState(db, "23514", () -> insertUser(db, UUID.randomUUID(), 3, "C@example.invalid", "2020-01-01"));
                 expectSqlState(db, "23505", () -> insertUser(db, UUID.randomUUID(), 2, "D@example.invalid", "2020-01-01"));
                 expectSqlState(db, "23502", () -> insertUser(db, UUID.randomUUID(), 1, "E@example.invalid", null));
@@ -65,11 +76,28 @@ class FoundationIntegrationTest {
         try (var a = dataSource.getConnection(); var b = dataSource.getConnection()) {
             a.setAutoCommit(false); b.setAutoCommit(false);
             try (var sql = b.createStatement()) { sql.execute("SET lock_timeout = '5s'"); }
+            int waitingPid;
+            try (var row = b.createStatement().executeQuery("SELECT pg_backend_pid()")) {
+                row.next(); waitingPid = row.getInt(1);
+            }
             insertUser(a, first, 1, "race-a@example.invalid", "2020-01-01");
             var attempt = pool.submit(() -> {
                 try { insertUser(b, second, 1, "race-b@example.invalid", "2020-01-01"); b.commit(); return "COMMITTED"; }
                 catch (SQLException error) { b.rollback(); return error.getSQLState(); }
             });
+            boolean observedLockWait = false;
+            long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(3);
+            try (var observer = dataSource.getConnection(); var query = observer.prepareStatement(
+                    "SELECT wait_event_type FROM pg_stat_activity WHERE pid = ?")) {
+                query.setInt(1, waitingPid);
+                while (System.nanoTime() < deadline) {
+                    try (var row = query.executeQuery()) {
+                        if (row.next() && "Lock".equals(row.getString(1))) { observedLockWait = true; break; }
+                    }
+                    Thread.sleep(25);
+                }
+            }
+            assertTrue(observedLockWait, "Second independent transaction must contend for the uncommitted slot");
             a.commit();
             assertEquals("23505", attempt.get(10, TimeUnit.SECONDS));
         } finally {

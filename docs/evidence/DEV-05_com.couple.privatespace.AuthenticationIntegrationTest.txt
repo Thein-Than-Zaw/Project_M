@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.couple.privatespace.AuthenticationIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 94.30 s -- in com.couple.privatespace.AuthenticationIntegrationTest

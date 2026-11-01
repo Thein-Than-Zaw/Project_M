@@ -1,4 +1,16 @@
-# Engineering profile — DEV-01
+# Engineering profile — current DEV-05
+
+Current Chat update (1 November2026): DEV-05 core implemented; owner confirms4000 Unicode code points and Edit/Delete deferred. Native full30 PASS on18.6; freshV1–V13 and real dev11→13 verified with original-table fingerprints unchanged. Actual2 accounts/pairing preserved. No new application dependency; Node24.22.1 used only for syntax/test proxy. Final runtime/JAR identity0284e454… recorded in DEV-05_source-manifest.json;99 runtime/resource files matched. Browser core flows verified, true hidden-tab Read qualification DEV05-UI01 remains unverified; see DEV-05_Checkpoint.md. No UAT/release approval or Drive sync claimed. Older entries below are historical.
+
+Current feature update (1 November2026): DEV-04 core Home/Profile/Dates implemented; owner confirms Day1, non-leap Feb28 and BOTH members may delete Special Dates. V10/V11 applied on installed18.6; native22 tests PASS, separate empty-schema V1–V11 construction and observed9→11 dev upgrade verified. Final UI rerun at390/1440 CSS widths; actual browser midnight rollover not observed. No dependencies changed. See DEV-04_Checkpoint.md and DEV-04_source-manifest.json. Avatar/media summaries and reminder scope remain separate; full task PARTIAL / human UI/UAT undecided / release not ready. Historical entries below retain original evidence.
+
+Current database update (1 November2026): owner authorized installed PostgreSQL18.6 Windows service/5432. Native17.7 backup restored into verified-empty dev DB; every public row count/content fingerprint matched, including actual Flyway history and setup token. Separate fresh18.6 test DB applied V1–V9 and13 integration tests passed. Non-admin couple_app, UTF8/C, defaultUTC and explicit Asia/Yangon business calendar retained. Ignored .local/database.json selects installed5432; startup verifies without admin credentials/implicit fallback. Old portable server stopped, source data/private backup retained. Current evidence/source identity/run guide: PostgreSQL_18_Checkpoint.md, DB18_source-manifest.json and Installed_PostgreSQL_Setup.md. Earlier17.7 checkpoints remain historical.
+
+Historical DEV-03 update (1 November2026): persistent one-time pairing implemented; V7–V9, real user-queue STOMP with spring-security-messaging7.1.2 (same Boot BOM), explicit loopback origins/CONNECT CSRF/session revocation, minimal ACTIVE-only shared-home metadata. Branch main / HEAD31f9789 with dirty changes and pre-existing README merge conflict preserved; no commit/merge created. Original DEV-03 checkpoint used PostgreSQL17.7; current engine verification is recorded separately above. Not full-product/release readiness.
+
+Owner decision update,1 November2026: Couple business timezone confirmed as **Asia/Yangon (Myanmar Standard Time, UTC+06:30)** and configured at app.couple.timezone. Future pairing/calendar/reminder services must consume that setting; UTC persistence for event instants remains unchanged. No DB migration/data change or system-JVM timezone change is needed. Historical statements that couple timezone was unknown refer to the earlier checkpoint.
+
+Historical DEV-02 update: Login/Sign Up is implemented and verified in DEV-02_Checkpoint.md. Static auth UI follows UIs.pdf; identity uses Spring JdbcTemplate and native Spring Security form filter/session, adaptive PBKDF2, registration gate/token migrations V4–V6. Setup/partner registration codes implemented under scoped continuation, not full pairing. No new external service/dependency was added. Original foundation inventory below remains historical evidence. Current source/build identity: DEV-02_source-manifest.json; branch/Git/Drive/human acceptance remain unrecorded. DEV-01 source manifest is historical, not current code identity.
 
 Date: 1 November 2026, Asia/Rangoon. Mode: NEW application in existing `C:\Projects\Project_M`. Initial inventory: only requirements `.md` and `.docx`; no existing implementation, dependency manifest, Git repository, migration history, AGENTS.md, Maven, PostgreSQL or Docker discovered. No source/history was replaced. Git CLI exists; no Git initialization/commit/push was requested or performed.
 
@@ -12,7 +24,7 @@ Product authority: latest owner instruction → requirements v1.1 confirmed clau
 | Boot / build | Spring Boot 4.1.2; Maven 3.9.12; official Maven Wrapper 3.3.4 only-script |
 | Web | Spring MVC, embedded Tomcat; static HTML/CSS/JS; same origin |
 | Security | Spring Security 7.1.2 (Boot-managed); deny-by-default foundation; CSRF/cache headers/CSP enabled; no generated user |
-| Persistence | PostgreSQL 17.7 Windows amd64 portable engine; UTF8, C locale, UTC timestamps; port 54329 loopback |
+| Persistence | PostgreSQL18.6 installed Windows service/5432; UTF8/C project databases/defaultUTC; old17.7 data retained/stopped |
 | DB tooling | Flyway 12.4.0 + PostgreSQL module; PostgreSQL JDBC 42.7.14; all Boot BOM-managed |
 | ORM | Spring Data JPA starter; open-in-view off, ddl-auto validate; no entities/repositories yet |
 | Realtime | Spring WebSocket 7.0.10/STOMP dependencies only; endpoint not enabled until identity/authorization |

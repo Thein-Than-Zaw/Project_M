@@ -1,0 +1,167 @@
+Partner Home unread before opening Chat:
+- link "Skip to content":
+  - /url: "#main"
+- main:
+  - text: YOUR LITTLE WORLD
+  - heading "Your favorite place is a person." [level=1]
+  - paragraph: 1 November 2026 · Welcome home, Jamie
+  - button "Sign out"
+  - region "Home":
+    - text: OUR LITTLE FOREVER
+    - generic: Day
+    - strong: "366"
+    - heading "of choosing you." [level=2]
+    - paragraph: Together since 1 November 2025
+    - generic: Every day, a little more us.
+    - generic: somewhere with you
+    - link "◷ Our special dates":
+      - /url: "#dates"
+    - link "Edit my profile":
+      - /url: "#profile"
+    - link "Open chat 1":
+      - /url: /chat.html
+      - text: Open chat
+      - generic: "1"
+    - button "Video call · coming later" [disabled]
+    - heading "The next little celebration." [level=2]
+    - link "View our dates →":
+      - /url: "#dates"
+    - article:
+      - text: OUR ANNIVERSARY
+      - heading "1 November 2026" [level=3]
+      - paragraph: Today
+    - article:
+      - text: A DATE TO LOOK FORWARD TO
+      - heading "No special dates yet" [level=3]
+      - paragraph: Make room for your next little celebration.
+      - link "Open our dates →":
+        - /url: "#dates"
+    - heading "Little moments, kept forever." [level=2]
+    - text: ♡
+    - heading "Your memories will belong here." [level=3]
+    - paragraph: Memory uploads will be available in a later step. Your private space is ready for the moments ahead.
+    - button "Save a memory · coming later" [disabled]
+  - text: Only you two can make a place feel like this. ♡
+  - generic: Live updates connected.
+- navigation "Mobile navigation":
+  - link "⌂ Home":
+    - /url: "#home"
+    - text: ⌂
+    - generic: Home
+  - link "♡ Chat 1":
+    - /url: /chat.html
+    - text: ♡
+    - text: Chat
+    - generic: "1"
+  - link "◷ Our dates":
+    - /url: "#dates"
+    - text: ◷
+    - generic: Our dates
+  - link "⚙ My profile":
+    - /url: "#profile"
+    - text: ⚙
+    - generic: My profile
+
+Blocked-WS reload preserved unsent outbox:
+1 Nov 2026
+
+မင်္ဂလာပါ 🌸 Our little world is ready.
+
+10:11
+Read
+
+You are still my favorite person. ♡
+
+10:12
+
+Plain text: <img src=x onerror=alert(1)>
+
+10:13
+Read
+
+🌸
+
+10:15
+Read
+
+Queued while disconnected · one message only 🌸
+
+Queued · waiting for connection
+
+Restored transport: queued text committed exactly one bubble; missing peer message recovered:
+1 Nov 2026
+
+မင်္ဂလာပါ 🌸 Our little world is ready.
+
+10:11
+Read
+
+You are still my favorite person. ♡
+
+10:12
+
+Plain text: <img src=x onerror=alert(1)>
+
+10:13
+Read
+
+🌸
+
+10:15
+Read
+
+A saved hello while your connection was away. ♡
+
+10:17
+
+Queued while disconnected · one message only 🌸
+
+10:18
+Read
+
+Controlled database rejection: no Sent, retained text + Retry:
+1 Nov 2026
+
+မင်္ဂလာပါ 🌸 Our little world is ready.
+
+10:11
+Read
+
+You are still my favorite person. ♡
+
+10:12
+
+Plain text: <img src=x onerror=alert(1)>
+
+10:13
+Read
+
+🌸
+
+10:15
+Read
+
+A saved hello while your connection was away. ♡
+
+10:17
+
+Queued while disconnected · one message only 🌸
+
+10:18
+Read
+
+Retry me after the test database recovers.
+
+We could not save this message. Retry with the same message identifier.
+Retry
+
+Older history: latest50 then Load earlier =>62 messages, earliest Unicode message restored.
+
+FINAL BUILD: retained failed draft → Retry → server-confirmed Sent, same bubble:
+Final build retry after recovery.
+
+10:32
+Sent
+
+FINAL viewport evidence: mobile inner390x844/client390/scroll390/documentHeight844; desktop inner1440x960/client1425/scroll1425. No horizontal overflow. Final friendly DB-failure/Retry and committed two-way Unicode messages observed.
+Background-tab attempt: tool selected tab3 while peer tab2 had no direct interaction, but sender eventually showed Read. The automation did not supply verified DOM Page Visibility/window focus state (read-only evaluate document.hasFocus unavailable). Hidden-tab graphical AC remains unverified, not PASS; source guard and native recipient-ACK semantics reviewed/tested separately.

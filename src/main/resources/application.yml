@@ -28,11 +28,32 @@ server:
     include-binding-errors: never
   servlet:
     session:
+      tracking-modes: cookie
       timeout: 30m
       cookie:
         http-only: true
         same-site: lax
         secure: ${SESSION_COOKIE_SECURE:false}
+  tomcat:
+    max-http-form-post-size: 16KB
+app:
+  couple:
+    # Owner-confirmed Myanmar Standard Time; event timestamps remain UTC.
+    timezone: Asia/Yangon
+  pairing:
+    invite-hours: 24
+    request-limit: ${PAIRING_REQUEST_LIMIT:30}
+  chat:
+    sends-per-minute: ${CHAT_SENDS_PER_MINUTE:60}
+    acks-per-minute: ${CHAT_ACKS_PER_MINUTE:120}
+  websocket:
+    allowed-origins: http://localhost:${server.port},http://127.0.0.1:${server.port}
+  auth:
+    registration-token-hours: ${REGISTRATION_TOKEN_HOURS:24}
+    login-account-limit: ${LOGIN_ACCOUNT_LIMIT:10}
+    login-ip-limit: ${LOGIN_IP_LIMIT:30}
+    registration-ip-limit: ${REGISTRATION_IP_LIMIT:10}
+    rate-window-seconds: ${AUTH_RATE_WINDOW_SECONDS:900}
 management:
   endpoints:
     web:
