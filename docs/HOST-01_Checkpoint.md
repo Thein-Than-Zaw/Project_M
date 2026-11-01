@@ -1,5 +1,8 @@
 # HOST-01 Code Update Record / Human Review Pack
 
+Historical preparation checkpoint. For the subsequent live Render deployment and
+current URL/status, see [HOST-02](HOST-02_Deployment.md).
+
 2026-11-01, Asia/Yangon. Existing repository `C:/Projects/Project_M`.
 Owner authorized Docker/Render configuration and durable private storage after
 NEON-01, then explicitly requested an audit using the supplied Neon skill URL.

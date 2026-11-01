@@ -15,20 +15,20 @@ A private responsive web application for one couple and two accounts. Built with
 
 Both members can edit/delete Special Dates and Memories. Avatar uploads, typing/presence, general notification inbox and authentication recovery/settings remain separate work. Calls still require real browser/two-device/relay verification. Custom sticker uploads/marketplace and paid gifts are outside the current increment. Chat message Edit/Delete is deferred. In-app notifications only; no browser push. Content is private through server-side authorization; no app-wide E2EE claim is made.
 
-This is a local development build, not a production release. Actual background/unfocused-tab Read qualification in real Chrome/Edge remains pending (DEV05-UI01); see the [DEV-05 checkpoint](docs/DEV-05_Checkpoint.md). Human UI/UAT approval is not asserted.
+This remains a development/test deployment, not a production release. Actual background/unfocused-tab Read qualification in real Chrome/Edge remains pending (DEV05-UI01); see the [DEV-05 checkpoint](docs/DEV-05_Checkpoint.md). Human UI/UAT approval is not asserted.
 
 ## Run on the configured Windows development machine
 
 Render deployment continuation: [HOST-02 record](docs/HOST-02_Deployment.md).
 Docker/private storage preparation: [HOST-01 setup](docs/HOST-01_Render_Setup.md).
-Live private bucket upload/readback/privacy/deletion passed; Linux container and public deployment verification are pending;
+Live test URL: **https://couple-private-space.onrender.com**. Docker/Java21 startup and public HTTPS/security smoke checks passed; full user/media/call qualification is pending.
 the Render profile requires working object storage and never uses local files as durable media.
 
 Neon database setup and separate localhost port8082: see
 [NEON-01 setup checkpoint](docs/NEON-01_Setup.md). This connects the existing JVM
 app to Neon PostgreSQL; it does not host the JVM or media on Neon.
 
-Observed baseline: Oracle JDK27.0.1.0.3 (compiler release21), Spring Boot4.1.2, Maven3.9.12 and installed PostgreSQL18.6 on5432. Detailed versions: [Engineering profile](docs/Engineering_Profile.md). A Java21 runtime has not been independently tested here.
+Local baseline: Oracle JDK27.0.1.0.3 (compiler release21), Spring Boot4.1.2, Maven3.9.12 and installed PostgreSQL18.6 on5432. Render now runs Java21.0.13 against Neon PostgreSQL18.6 with private object storage. Detailed versions: [Engineering profile](docs/Engineering_Profile.md).
 
 From the project root:
 

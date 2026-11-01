@@ -1,5 +1,8 @@
 # HOST-01 — Render hosting preparation
 
+Preparation history below; the service is now live. Current deployment/access
+results and recovery notes: [HOST-02](HOST-02_Deployment.md).
+
 Owner authorization: continue Docker/hosting configuration and persistent media
 preparation after NEON-01. Existing Java/Spring Security/JDBC/Flyway/STOMP/WebRTC
 architecture and all owner-confirmed file/Trash rules are retained.

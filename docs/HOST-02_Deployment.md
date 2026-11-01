@@ -60,12 +60,53 @@ in the browser and explicitly chose **My Workspace → Project_M**.
 Evidence: `docs/evidence/HOST-02_unit-tests.txt`, `HOST-02_build.txt`,
 `HOST-02_blueprint-validation.json`, plus final source/deployment records.
 
-## Current status
+## Observed live deployment
 
-Publication/deployment in progress. Public URL and Linux runtime success are not
-asserted until observed. No new user account or real-content fixture has been
-created. Local Neon instance8082 was stopped before packaging; a successful hosted
-activation should use one app instance because STOMP routing is in-memory.
+- Published isolated branch `codex/render-hosting` to the existing GitHub repository;
+  deployed application source commit `0297f97919e86a34a85077a6ea682f6f8e3f7c84`.
+  Main was not changed. Subsequent evidence/tool-only commits do not trigger deploys.
+- Created **Free** Docker web service `srv-dbjisdqjnfac7384lr50` in the explicitly
+  selected Project_M Production environment. Existing SocialMedia is unchanged.
+  Automatic deploy is **no**; no paid disk/service or plan upgrade was requested.
+- URL: **https://couple-private-space.onrender.com** .
+  Dashboard: https://dashboard.render.com/web/srv-dbjisdqjnfac7384lr50 .
+- First deploy `dep-dbjiseajnfac7384lsd0`: **live**. Docker build/image upload passed.
+  Runtime log: Java **21.0.13**, non-root `couple`, active render profile, port10000,
+  Neon PostgreSQL18.6, existing Flyway schema and private S3 bucket initialized.
+  `Started PrivateSpaceApplication in 139.001 seconds` on first Free-instance startup.
+- Actual public HTTPS smoke: **10 PASS**—readiness200, home/CSP/HSTS, csrf endpoint,
+  unauthenticated me/messages/actuator denial, untrusted POST403, secure cookie flags
+  and database-backed invalid-login401. No user account fixture was created.
+  `HOST-02_public-https.txt` records output; `HOST-02_render-deployment.json`
+  contains only credential-free service/deploy metadata.
+- Secret-file import was verified in the actual hosted instance; credentials were
+  sent through Render's secret-file upload, not command arguments, Git, Docker
+  image layers or public logs. Runtime environment URL determines the exact WSS origin.
+- Local Neon instances8082 and the loopback10001 hosted-profile probe were stopped
+  before public activation. This deployment uses one app instance because STOMP
+  routing is in-memory. The separate local PostgreSQL database/content is retained.
+
+## Remaining qualification and recovery
+
+Infrastructure is live and its documented checks passed. Full valid user
+Login/pairing/Chat over WSS, authenticated media upload/playback/seek/download,
+restart with actual Memory references, two-device calls and TURN relay remain
+subsequent test work. Do not infer full browser/UAT acceptance from these smoke
+checks. File-size limits were not changed; maximum-media Free-instance memory/load
+qualification is pending. Existing Neon account data is retained; local-only
+accounts/media were not copied. Earlier audit found0 referenced Neon Memory assets.
+
+For a genuinely new first account, use the previously issued private
+`.local/neon-setup-token.txt` while valid, or `npm run setup:neon` before any account
+exists. Partner registration uses the existing invitation flow. Never put setup
+codes in Git or send them in chat. Existing Neon accounts can sign in on the public
+URL; local PostgreSQL accounts belong to a separate database.
+
+Recovery: retain Neon metadata/bucket and runtime secret file; roll back only to a
+compatible tested source commit. Do not change the backend to local disk for this
+Free service or delete the bucket. Use explicit deploys after source changes since
+auto-deploy is off. Credentials changes should use Render's Environment/Secret
+Files settings followed by redeploy. Do not reset the database.
 
 Human UAT/release acceptance and Drive synchronization remain separate;
 DRIVE_SYNC_PENDING (authorized destination unknown).

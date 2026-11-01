@@ -1,0 +1,14 @@
+{
+  "serviceId": "srv-dbjisdqjnfac7384lr50",
+  "name": "couple-private-space",
+  "url": "https://couple-private-space.onrender.com",
+  "plan": "free",
+  "runtime": "docker",
+  "autoDeploy": "no",
+  "environmentId": "evm-dbjgk3vlk1mc7396jf4g",
+  "deployId": "dep-dbjiseajnfac7384lsd0",
+  "status": "live",
+  "sourceCommit": "0297f97919e86a34a85077a6ea682f6f8e3f7c84",
+  "createdAt": "2026-11-01T12:19:05.280703Z",
+  "updatedAt": "2026-11-01T12:22:55.935457Z"
+}
