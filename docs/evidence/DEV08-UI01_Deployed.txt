@@ -1,0 +1,26 @@
+DEV08-UI01 deployed verification
+Source commit: a1cd35c337cc5f466a9e05a5ed529b1ee133b8d2
+Render deploy: dep-dbjldu3bc2fs73d5si1g
+Status: live at 2026-11-01T15:16:28.740028Z
+URL: https://couple-private-space.onrender.com
+Local packaged JAR SHA256: BE19AEE8675EC5972983B977DDFF7E73F334B49DF0827334CBBE9A0E3EA7C500 (local artifact, not a claimed remote Linux JAR hash)
+COMMAND: node .local/dev08-ui01-public-assets.mjs (six public assets, normalized CRLF comparison)
+PASS deployed call-widget.js: HTTP 200 and source matches a1cd35c
+PASS deployed calls.css: HTTP 200 and source matches a1cd35c
+PASS deployed notification-sounds.js: HTTP 200 and source matches a1cd35c
+PASS deployed chat.js: HTTP 200 and source matches a1cd35c
+PASS deployed home.js: HTTP 200 and source matches a1cd35c
+PASS deployed memories.js: HTTP 200 and source matches a1cd35c
+COMMAND: APP_TEST_BASE_URL=https://couple-private-space.onrender.com npm.cmd run test:neon:http
+PASS /actuator/health/readiness HTTP 200
+PASS HTTPS HSTS header
+PASS / HTTP 200
+PASS /api/csrf HTTP 200
+PASS /api/me HTTP 401
+PASS /api/messages HTTP 401
+PASS /actuator/env HTTP 401
+PASS untrusted write blocked HTTP 403
+PASS HTTPS session cookie Secure/HttpOnly/SameSite=Lax
+PASS database-backed login lookup HTTP 401 INVALID_CREDENTIALS (no account created)
+Initial source-match check while update_in_progress found the previous served version; retained privately as rollout evidence. Retest after live passed for all six assets.
+Actual rendered desktop/mobile and audible media: NOT_TESTED; browser access disabled. No human visual/UAT approval inferred.

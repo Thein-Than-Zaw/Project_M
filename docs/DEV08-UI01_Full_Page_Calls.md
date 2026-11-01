@@ -26,3 +26,9 @@ Test and deployment results will be appended below. No user-data reset/migration
 ## Local verification
 
 Final npm.cmd run build: BUILD SUCCESS (14.233 s). Local PostgreSQL-backed CallIntegrationTest10 + ChatIntegrationTest8 and RtcConfigurationTest4: 22 passed, no failures. Recipient marker ChatNotificationsTest1: passed. Controlled sound engine4 + media acquisition7: 11 passed. Total 34 scoped checks; these do not prove rendered layout or audible physical media. Evidence: docs/evidence/DEV08-UI01_Verification.txt. Node warns about module type inference in this existing mixed Node/browser project; tests still pass. No test fixtures touched Neon or live accounts.
+
+## Deployed verification
+
+Source a1cd35c337cc5f466a9e05a5ed529b1ee133b8d2 is LIVE on https://couple-private-space.onrender.com (Render dep-dbjldu3bc2fs73d5si1g, 2026-11-01T15:16:28Z). Six served UI modules/styles matched normalized source; ten public health/security/database-lookup checks passed after live. Initial asset comparison during rolling startup saw the previous version; final retest passed. Evidence: docs/evidence/DEV08-UI01_Deployed.txt. Existing free service, database, private storage and TURN configuration preserved.
+
+Owner reported cross-network Voice/Video working before this change; that is user-reported historical evidence, not a graphical pass for this new build. Review now: hard-refresh, enable sounds, send a partner message, answer Video, toggle mic/camera, Back to chat then reopen Calls, mute sounds and verify incoming visual alert without melody on both desktop and phone. Ordinary browser Full screen is optional; full-page layout works without Fullscreen API. Call audio should remain audible while notification sounds are muted.
