@@ -1,0 +1,8 @@
+Blobfox and BunHD character artwork by Volpeon, formerly Feuerfuchs.
+Copyright 2019 Feuerfuchs <me@feuerfuchs.dev> (https://www.feuerfuchs.dev/)
+Original creator: https://volpeon.ink/
+Pack pages: https://volpeon.ink/emojis/blobfox/ and https://volpeon.ink/emojis/bunhd/
+Licensed under the Apache License, Version 2.0. See Apache-2.0.txt.
+Original PNG/APNG artwork is bundled without image modifications. Names/codes and catalogue metadata were added by this project.
+Asset hashes and original archive URLs are recorded in docs/evidence/DEV-06_asset-manifest.json.
+Provided AS IS, without warranties or conditions of any kind.

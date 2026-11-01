@@ -1,6 +1,15 @@
 import {watchPairing} from '/pairing-socket.js';
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 let home,dates,page=0,editing=null,loading=false,refreshAgain=false,midnightTimer,poll,stopSocket,epoch=0,renderedDates='';
+let memoryHomeBusy=false,memoryHomeIdentity='';
+async function loadHomeMemories(){
+  if(memoryHomeBusy)return;memoryHomeBusy=true;const revision=epoch;
+  try{const result=await api('/api/memories');if(revision!==epoch)return;const items=result.items.slice(0,3),key=JSON.stringify(items);if(key===memoryHomeIdentity)return;memoryHomeIdentity=key;
+    const fragment=document.createDocumentFragment();if(!items.length){const box=document.createElement('div');box.className='empty-card';const h=document.createElement('h3');h.textContent='A moment worth keeping.';const link=document.createElement('a');link.href='/memories.html';link.textContent='Save your first memory →';box.append(h,link);fragment.append(box);}
+    for(const item of items){const link=document.createElement('a');link.href=`/memories.html#${item.id}`;const photo=item.assets.find(a=>a.thumbnail);if(photo){const img=document.createElement('img');img.src=photo.thumbnail;img.alt='';img.loading='lazy';link.append(img);}const title=document.createElement('strong');title.textContent=item.title;const day=document.createElement('p');day.textContent=pretty(item.memoryDate);link.append(title,day);fragment.append(link);}$('#home-memories').replaceChildren(fragment);
+  }catch{if(revision===epoch){$('#home-memories').textContent='Memories could not be refreshed. Open Memories to try again.';memoryHomeIdentity='';}}
+  finally{memoryHomeBusy=false;}
+}
 const pretty=date=>new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(`${date}T00:00:00Z`));
 const dayLabel=days=>days===0?'Today':days===1?'Tomorrow':`In ${days.toLocaleString()} days`;
 async function api(path,method='GET',body,key){
@@ -24,6 +33,7 @@ function route(){
   if(home)$('#welcome').textContent=`${pretty(home.calendar.today)} · Welcome home, ${home.self.displayName}`;
 }
 function render(){
+  loadHomeMemories();
   for(const node of $$('[data-day]'))node.textContent=home.calendar.dayNumber.toLocaleString();
   for(const node of $$('[data-start]'))node.textContent=pretty(home.relationshipDate);
   for(const node of $$('[data-anniversary]'))node.textContent=pretty(home.calendar.anniversary);

@@ -7,6 +7,9 @@ server:
     session:
       timeout: 1m
 app:
+  memories:
+    storage-root: target/test-memory-assets
+    maintenance-initial-ms: 900000
   pairing:
     request-limit: 200
   auth:

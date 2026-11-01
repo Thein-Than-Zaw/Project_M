@@ -19,6 +19,11 @@ spring:
     clean-disabled: true
     validate-on-migrate: true
     baseline-on-migrate: false
+  servlet:
+    multipart:
+      max-file-size: 100000000B
+      max-request-size: 101000000B
+      file-size-threshold: 0
 server:
   address: ${SERVER_ADDRESS:127.0.0.1}
   port: ${SERVER_PORT:8080}
@@ -37,6 +42,11 @@ server:
   tomcat:
     max-http-form-post-size: 16KB
 app:
+  memories:
+    storage-root: ${MEMORY_STORAGE_ROOT:.local/uploads}
+    ffprobe: ${FFPROBE_PATH:.tools/ffmpeg/ffmpeg-8.1.2-essentials_build/bin/ffprobe.exe}
+    ffmpeg: ${FFMPEG_PATH:.tools/ffmpeg/ffmpeg-8.1.2-essentials_build/bin/ffmpeg.exe}
+    maintenance-ms: 60000
   couple:
     # Owner-confirmed Myanmar Standard Time; event timestamps remain UTC.
     timezone: Asia/Yangon

@@ -1,0 +1,17 @@
+DEV-06 final browser journeys, 1 Nov2026 Asia/Yangon.
+Final JAR aa189ad6092aff195968ce3d9dc01412725fe5c7c1f1b88c80bfebcaa5a58789.
+Dedicated PostgreSQL18.6 couple_private_space_test/public, synthetic Alex/Jamie accounts only.
+IAB isolated host cookie sessions127.0.0.1:18081 and localhost:18081; real app/server/STOMP/data, no mocked browser messages.
+
+PASS final Home → Stickers & gifts link → auto-open chat dialog; composer sticker entry works both sides.
+PASS363 catalogue /60 initial choices →120 after Load more. Pack BunHD35, heart search3 across both packs; impossible search0 with clear status. No claim every asset was graphically inspected.
+PASS Preview BunHD Heart,501 flower emoji note rejected with max500 message; Cancel returns catalogue/search focus and0 chat rows before first Send. Native final cancelledPreviewRows0.
+PASS A→B BunHD Heart with Myanmar text, heart/skin-tone/ZWJ emoji and literal img/onerror text. Selected sticker/name/note identical after refresh. No injected image element/JS dialog observed; text is visibly inert.
+PASS Recipient in-app status "You received a little gift."; actual receipt while recipient's gift dialog obscured chat:1 row,1 uniqueKey,1 gift, delivered1/read0 (DEV-06_modal-receipt-check.txt). After dialog closed and viewed, read1. This is modal-obscured evidence, not a claim of actual OS/browser hidden-tab qualification.
+PASS Named test-only DB CHECK rejects note "DEV06 retry after reload": no Sent for failed row; same sticker/note visible, Retry; reload preserves failed sticker, remove CHECK then Retry →1 saved row/bubble. Native final retryRows1. Existing native tests cover same UUID3x replay/concurrent replay/changed-intent denial.
+PASS A Sent2/Received1, B Received2/Sent empty before reverse send. B→A Blobfox Heart with empty note; mixed Myanmar+emoji TEXT from B; refresh retained3 gifts+1 text without duplicate bubble.
+PASS Temporary test catalogue asset points at nonexistent private PNG: preview hides failed image and preserves Blobfox Heart name; sent bubble keeps name+note text fallback. Restored original catalogue asset before teardown. Image/animation toggle hides images but keeps sticker labels, then restores display.
+PASS final screenshot1440x960 desktop catalogue (60 visible model choices, vertically scrollable dialog),390x844 mobile heart search (client width375 incl browser scrollbar difference,scrollWidth375,dialog324), mobile received note bubble. No horizontal overflow observed. Corrected initial global checkbox sizing and Cancel keyboard focus; those two final UI fixes graphically retested after package build.
+Native final GUI dataset:5 messages /5 client keys /4 GIFT /1 TEXT, delivered/read5; cancelledPreviewRows0,retryRows1. Named fixtures and test failure constraint removed after review; reference catalogue retained. See final UI DB evidence and teardown evidence.
+
+AI self-review only. No human UAT, real mobile-device/browser-engine matrix, formal accessibility certification, load/soak, production TLS or external notification inbox claimed. DEV05-UI01 actual background/unfocused Chrome/Edge prerequisite remains UNVERIFIED. Initial native Windows browser URL policy could not establish authority; later IAB review had one transient automatic approval timeout, successful permitted retry, then documented fresh-tab recovery after server-restart stale connection error. No browser safety control bypassed.

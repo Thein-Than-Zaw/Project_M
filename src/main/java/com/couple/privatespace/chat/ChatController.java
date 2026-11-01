@@ -23,6 +23,10 @@ public class ChatController {
     public ChatService.Page history(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam(required=false) Long before,@RequestParam(required=false) Long after){return chat.history(actor.accountId(),before,after);}
     @GetMapping("/api/chat/state") @ResponseBody
     public ChatService.State state(@AuthenticationPrincipal AccountPrincipal actor){return chat.state(actor.accountId());}
+    @GetMapping("/api/gifts") @ResponseBody
+    public ChatService.Catalogue gifts(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam(required=false) String pack,@RequestParam(required=false) String q,@RequestParam(defaultValue="0") int offset){return chat.gifts(actor.accountId(),pack,q,offset);}
+    @GetMapping("/api/gifts/history") @ResponseBody
+    public ChatService.GiftHistory giftsHistory(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam(defaultValue="all") String direction,@RequestParam(required=false) Long before){return chat.giftHistory(actor.accountId(),direction,before);}
     @GetMapping("/api/chat/receipts") @ResponseBody
     public List<ChatService.Receipt> receipts(@AuthenticationPrincipal AccountPrincipal actor,@RequestParam List<UUID> ids){return chat.receipts(actor.accountId(),ids);}
     @MessageMapping("/chat.send") @SendToUser(value="/queue/chat",broadcast=false)

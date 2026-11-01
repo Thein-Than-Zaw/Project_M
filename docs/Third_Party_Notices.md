@@ -14,3 +14,8 @@ DEV-01 uses dependencies, not copied third-party product imagery/fonts/UI kits. 
 | Installed Oracle JDK | 27.0.1.0.3 | Existing machine runtime, not redistributed by project |
 
 `.tools`, `.local`, `target` and downloaded archives are ignored, not application source. Tool bootstrap restores pinned downloads. This inventory is not a legal review or dependency vulnerability scan. Review licenses and current advisories before deployment/distribution.
+# DEV-06 artwork addition — 1 November2026
+
+363 original Blobfox/BunHD PNG/APNG assets by Volpeon (formerly Feuerfuchs), licensed Apache-2.0 on the original creator pack pages. Original artwork retained unchanged; project adds catalogue codes and readable labels. Original pages: https://volpeon.ink/emojis/blobfox/ and https://volpeon.ink/emojis/bunhd/. Original archives: https://strapi.volpeon.ink/uploads/blobfox_1703c01b78.zip and https://strapi.volpeon.ink/uploads/bunhd_cf2a62ba99.zip.
+
+Runtime credit/copyright: `src/main/resources/static/stickers/NOTICE.txt`; complete license: `Apache-2.0.txt` in the same directory. Archive/per-file SHA256 and animation inventory: `docs/evidence/DEV-06_asset-manifest.json`. No external runtime image requests, no dependency on Telegram/Discord APIs or user accounts. Other creator packs have their own licenses and are not implicitly covered by this notice.

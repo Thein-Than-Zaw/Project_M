@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestControllerAdvice
 public class AuthErrorHandler {
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    ResponseEntity<Map<String,String>> uploadTooLarge(){return ResponseEntity.status(413).body(Map.of("code","FILE_TOO_LARGE","message","This file exceeds the upload limit."));}
     public record ErrorBody(String code, String message, Map<String,String> fieldErrors, String requestId) { }
     @ExceptionHandler(ApiFailure.class)
     ResponseEntity<ErrorBody> known(ApiFailure failure, HttpServletResponse response) {

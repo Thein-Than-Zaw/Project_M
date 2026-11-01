@@ -20,7 +20,7 @@ export function watchPairing(onUpdate,onStatus){
             socket.send('SUBSCRIBE\nid:pairing\ndestination:/user/queue/pairing\nack:auto\n\n\0');
             heartbeat=setInterval(()=>{if(socket?.readyState===WebSocket.OPEN)socket.send('\n');},10000);
             onUpdate(); // close subscribe-vs-commit race by REST reconciliation
-          }else if(command==='MESSAGE')onUpdate();
+          }else if(command==='MESSAGE'){let update;try{update=JSON.parse(body);}catch{}onUpdate(update);}
           else if(command==='ERROR')socket.close();
         }
         if(buffer.length>16384)socket.close();

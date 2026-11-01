@@ -18,15 +18,40 @@ public class ChatService {
     public ChatService(JdbcTemplate jdbc,PairingService pairing,ApplicationEventPublisher events,ChatLimiter limiter) {
         this.jdbc=jdbc;this.pairing=pairing;this.events=events;this.limiter=limiter;
     }
-    public record Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,
+    public record Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,String type,String giftCode,String giftName,String giftAssetPath,
             Instant createdAt,Instant deliveredAt,Instant readAt) { }
     public record Receipt(UUID id,long sequence,Instant deliveredAt,Instant readAt) { }
     public record State(long latestSequence,long unreadCount) { }
     public record Page(UUID selfId,String selfName,PairingService.Member partner,String timezone,List<Message> items,
             boolean hasMore,long latestSequence,long unreadCount) { }
-    public record Send(UUID clientMessageId,String body) { }
+    public record Send(UUID clientMessageId,String body,String type,String giftCode,UUID recipientId) { }
+    public record Gift(String code,String name,String pack,String assetPath) { }
+    public record Catalogue(List<Gift> items,List<String> packs,long total,boolean hasMore) { }
+    public record GiftHistory(List<Message> items,boolean hasMore) { }
     public record Ack(List<UUID> messageIds) { }
     public record Changed(List<UUID> members,String type,Message message,List<Receipt> receipts) { }
+
+    /** DEV-06 GIFT-01/03: only bundled catalogue assets, actor's active space, bounded queries. */
+    @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
+    public Catalogue gifts(UUID actor,String pack,String q,int offset) {
+        active(actor);q=q==null?"":q.strip().toLowerCase(Locale.ROOT);pack=pack==null?"":pack;
+        if(offset<0||offset>100000||q.codePointCount(0,q.length())>80||pack.length()>40)throw new ApiFailure(400,"INVALID_GIFT_SEARCH","Choose a valid sticker search.");
+        var args=new Object[]{pack,pack,q,q};
+        String where=" WHERE active AND (?='' OR pack=?) AND (?='' OR strpos(lower(name),?)>0)";
+        long total=jdbc.queryForObject("SELECT count(*) FROM gift_catalog"+where,Long.class,args);
+        var items=jdbc.query("SELECT code,name,pack,asset_path FROM gift_catalog"+where+" ORDER BY code LIMIT 60 OFFSET ?",
+            (r,n)->new Gift(r.getString(1),r.getString(2),r.getString(3),r.getString(4)),pack,pack,q,q,offset);
+        return new Catalogue(items,jdbc.queryForList("SELECT DISTINCT pack FROM gift_catalog WHERE active ORDER BY pack",String.class),total,offset+items.size()<total);
+    }
+    @Transactional(readOnly=true)
+    public GiftHistory giftHistory(UUID actor,String direction,Long before) {
+        var space=active(actor);
+        if(!Set.of("all","sent","received").contains(direction)||before!=null&&before<=0)throw new ApiFailure(400,"INVALID_GIFT_HISTORY","Choose sent or received stickers.");
+        String filter=direction.equals("all")?"":direction.equals("sent")?" AND sender_id=?":" AND sender_id<>?";
+        var args=new ArrayList<Object>();args.add(space.id());args.add(before==null?Long.MAX_VALUE:before);if(!direction.equals("all"))args.add(actor);
+        var rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND sequence<? AND type='GIFT'"+filter+" ORDER BY sequence DESC LIMIT 51",(r,n)->map(r),args.toArray());
+        return new GiftHistory(rows.stream().limit(50).toList(),rows.size()>50);
+    }
 
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public State state(UUID actor) {var space=active(actor);return state(space.id(),actor);}
@@ -58,20 +83,29 @@ public class ChatService {
     @Transactional
     public Message send(UUID actor,Send command) {
         if(command.clientMessageId()==null)throw new ApiFailure(400,"INVALID_MESSAGE_ID","Retry with a valid message identifier.");
-        String body=command.body();
+        String type=command.type()==null?"TEXT":command.type();boolean gift=type.equals("GIFT");
+        if(!Set.of("TEXT","GIFT").contains(type)||(!gift&&command.giftCode()!=null))throw new ApiFailure(400,"INVALID_MESSAGE_TYPE","Choose a supported message type.");
+        if(command.recipientId()!=null)throw new ApiFailure(400,"INVALID_RECIPIENT","Your partner is selected by the server.");
+        String body=gift&&command.body()==null?"":command.body();
         // Unicode space separators (including NBSP) are blank even when String.isBlank excludes them.
-        if(body==null||body.codePoints().allMatch(c->Character.isWhitespace(c)||Character.isSpaceChar(c)||c==0xFEFF))throw new ApiFailure(400,"EMPTY_MESSAGE","Write a message first.");
-        if(body.codePointCount(0,body.length())>4000||body.codePoints().anyMatch(c->c==0||Character.isSurrogate((char)c)&&c<=65535))throw new ApiFailure(400,"MESSAGE_TOO_LONG","Use up to 4,000 valid Unicode characters.");
+        if(!gift&&(body==null||body.codePoints().allMatch(c->Character.isWhitespace(c)||Character.isSpaceChar(c)||c==0xFEFF)))throw new ApiFailure(400,"EMPTY_MESSAGE","Write a message first.");
+        if(body.codePointCount(0,body.length())>(gift?500:4000)||body.codePoints().anyMatch(c->c==0||Character.isSurrogate((char)c)&&c<=65535))throw new ApiFailure(400,gift?"GIFT_NOTE_TOO_LONG":"MESSAGE_TOO_LONG",gift?"Keep your note within 500 characters.":"Use up to 4,000 valid Unicode characters.");
         var space=active(actor);lock(space.id());
         var existing=jdbc.query("SELECT * FROM chat_message WHERE sender_id=? AND client_message_id=?",(r,n)->map(r),actor,command.clientMessageId());
         if(!existing.isEmpty()) {
-            if(!existing.getFirst().body().equals(body))throw new ApiFailure(409,"MESSAGE_CONFLICT","This message identifier was already used for different text.");
+            var old=existing.getFirst();
+            if(!old.body().equals(body)||!old.type().equals(type)||!Objects.equals(old.giftCode(),command.giftCode()))throw new ApiFailure(409,"MESSAGE_CONFLICT","This message identifier was already used for different content.");
             return existing.getFirst();
+        }
+        Gift selected=null;
+        if(gift){
+            var choices=jdbc.query("SELECT code,name,pack,asset_path FROM gift_catalog WHERE code=? AND active FOR SHARE",(r,n)->new Gift(r.getString(1),r.getString(2),r.getString(3),r.getString(4)),command.giftCode());
+            if(choices.isEmpty())throw new ApiFailure(400,"INVALID_GIFT","This gift is not available.");selected=choices.getFirst();
         }
         limiter.check(actor,true);
         long sequence=jdbc.queryForObject("UPDATE chat_conversation SET last_sequence=last_sequence+1,updated_at=clock_timestamp() WHERE space_id=? RETURNING last_sequence",Long.class,space.id());
-        var message=jdbc.queryForObject("INSERT INTO chat_message(id,space_id,sequence,sender_id,client_message_id,body) VALUES (?,?,?,?,?,?) RETURNING *",
-            (r,n)->map(r),UUID.randomUUID(),space.id(),sequence,actor,command.clientMessageId(),body);
+        var message=jdbc.queryForObject("INSERT INTO chat_message(id,space_id,sequence,sender_id,client_message_id,body,type,gift_code,gift_name,gift_asset_path) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING *",
+            (r,n)->map(r),UUID.randomUUID(),space.id(),sequence,actor,command.clientMessageId(),body,type,selected==null?null:selected.code(),selected==null?null:selected.name(),selected==null?null:selected.assetPath());
         events.publishEvent(new Changed(memberIds(space),"message.created",message,List.of()));return message;
     }
     /** CHAT-03 / AC-F04-06: recipient-only explicit per-message receipts never mark unseen older pages. */
@@ -97,7 +131,7 @@ public class ChatService {
     }
     private List<UUID> memberIds(PairingService.Space space){return space.members().stream().map(PairingService.Member::id).toList();}
     private Message map(java.sql.ResultSet r)throws java.sql.SQLException {
-        return new Message(r.getObject("id",UUID.class),r.getLong("sequence"),r.getObject("sender_id",UUID.class),r.getObject("client_message_id",UUID.class),r.getString("body"),r.getTimestamp("created_at").toInstant(),instant(r,"delivered_at"),instant(r,"read_at"));
+        return new Message(r.getObject("id",UUID.class),r.getLong("sequence"),r.getObject("sender_id",UUID.class),r.getObject("client_message_id",UUID.class),r.getString("body"),r.getString("type"),r.getString("gift_code"),r.getString("gift_name"),r.getString("gift_asset_path"),r.getTimestamp("created_at").toInstant(),instant(r,"delivered_at"),instant(r,"read_at"));
     }
     private static Instant instant(java.sql.ResultSet r,String field)throws java.sql.SQLException {var t=r.getTimestamp(field);return t==null?null:t.toInstant();}
     private static Instant instant(java.sql.ResultSet r,int field)throws java.sql.SQLException {var t=r.getTimestamp(field);return t==null?null:t.toInstant();}

@@ -1,0 +1,1 @@
+Synthetic GUI rows=5 uniqueKeys=5 gifts=4 delivered=5 read=5 cancelledPreviewRows=0 retryRows=1

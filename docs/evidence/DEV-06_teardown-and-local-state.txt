@@ -1,0 +1,2 @@
+couple_private_space accounts=2 members=2 messages=0 catalogue=363 migrations=15 faultConstraints=0 restoredAsset=1
+couple_private_space_test accounts=0 members=0 messages=0 catalogue=363 migrations=15 faultConstraints=0 restoredAsset=1

@@ -35,8 +35,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/partner-registration-code").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/space").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/spaces","/api/invitations","/api/invitations/preview","/api/invitations/join").authenticated()
-                .requestMatchers(HttpMethod.GET,"/home.css","/chat.css","/chat.js","/chat-socket.js").permitAll()
-                .requestMatchers(HttpMethod.GET,"/home.html","/api/home","/api/dates","/chat.html","/api/chat","/api/chat/state","/api/chat/receipts").access((identity,context)->new AuthorizationDecision(
+                .requestMatchers(HttpMethod.GET,"/home.css","/chat.css","/chat.js","/chat-socket.js","/memories.css","/memories.js").permitAll()
+                .requestMatchers("/memories.html","/api/memories","/api/memories/**","/api/memory-uploads","/api/memory-uploads/**","/api/memory-assets/*").access((identity,context)->new AuthorizationDecision(
+                    identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
+                .requestMatchers(HttpMethod.GET,"/home.html","/api/home","/api/dates","/chat.html","/api/chat","/api/chat/state","/api/chat/receipts","/api/gifts","/api/gifts/history","/stickers/**").access((identity,context)->new AuthorizationDecision(
                     identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers(HttpMethod.PATCH,"/api/profile","/api/relationship-date","/api/dates/*").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/dates").authenticated()
@@ -46,7 +48,7 @@ public class SecurityConfig {
             .requestCache(cache -> cache.requestCache(new NullRequestCache()))
             .exceptionHandling(errors -> errors
                 .authenticationEntryPoint((request, response, error) -> {
-                    if (request.getRequestURI().equals("/space.html")||request.getRequestURI().equals("/home.html")||request.getRequestURI().equals("/chat.html")) response.sendRedirect("/?expired=1");
+                    if (request.getRequestURI().equals("/space.html")||request.getRequestURI().equals("/home.html")||request.getRequestURI().equals("/chat.html")||request.getRequestURI().equals("/memories.html")) response.sendRedirect("/?expired=1");
                     else ApiFailure.write(response, 401, "UNAUTHENTICATED", "Please sign in to continue.");
                 })
                 .accessDeniedHandler((request, response, error) -> ApiFailure.write(response, 403, "FORBIDDEN", "This request is not allowed. Refresh and try again.")))

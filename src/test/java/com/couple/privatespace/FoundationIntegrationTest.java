@@ -49,7 +49,7 @@ class FoundationIntegrationTest {
             db.setAutoCommit(false);
             try {
                 try (var rows = db.createStatement().executeQuery("SELECT count(*) FROM flyway_schema_history WHERE success AND version IS NOT NULL")) {
-                    assertTrue(rows.next()); assertEquals(13, rows.getInt(1)); // DEV-05 adds V12–V13 forward migrations.
+                    assertTrue(rows.next()); assertEquals(19, rows.getInt(1)); // DEV-07 adds V16–V19; prior migrations remain unchanged.
                 }
                 insertUser(db, UUID.randomUUID(), 1, "A@example.invalid", "2020-01-01");
                 insertUser(db, UUID.randomUUID(), 2, "B@example.invalid", "2020-01-02");

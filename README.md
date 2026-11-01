@@ -9,8 +9,9 @@ A private responsive web application for one couple and two accounts. Built with
 - **DEV-03:** persistent one-time pairing, separate registration/pairing invitations and explicit shared-date confirmation.
 - **DEV-04 core:** Home, own display-name editing, shared relationship date, anniversary/countdown and Special Dates. Start date is Day1; Feb29 anniversaries fall on Feb28 in non-leap years. Calendar timezone is Asia/Yangon.
 - **DEV-05 core:** private text/emoji Chat (up to4000 Unicode code points), durable ordered history, unread badge, Sent/Delivered/Read receipts, duplicate-safe retry and reconnect recovery.
+- **DEV-06 core:**363 free Blobfox/BunHD character sticker gifts (20 animated), pack/search picker, preview with optional500-code-point note, private chat persistence and Sent/Received filters. Artwork attribution/license is bundled; no external asset service is needed at runtime. See [DEV-06 checkpoint](docs/DEV-06_Checkpoint.md).
 
-Both members can edit/delete Special Dates. Both-member Memory edit/delete remains a confirmed requirement for the future Memory module. Memory/avatar uploads, gifts, calls, typing/presence, general notification inbox and authentication recovery/settings remain separate work. Chat message Edit/Delete is deferred. In-app notifications only; no browser push. Content is private through server-side authorization; E2EE is not implemented.
+Both members can edit/delete Special Dates. Both-member Memory edit/delete remains a confirmed requirement for the future Memory module. Memory/avatar uploads, calls, typing/presence, general notification inbox and authentication recovery/settings remain separate work. Custom sticker uploads/marketplace and paid gifts are outside the current increment. Chat message Edit/Delete is deferred. In-app notifications only; no browser push. Content is private through server-side authorization; E2EE is not implemented.
 
 This is a local development build, not a production release. Actual background/unfocused-tab Read qualification in real Chrome/Edge remains pending (DEV05-UI01); see the [DEV-05 checkpoint](docs/DEV-05_Checkpoint.md). Human UI/UAT approval is not asserted.
 
@@ -71,7 +72,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-local.ps1
 
 This runs Maven verify with real PostgreSQL and an HTTP/STOMP test server on18080. Fixtures require an empty isolated `_test` schema and refuse unrelated existing accounts. There is no H2 fallback. Reports: `target/surefire-reports/`; packaged app: `target/private-space-0.1.0-SNAPSHOT.jar`.
 
-Final DEV-05 native verification: **30 tests passed,0 failures/errors/skips** on PostgreSQL18.6. A separate empty schema constructed V1–V13, and the actual development upgrade11→13 preserved original-table fingerprints/accounts/pairing. Browser core flows and remaining qualification limits are recorded in the [checkpoint](docs/DEV-05_Checkpoint.md) and [source manifest](docs/evidence/DEV-05_source-manifest.json). Prior evidence files keep their original build identity; they are not blanket certification of future changes.
+Current DEV-06 verification: **35-test regression suite passed**, plus **1 separate pre-existing-text migration rehearsal passed**, on PostgreSQL18.6. Fresh V1–V15 and actual dev13→15 upgrade verified; original13 table projections unchanged. Browser sticker journeys and exact build/test limitations: [DEV-06 checkpoint](docs/DEV-06_Checkpoint.md). The additional migration test was run separately, not as an asserted single36-test suite.
+
+Historical DEV-05 verification:30 native tests passed on its recorded build. Browser core flows and remaining background-tab qualification are recorded in the [DEV-05 checkpoint](docs/DEV-05_Checkpoint.md). Prior evidence keeps its original identity.
 
 Flyway applies forward migrations and validates existing history; clean and automatic baseline are disabled. Never edit applied migrations, drop database tables or remove `.local/pgdata` to resolve startup errors. Hibernate does not create/update the schema; feature persistence uses Spring JdbcTemplate.
 
@@ -79,8 +82,8 @@ Flyway applies forward migrations and validates existing history; clean and auto
 
 - `src/main/java/com/couple/privatespace`: identity, pairing, home, chat, realtime and configuration.
 - `src/main/resources/static`: same-origin responsive UI.
-- `src/main/resources/db/migration`: V1–V13 append-only schema history.
-- `src/test/java`: native authentication, pairing, Home/date and Chat verification.
+- `src/main/resources/db/migration`: V1–V15 append-only schema history.
+- `src/test/java`: native authentication, pairing, Home/date, Chat, sticker and predecessor migration verification.
 - `scripts`: local bootstrap/provision/start/test helpers.
 - `docs`: requirements, contracts, task/checkpoint records, UI reference and evidence.
 

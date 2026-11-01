@@ -25,7 +25,7 @@ export function chatSocket({onEvent,onStatus,onReady,onExpired}){
           const end=buffer.indexOf('\0'),raw=buffer.slice(0,end).replace(/^\s+/,'');buffer=buffer.slice(end+1);
           const separator=raw.indexOf('\n\n'),head=raw.slice(0,separator).replace(/\r/g,''),body=separator<0?'':raw.slice(separator+2),command=head.split('\n')[0];
           if(command==='CONNECTED'){
-            clearTimeout(connectTimer);attempt=1000;frame('SUBSCRIBE',{id:'chat',destination:'/user/queue/chat',ack:'auto'});ready=true;onStatus('Connected · Private chat');
+            clearTimeout(connectTimer);attempt=1000;frame('SUBSCRIBE',{id:'chat',destination:'/user/queue/chat',ack:'auto'});frame('SUBSCRIBE',{id:'memories',destination:'/user/queue/pairing',ack:'auto'});ready=true;onStatus('Connected · Private chat');
             heartbeat=setInterval(()=>{if(socket?.readyState===WebSocket.OPEN)socket.send('\n');},10000);onReady();
           }else if(command==='MESSAGE'){
             try{onEvent(JSON.parse(body));}catch{onStatus('An update could not be read. Reloading saved messages…');onReady();}
