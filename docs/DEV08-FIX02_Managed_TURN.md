@@ -14,6 +14,11 @@ are not assumed. No paid plan or shared public Internet credentials were enabled
 
 ## Source and contract
 
+Base commit: a359d0b77eac2fe25fe57aa983ccd1ba972f8874. Local tested source identity:
+`b140cbf8ce0d33988cdfe64b303b89c279970e62cd423d9b17473a4246910a48`;
+see docs/evidence/DEV08-FIX02_source-manifest.json. Deployment source is identified
+separately by the exact Git commit below (Docker rebuilds the JAR on Java21).
+
 - RtcConfiguration supports provider-issued username/credential password as an
   alternative to existing coturn REST HMAC. Both cannot be enabled together.
   Incomplete/control-character/overlong settings fail closed. Production constructor
@@ -52,8 +57,26 @@ are not assumed. No paid plan or shared public Internet credentials were enabled
 
 ## Deployment and user verification
 
-Deployment in progress on existing codex/render-hosting branch/service. Actual
-deployed commit/status and public checks will be appended after observation.
+Existing branch codex/render-hosting published commit
+`086fa2dd85d9067717c41047faeaaa2249019bcd`. Existing Free service
+`srv-dbjisdqjnfac7384lr50` deployed it as `dep-dbjkmh8473hc73a4qv80`: **live**.
+URL remains https://couple-private-space.onrender.com . No new service or database.
+
+Actual Render secret-file readback exactly matched the prepared TURN overlay;
+all unrelated database/storage values were preserved. The one-file REST update
+returned HTTP200 and the subsequent exact-commit deploy passed Docker build,
+Java21 startup and health checks. Shared secrets/API tokens/provider credentials
+were not put in Git or command arguments. Backup remains in ignored .local.
+
+Post-deploy public HTTPS smoke **10 passed**. Anonymous `/api/rtc/config` remained
+HTTP401 with no relay credential in its response. See
+docs/evidence/DEV08-FIX02_public-https.txt and DEV08-FIX02_deployment.json.
+No real paired user's password/session was requested or impersonated to test this.
+
+The first private API operation used a stale proxy-selection assumption and failed
+before any request; honored the current enabled HTTP/HTTPS proxy entries afterward.
+No global network/TLS settings changed. This was operator connectivity, not a
+device/media test or production data failure.
 
 After activation, refresh/sign in on both devices and test Wi-Fi vs mobile data.
 For an explicit relay-only check, open /chat.html?relay=1 on both paired sessions.

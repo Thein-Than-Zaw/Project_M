@@ -20,6 +20,9 @@ This remains a development/test deployment, not a production release. Actual bac
 ## Run on the configured Windows development machine
 
 Render deployment continuation: [HOST-02 record](docs/HOST-02_Deployment.md).
+Cross-network call relay: [DEV08-FIX02](docs/DEV08-FIX02_Managed_TURN.md).
+ExpressTURN managed relay is configured and software relay-only connectivity passed;
+actual two-phone voice/video verification remains pending.
 Docker/private storage preparation: [HOST-01 setup](docs/HOST-01_Render_Setup.md).
 Live test URL: **https://couple-private-space.onrender.com**. Docker/Java21 startup and public HTTPS/security smoke checks passed; full user/media/call qualification is pending.
 the Render profile requires working object storage and never uses local files as durable media.
