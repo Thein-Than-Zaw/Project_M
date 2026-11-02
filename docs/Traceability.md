@@ -113,3 +113,5 @@ CHAT-06 owner media/sending review → C1–C6 in [CHAT-06 record](CHAT-06_Sendi
 CHAT-05/06 deployed application identity2d3294c → Render dep-dbjuim67bikc738jtds0 LIVE / schemaV30 → full native105, JS64 and final HTTPS/source/guest-ACL checks PASS. Release evidence and exact package identity: [Release_CHAT06](Release_CHAT06.md). Owner deployment authorization supersedes earlier local HOLD; physical device UAT and Drive sync remain separately pending.
 
 CALL-UI03 owner laptop call screenshots → C1–C6 in [laptop call layout record](CALL-UI03_Laptop_Call_Layout.md) → call-widget.js/calls.css presentation and Fit/Fill → Node64 and markup/accessibility checks PASS; actual graphical/device review pending because browser use disabled. Local only, no deployment.
+
+CALL-UI03 deployment authorization received → application a6196b3 → Render dep-dbka9v2jnfac73a2dssg LIVE at 21:31 Myanmar time on 2 November 2026. JS64, markup and six live health/source/access checks PASS; schemaV30 unchanged. See CALL-UI03_Laptop_Call_Layout.md for exact source/package identity and remaining physical visual review / DRIVE_SYNC_PENDING.
