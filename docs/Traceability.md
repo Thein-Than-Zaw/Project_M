@@ -117,3 +117,5 @@ CALL-UI03 owner laptop call screenshots → C1–C6 in [laptop call layout recor
 CALL-UI03 deployment authorization received → application a6196b3 → Render dep-dbka9v2jnfac73a2dssg LIVE at 21:31 Myanmar time on 2 November 2026. JS64, markup and six live health/source/access checks PASS; schemaV30 unchanged. See CALL-UI03_Laptop_Call_Layout.md for exact source/package identity and remaining physical visual review / DRIVE_SYNC_PENDING.
 
 CALL-UI04 owner live screenshot feedback → C1 full remote frame/default Fit and C2 persistent fullscreen icon → call-widget.js plus call-presentation.test.mjs → Node66 and markup checks PASS. Root causes and remaining native-device visual review: [CALL-UI04 record](CALL-UI04_Uncropped_Video_And_Fullscreen_Icon.md). Local correction; no deployment yet.
+
+CALL-UI04 explicitly deployed → appc90b401 / Render dep-dbkah9kipgvc73e5jagg LIVE at 21:46:39 Myanmar time on 2 November 2026 → Node66 and six live readiness/source/access checks PASS; schemaV30 unchanged. Source package locally verified, DRIVE_SYNC_PENDING and physical visual review pending; [full record](CALL-UI04_Uncropped_Video_And_Fullscreen_Icon.md).
