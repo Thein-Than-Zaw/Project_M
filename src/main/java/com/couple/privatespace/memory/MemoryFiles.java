@@ -117,9 +117,32 @@ public class MemoryFiles {
             try(var in=zip.getInputStream(zip.getEntry(main))){sax.newSAXParser().parse(in,new org.xml.sax.helpers.DefaultHandler(){boolean first=true;public void startElement(String uri,String local,String q,org.xml.sax.Attributes attrs)throws org.xml.sax.SAXException{if(first){first=false;String family=ext.equals("docx")?"wordprocessingml":ext.equals("xlsx")?"spreadsheetml":"presentationml";if(!local.equals(expectedRoot)||!Set.of("http://schemas.openxmlformats.org/"+family+"/2006/main","http://purl.oclc.org/ooxml/"+family+"/main").contains(uri))throw new org.xml.sax.SAXException("Wrong document root");}}});}
         }
     }
+    /** CHAT-05: audio-only browser recordings normalized to inline-playable AAC/MP4. */
+    public Validated validateVoice(MultipartFile file){
+        if(file.getSize()<1||file.getSize()>10000000L)throw failure("VOICE_TOO_LARGE","Keep voice messages within 10 MB.");
+        UUID id=UUID.randomUUID();Path encoded=stage.resolve(id+".m4a");boolean acquired=false;
+        try{
+            if(!workers.tryAcquire(1,TimeUnit.SECONDS))throw new ApiFailure(429,"UPLOAD_BUSY","Media checking is busy. Retry shortly.");acquired=true;
+            long size=0;try(var in=file.getInputStream();var out=Files.newOutputStream(staged(id,false),StandardOpenOption.CREATE_NEW)){byte[] bytes=new byte[16384];int n;while((n=in.read(bytes))!=-1){size+=n;if(size>10000000L)throw failure("VOICE_TOO_LARGE","Keep voice messages within 10 MB.");out.write(bytes,0,n);}}
+            byte[] head;try(var in=Files.newInputStream(staged(id,false))){head=in.readNBytes(12);}
+            boolean signature=head.length>=12&&((head[0]&255)==0x1a&&(head[1]&255)==0x45&&(head[2]&255)==0xdf&&(head[3]&255)==0xa3||new String(head,0,4,java.nio.charset.StandardCharsets.US_ASCII).equals("OggS")||new String(head,4,4,java.nio.charset.StandardCharsets.US_ASCII).equals("ftyp"));
+            if(!signature)throw failure("INVALID_VOICE","This recording is not a supported audio container.");
+            var probe=json.readTree(run(id,List.of(ffprobe,"-v","error","-protocol_whitelist","file,pipe","-show_entries","stream=codec_type,codec_name,channels:format=duration","-of","json",staged(id,false).toString()),20));
+            var streams=probe.path("streams");if(!streams.isArray()||streams.size()!=1||!streams.get(0).path("codec_type").asText().equals("audio")||!Set.of("aac","opus","vorbis").contains(streams.get(0).path("codec_name").asText())||streams.get(0).path("channels").asInt()<1||streams.get(0).path("channels").asInt()>2)throw failure("INVALID_VOICE","Record one audio track without video.");
+            // Browser WebM may omit duration until decoded; normalize with a hard output bound, then probe it.
+            String duration=probe.path("format").path("duration").asText();if(!duration.isBlank()&&!duration.equals("N/A")&&Double.parseDouble(duration)>300.5)throw failure("VOICE_TOO_LONG","Keep voice messages within 5 minutes.");
+            run(id,List.of(ffmpeg,"-v","error","-nostdin","-y","-threads","1","-protocol_whitelist","file,pipe","-i",staged(id,false).toString(),"-map","0:a:0","-vn","-map_metadata","-1","-ac","1","-ar","48000","-c:a","aac","-b:a","64k","-t","301","-movflags","+faststart","-threads","1",encoded.toString()),90);
+            var checked=json.readTree(run(id,List.of(ffprobe,"-v","error","-show_entries","format=duration","-of","json",encoded.toString()),20));double seconds=Double.parseDouble(checked.path("format").path("duration").asText());
+            if(!Double.isFinite(seconds)||seconds<=0||seconds>300.5)throw failure("VOICE_TOO_LONG","Keep voice messages within 5 minutes.");
+            Files.move(encoded,staged(id,false),StandardCopyOption.REPLACE_EXISTING);byte[] bytes=Files.readAllBytes(staged(id,false));if(bytes.length<1||bytes.length>10000000)throw failure("VOICE_TOO_LARGE","Keep voice messages within 10 MB.");
+            return new Validated(id,"Voice message.m4a","VOICE","audio/mp4",bytes.length,HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)),seconds,null,null);
+        }catch(ApiFailure error){discardStaged(id);throw error;}catch(InterruptedException error){Thread.currentThread().interrupt();discardStaged(id);throw new ApiFailure(503,"UPLOAD_INTERRUPTED","Recording check interrupted. Retry.");}
+        catch(Exception error){discardStaged(id);throw failure("INVALID_VOICE","This recording could not be checked. Record again.");}
+        finally{try{Files.deleteIfExists(encoded);}catch(IOException ignored){}if(acquired)workers.release();}
+    }
     public void promote(Validated file)throws IOException{
-        if(remote!=null){remote.put(file.id(),false,staged(file.id(),false));if(!file.kind().equals("DOCUMENT"))remote.put(file.id(),true,staged(file.id(),true));return;}
-        Files.move(staged(file.id(),false),path(file.id(),false),StandardCopyOption.ATOMIC_MOVE);if(!file.kind().equals("DOCUMENT"))Files.move(staged(file.id(),true),path(file.id(),true),StandardCopyOption.ATOMIC_MOVE);
+        if(remote!=null){remote.put(file.id(),false,staged(file.id(),false));if(Set.of("IMAGE","VIDEO").contains(file.kind()))remote.put(file.id(),true,staged(file.id(),true));return;}
+        Files.move(staged(file.id(),false),path(file.id(),false),StandardCopyOption.ATOMIC_MOVE);if(Set.of("IMAGE","VIDEO").contains(file.kind()))Files.move(staged(file.id(),true),path(file.id(),true),StandardCopyOption.ATOMIC_MOVE);
     }
     public boolean available(UUID id)throws IOException{return remote!=null?remote.exists(id,false):Files.isRegularFile(path(id,false),LinkOption.NOFOLLOW_LINKS);}
     public Resource resource(UUID id,boolean thumb)throws IOException{

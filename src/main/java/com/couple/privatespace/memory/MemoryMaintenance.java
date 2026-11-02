@@ -20,7 +20,7 @@ public class MemoryMaintenance {
             purger.claimExpired();purgeIds(jdbc.queryForList("SELECT id FROM memory WHERE state='PURGING' LIMIT 100",UUID.class));
             for(UUID id:jdbc.queryForList("SELECT id FROM memory_asset WHERE state='DISCARDED' AND memory_id IS NULL LIMIT 100",UUID.class))try{purger.purgeAsset(id);}catch(RuntimeException error){log.warn("Unpublished file removal pending; will retry. Asset {}",id);}
             reconcile(files.stage,true);reconcile(files.objects,false);
-            try{files.reconcileRemote(id->jdbc.queryForObject("SELECT count(*) FROM memory_asset WHERE id=?",Integer.class,id)>0);}
+            try{files.reconcileRemote(id->jdbc.queryForObject("SELECT (SELECT count(*) FROM memory_asset WHERE id=?)+(SELECT count(*) FROM chat_attachment WHERE id=?)",Integer.class,id,id)>0);}
             catch(java.io.IOException error){log.warn("Private remote object reconciliation will retry.");}
         }catch(RuntimeException error){log.warn("Memory maintenance could not complete; durable work will retry.");}
     }
@@ -30,7 +30,7 @@ public class MemoryMaintenance {
             for(Path path:paths.toList()){
                 String name=path.getFileName().toString();if(!name.matches("[a-f0-9-]{36}\\.(data|jpg|log)")||Files.isSymbolicLink(path)||!Files.getLastModifiedTime(path).toInstant().isBefore(cutoff))continue;
                 UUID id;try{id=UUID.fromString(name.substring(0,36));}catch(IllegalArgumentException ignored){continue;}
-                if(staging||jdbc.queryForObject("SELECT count(*) FROM memory_asset WHERE id=?",Integer.class,id)==0)Files.deleteIfExists(path);
+                if(staging||jdbc.queryForObject("SELECT (SELECT count(*) FROM memory_asset WHERE id=?)+(SELECT count(*) FROM chat_attachment WHERE id=?)",Integer.class,id,id)==0)Files.deleteIfExists(path);
                 if(++checked>=100)break;
             }
         }catch(Exception error){log.warn("Private file reconciliation will retry.");}

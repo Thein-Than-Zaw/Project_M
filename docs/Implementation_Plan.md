@@ -53,3 +53,11 @@ CHAT-02B local appearance/interaction correction (2 Nov2026): owner requests hov
 # Latest local update — CHAT-03 (2 November 2026)
 
 [Mobile Chat UX/private profiles record](CHAT-03_Mobile_Chat_UX.md): owner-requested compact responsive Chat, actual right-click timer fix, bubble-corner reactions, scroll pagination, Settings hierarchy, private profile photos and observed activity. Local verification recorded separately from physical-device UAT. Deployment HOLD and DRIVE_SYNC_PENDING continue.
+
+## CHAT-05 local continuation — 2 November 2026
+
+Owner adds mobile long-press actions, fixed laptop partner card, read-to-notification sync, unified emoji/sticker composer, private inline image/document/video/voice and cancellable sending/recording. Source implemented locally in V27–V30 and Chat media modules. See CHAT-05_Local_Media_And_Mobile_UX.md for all seven clause mappings, exact source/build identity, tests and remaining device checks. Local preview runs on 18083. Latest explicit owner deployment HOLD overrides prior release requests: no push/deploy. Human mobile/playback acceptance pending; DRIVE_SYNC_PENDING.
+
+## CHAT-06 sending/media polish — 2 November 2026
+
+Latest owner review → six UI clauses in CHAT-06_Sending_State_And_Compact_Media.md: immediate media bubble, small Sending spinner, shared five-minute budget/Failed/Retry/Cancel, free composer, hidden media filename/Download menu, compact padding. Local source and affected tests updated; schema stays V30. Previous CHAT-05 progress-panel/180s/15s behavior is superseded by this owner instruction. Deployment HOLD and human graphical/mobile review remain.

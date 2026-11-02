@@ -17,9 +17,15 @@ test('mouse hover immediately offers reactions and right click opens context act
 test('keyboard context-menu key and Shift+F10 offer the same Reply/Delete actions',()=>{
  const f=fixture();assert.ok(f.emit('keydown',{key:'ContextMenu'}));assert.ok(f.emit('keydown',{key:'F10',shiftKey:true}));assert.equal(f.calls.context.length,2);assert.equal(f.calls.context[1].clientY,90);assert.equal(f.emit('keydown',{key:'F10',shiftKey:false}),false);
 });
-test('touch tap reveals reactions; long press opens actions without an extra tap reaction',()=>{
- const tap=fixture();tap.emit('pointerenter',{pointerType:'touch'});assert.equal(tap.calls.reactions,0);tap.emit('pointerdown',{pointerType:'touch',clientX:20,clientY:30});tap.emit('pointerup');assert.equal(tap.calls.reactions,1);assert.equal(tap.jobs.size,0);
- const hold=fixture();hold.emit('pointerdown',{pointerType:'touch',clientX:40,clientY:50});hold.hold();hold.emit('pointerup');assert.equal(hold.calls.context.length,1);assert.equal(hold.calls.reactions,0);
+test('touch tap/focus does not open a toolbar; long press opens reactions only',()=>{
+ const tap=fixture();tap.emit('pointerenter',{pointerType:'touch'});tap.emit('pointerdown',{pointerType:'touch',clientX:20,clientY:30});tap.emit('focusin');tap.emit('pointerup');assert.equal(tap.calls.reactions,0);assert.equal(tap.calls.context.length,0);assert.equal(tap.jobs.size,0);
+ const hold=fixture();hold.emit('pointerdown',{pointerType:'touch',clientX:40,clientY:50});hold.hold();hold.emit('pointerup');hold.emit('pointerleave');hold.emit('focusout');assert.equal(hold.calls.context.length,0);assert.equal(hold.calls.reactions,1);assert.equal(hold.calls.leave,0);
+});
+test('native touch context menu cannot replace the reaction toolbar with Reply/Delete',()=>{
+ const f=fixture();f.emit('pointerdown',{pointerType:'touch',clientX:40,clientY:50});f.hold();assert.ok(f.emit('contextmenu',{pointerType:'touch'}));assert.equal(f.calls.reactions,1);assert.equal(f.calls.context.length,0);
+});
+test('long press consumes the release click, while normal clicks keep their default action',()=>{
+ const f=fixture();f.emit('pointerdown',{pointerType:'touch',clientX:40,clientY:50});f.hold();f.emit('pointerup');assert.equal(f.emit('click'),true);assert.equal(f.emit('click'),false);
 });
 test('scrolling, cancelled touch and leaving the message cancel long press',()=>{
  for(const stop of ['move','cancel','leave']){const f=fixture();f.emit('pointerdown',{pointerType:'touch',clientX:0,clientY:0});if(stop==='move')f.emit('pointermove',{clientX:0,clientY:30});else f.emit(stop==='cancel'?'pointercancel':'pointerleave');f.hold();f.emit('pointerup');assert.equal(f.calls.context.length,0);assert.equal(f.calls.reactions,0);assert.equal(f.jobs.size,0);}

@@ -14,7 +14,7 @@ public final class MemoryUploadGate extends OncePerRequestFilter {
     private final Semaphore requests = new Semaphore(2);
 
     @Override protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getMethod().equals("POST") || !request.getRequestURI().equals("/api/memory-uploads");
+        return !request.getMethod().equals("POST") || !java.util.Set.of("/api/memory-uploads","/api/chat/uploads").contains(request.getRequestURI());
     }
 
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

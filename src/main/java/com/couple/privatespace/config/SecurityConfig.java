@@ -36,8 +36,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/api/space").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/spaces","/api/invitations","/api/invitations/preview","/api/invitations/join").authenticated()
                 .requestMatchers(HttpMethod.GET,"/home.css","/chat.css","/chat.js","/chat-socket.js","/memories.css","/memories.js").permitAll()
-                .requestMatchers(HttpMethod.GET,"/profile-ui.js","/browser-notifications.js","/notification-inbox.js","/notifications.css","/notification-sounds.js","/call-widget.js","/call-socket.js","/call-media.js","/calls.css").permitAll()
-                .requestMatchers("/api/presence","/api/profile/photo","/api/profiles/*/photo","/api/chat/messages","/api/chat/messages/**","/api/notifications","/api/notifications/**","/api/calls/**","/api/rtc/config").access((identity,context)->new AuthorizationDecision(
+                .requestMatchers(HttpMethod.GET,"/chat-media.js","/profile-ui.js","/browser-notifications.js","/notification-inbox.js","/notifications.css","/notification-sounds.js","/call-widget.js","/call-socket.js","/call-media.js","/calls.css").permitAll()
+                .requestMatchers("/api/chat/uploads","/api/chat/uploads/**","/api/chat/assets/*","/api/presence","/api/profile/photo","/api/profiles/*/photo","/api/chat/messages","/api/chat/messages/**","/api/notifications","/api/notifications/**","/api/calls/**","/api/rtc/config").access((identity,context)->new AuthorizationDecision(
                     identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers("/memories.html","/api/memories","/api/memories/**","/api/memory-uploads","/api/memory-uploads/**","/api/memory-assets/*").access((identity,context)->new AuthorizationDecision(
                     identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))

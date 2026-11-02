@@ -18,17 +18,20 @@ public class ChatService {
     public ChatService(JdbcTemplate jdbc,PairingService pairing,ApplicationEventPublisher events,ChatLimiter limiter) {
         this.jdbc=jdbc;this.pairing=pairing;this.events=events;this.limiter=limiter;
     }
+    public record Attachment(UUID id,String name,String kind,String mime,long size,Double duration,Integer width,Integer height,String url,String thumbnail) {}
     public record Reaction(UUID userId,String emoji) { }
     public record Quote(UUID id,UUID senderId,String body,String type,String giftName,boolean unavailable) { }
     public record Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,String type,String giftCode,String giftName,String giftAssetPath,
-            Instant createdAt,Instant deliveredAt,Instant readAt,UUID replyToId,Quote reply,List<Reaction> reactions,Instant deletedAt,long version,boolean hidden) {
+            Instant createdAt,Instant deliveredAt,Instant readAt,UUID replyToId,Quote reply,List<Reaction> reactions,Instant deletedAt,long version,boolean hidden,UUID attachmentId,Attachment attachment) {
+        public Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,String type,String giftCode,String giftName,String giftAssetPath,Instant createdAt,Instant deliveredAt,Instant readAt,UUID replyToId,Quote reply,List<Reaction> reactions,Instant deletedAt,long version,boolean hidden){this(id,sequence,senderId,clientMessageId,body,type,giftCode,giftName,giftAssetPath,createdAt,deliveredAt,readAt,replyToId,reply,reactions,deletedAt,version,hidden,null,null);}
         public Message(UUID id,long sequence,UUID senderId,UUID clientMessageId,String body,String type,String giftCode,String giftName,String giftAssetPath,Instant createdAt,Instant deliveredAt,Instant readAt){this(id,sequence,senderId,clientMessageId,body,type,giftCode,giftName,giftAssetPath,createdAt,deliveredAt,readAt,null,null,List.of(),null,0,false);}
     }
     public record Receipt(UUID id,long sequence,Instant deliveredAt,Instant readAt) { }
     public record State(long latestSequence,long unreadCount,long changeVersion) { }
     public record Page(UUID selfId,String selfName,PairingService.Member partner,String timezone,List<Message> items,
             boolean hasMore,long latestSequence,long unreadCount,long changeVersion,String selfAvatarUrl) { }
-    public record Send(UUID clientMessageId,String body,String type,String giftCode,UUID recipientId,UUID replyToId) {
+    public record Send(UUID clientMessageId,String body,String type,String giftCode,UUID recipientId,UUID replyToId,UUID attachmentId) {
+        public Send(UUID key,String body,String type,String giftCode,UUID recipientId,UUID replyToId){this(key,body,type,giftCode,recipientId,replyToId,null);}
         public Send(UUID key,String body,String type,String giftCode,UUID recipientId){this(key,body,type,giftCode,recipientId,null);}
     }
     public record Snapshot(List<Message> items,List<UUID> removedIds) { }
@@ -91,18 +94,20 @@ public class ChatService {
     @Transactional
     public Message send(UUID actor,Send command) {
         if(command.clientMessageId()==null)throw new ApiFailure(400,"INVALID_MESSAGE_ID","Retry with a valid message identifier.");
-        String type=command.type()==null?"TEXT":command.type();boolean gift=type.equals("GIFT");
-        if(!Set.of("TEXT","GIFT").contains(type)||(!gift&&command.giftCode()!=null))throw new ApiFailure(400,"INVALID_MESSAGE_TYPE","Choose a supported message type.");
+        String type=command.type()==null?"TEXT":command.type();boolean gift=type.equals("GIFT"),file=type.equals("FILE");
+        if(!Set.of("TEXT","GIFT","FILE").contains(type)||(!gift&&command.giftCode()!=null))throw new ApiFailure(400,"INVALID_MESSAGE_TYPE","Choose a supported message type.");
+        if(file!=(command.attachmentId()!=null))throw new ApiFailure(400,"INVALID_ATTACHMENT","Choose one uploaded file for this message.");
         if(command.recipientId()!=null)throw new ApiFailure(400,"INVALID_RECIPIENT","Your partner is selected by the server.");
-        String body=gift&&command.body()==null?"":command.body();
+        String body=(gift||file)&&command.body()==null?"":command.body();
         // Unicode space separators (including NBSP) are blank even when String.isBlank excludes them.
-        if(!gift&&(body==null||body.codePoints().allMatch(c->Character.isWhitespace(c)||Character.isSpaceChar(c)||c==0xFEFF)))throw new ApiFailure(400,"EMPTY_MESSAGE","Write a message first.");
+        if(!gift&&!file&&(body==null||body.codePoints().allMatch(c->Character.isWhitespace(c)||Character.isSpaceChar(c)||c==0xFEFF)))throw new ApiFailure(400,"EMPTY_MESSAGE","Write a message first.");
         if(body.codePointCount(0,body.length())>(gift?500:4000)||body.codePoints().anyMatch(c->c==0||Character.isSurrogate((char)c)&&c<=65535))throw new ApiFailure(400,gift?"GIFT_NOTE_TOO_LONG":"MESSAGE_TOO_LONG",gift?"Keep your note within 500 characters.":"Use up to 4,000 valid Unicode characters.");
-        var space=active(actor);lock(space.id());
+        var space=active(actor);lockUpload(jdbc,actor,command.clientMessageId());ensureNotCancelled(jdbc,actor,command.clientMessageId());lock(space.id());
         var existing=jdbc.query("SELECT * FROM chat_message WHERE sender_id=? AND client_message_id=?",(r,n)->map(r),actor,command.clientMessageId());
         if(!existing.isEmpty()) {
             var old=existing.getFirst();
-            boolean same=jdbc.queryForObject("SELECT request_hash=sha256(convert_to(jsonb_build_array(?::text,?::text,?::text,?::uuid)::text,'UTF8')) FROM chat_message WHERE id=?",Boolean.class,body,type,command.giftCode(),command.replyToId(),old.id());
+            var fingerprint=new ArrayList<Object>(Arrays.asList(body,type,command.giftCode(),command.replyToId()));if(file)fingerprint.add(command.attachmentId());fingerprint.add(old.id());
+            boolean same=jdbc.queryForObject("SELECT request_hash=sha256(convert_to(jsonb_build_array(?::text,?::text,?::text,?::uuid"+(file?",?::uuid":"")+")::text,'UTF8')) FROM chat_message WHERE id=?",Boolean.class,fingerprint.toArray());
             if(!same)throw new ApiFailure(409,"MESSAGE_CONFLICT","This message identifier was already used for different content.");
             if(hidden(actor,old.id()))return copy(old,"",null,null,List.of(),true);
             return hydrate(space.id(),actor,List.of(old)).getFirst();
@@ -113,11 +118,13 @@ public class ChatService {
             var choices=jdbc.query("SELECT code,name,pack,asset_path FROM gift_catalog WHERE code=? AND active FOR SHARE",(r,n)->new Gift(r.getString(1),r.getString(2),r.getString(3),r.getString(4)),command.giftCode());
             if(choices.isEmpty())throw new ApiFailure(400,"INVALID_GIFT","This gift is not available.");selected=choices.getFirst();
         }
+        if(file){var uploads=jdbc.queryForList("SELECT id FROM chat_attachment WHERE id=? AND space_id=? AND uploader_id=? AND client_message_id=? AND state='UPLOADED' FOR UPDATE",command.attachmentId(),space.id(),actor,command.clientMessageId());if(uploads.isEmpty())throw new ApiFailure(409,"ATTACHMENT_UNAVAILABLE","This upload is unavailable or cancelled. Choose it again.");}
         limiter.check(actor,true);
         long sequence=jdbc.queryForObject("UPDATE chat_conversation SET last_sequence=last_sequence+1,change_version=change_version+1,updated_at=clock_timestamp() WHERE space_id=? RETURNING last_sequence",Long.class,space.id());
-        var message=jdbc.queryForObject("INSERT INTO chat_message(id,space_id,sequence,sender_id,client_message_id,body,type,gift_code,gift_name,gift_asset_path,reply_to_id) VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING *",
-            (r,n)->map(r),UUID.randomUUID(),space.id(),sequence,actor,command.clientMessageId(),body,type,selected==null?null:selected.code(),selected==null?null:selected.name(),selected==null?null:selected.assetPath(),command.replyToId());
-        events.publishEvent(new Changed(memberIds(space),"message.created",message,List.of()));return hydrate(space.id(),actor,List.of(message)).getFirst();
+        var message=jdbc.queryForObject("INSERT INTO chat_message(id,space_id,sequence,sender_id,client_message_id,body,type,gift_code,gift_name,gift_asset_path,reply_to_id,attachment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING *",
+            (r,n)->map(r),UUID.randomUUID(),space.id(),sequence,actor,command.clientMessageId(),body,type,selected==null?null:selected.code(),selected==null?null:selected.name(),selected==null?null:selected.assetPath(),command.replyToId(),command.attachmentId());
+        if(file)jdbc.update("UPDATE chat_attachment SET state='ATTACHED',message_id=? WHERE id=?",message.id(),command.attachmentId());
+        var result=hydrate(space.id(),actor,List.of(message)).getFirst();events.publishEvent(new Changed(memberIds(space),"message.created",file?copy(result,result.body(),result.replyToId(),null,List.of(),false):message,List.of()));return result;
     }
     /** CHAT-03 / AC-F04-06: recipient-only explicit per-message receipts never mark unseen older pages. */
     @Transactional
@@ -136,7 +143,7 @@ public class ChatService {
     private static final Set<String> EMOJI=Set.of("❤️","😂","😮","😢","👍","🥰");
     private boolean hidden(UUID actor,UUID id){return jdbc.queryForObject("SELECT count(*) FROM chat_message_hidden WHERE message_id=? AND user_id=?",Integer.class,id,actor)>0;}
     private Message visible(UUID space,UUID actor,UUID id){return jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND id=? AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)",(r,n)->map(r),space,id,actor).stream().findFirst().orElseThrow(()->new ApiFailure(404,"MESSAGE_UNAVAILABLE","This message is not available."));}
-    private Message copy(Message m,String body,UUID replyTo,Quote quote,List<Reaction> reactions,boolean hidden){return new Message(m.id(),m.sequence(),m.senderId(),m.clientMessageId(),body,m.type(),hidden?null:m.giftCode(),hidden?null:m.giftName(),hidden?null:m.giftAssetPath(),m.createdAt(),m.deliveredAt(),m.readAt(),replyTo,quote,reactions,m.deletedAt(),m.version(),hidden);}
+    private Message copy(Message m,String body,UUID replyTo,Quote quote,List<Reaction> reactions,boolean hidden){return new Message(m.id(),m.sequence(),m.senderId(),m.clientMessageId(),body,m.type(),hidden?null:m.giftCode(),hidden?null:m.giftName(),hidden?null:m.giftAssetPath(),m.createdAt(),m.deliveredAt(),m.readAt(),replyTo,quote,reactions,m.deletedAt(),m.version(),hidden,hidden||m.deletedAt()!=null?null:m.attachmentId(),hidden||m.deletedAt()!=null?null:m.attachment());}
     private List<Message> hydrate(UUID space,UUID actor,List<Message> rows){
         if(rows.isEmpty())return List.of();var ids=rows.stream().map(Message::id).toList();var replies=rows.stream().map(Message::replyToId).filter(Objects::nonNull).distinct().toList();var quotes=new HashMap<UUID,Quote>();
         if(!replies.isEmpty()){
@@ -145,6 +152,9 @@ public class ChatService {
         }
         var reactions=new HashMap<UUID,List<Reaction>>();var args=new ArrayList<Object>();args.add(space);args.addAll(ids);
         jdbc.query("SELECT message_id,user_id,emoji FROM chat_message_reaction WHERE space_id=? AND message_id IN ("+String.join(",",Collections.nCopies(ids.size(),"?"))+") ORDER BY user_id",(org.springframework.jdbc.core.RowCallbackHandler)r->reactions.computeIfAbsent(r.getObject(1,UUID.class),key->new ArrayList<>()).add(new Reaction(r.getObject(2,UUID.class),r.getString(3))),args.toArray());
+        var attachments=new HashMap<UUID,Attachment>();
+        jdbc.query("SELECT * FROM chat_attachment WHERE space_id=? AND message_id IN ("+String.join(",",Collections.nCopies(ids.size(),"?"))+") AND state='ATTACHED'",(org.springframework.jdbc.core.RowCallbackHandler)r->attachments.put(r.getObject("message_id",UUID.class),attachment(r)),args.toArray());
+        rows=rows.stream().map(m->new Message(m.id(),m.sequence(),m.senderId(),m.clientMessageId(),m.body(),m.type(),m.giftCode(),m.giftName(),m.giftAssetPath(),m.createdAt(),m.deliveredAt(),m.readAt(),m.replyToId(),m.reply(),m.reactions(),m.deletedAt(),m.version(),m.hidden(),m.attachmentId(),attachments.get(m.id()))).toList();
         return rows.stream().map(m->copy(m,m.body(),m.deletedAt()==null?m.replyToId():null,m.replyToId()==null||m.deletedAt()!=null?null:quotes.getOrDefault(m.replyToId(),new Quote(m.replyToId(),null,null,null,null,true)),m.deletedAt()!=null?List.of():List.copyOf(reactions.getOrDefault(m.id(),List.of())),false)).toList();
     }
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
@@ -159,7 +169,16 @@ public class ChatService {
     @Transactional
     public Message delete(UUID actor,UUID id){
         var space=active(actor);limiter.check(actor,false);lock(space.id());var message=visible(space.id(),actor,id);if(!message.senderId().equals(actor))throw new ApiFailure(403,"MESSAGE_DELETE_FORBIDDEN","You can delete for everyone only messages you sent.");
-        if(message.deletedAt()==null){jdbc.update("UPDATE chat_message SET body='',gift_code=NULL,gift_name=NULL,gift_asset_path=NULL,reply_to_id=NULL,deleted_at=clock_timestamp(),version=version+1 WHERE id=?",id);jdbc.update("DELETE FROM chat_message_reaction WHERE message_id=?",id);changed(space,memberIds(space),"message.deleted");}return hydrate(space.id(),actor,List.of(visible(space.id(),actor,id))).getFirst();
+        if(message.deletedAt()==null)tombstone(space,id);return hydrate(space.id(),actor,List.of(visible(space.id(),actor,id))).getFirst();
+    }
+    /** CHAT-06: cancellation covers every own send, including a hidden, already committed message. */
+    @Transactional
+    public void cancelSend(UUID actor,UUID id){
+        var space=active(actor);lock(space.id());var rows=jdbc.query("SELECT * FROM chat_message WHERE space_id=? AND id=? AND sender_id=?",(r,n)->map(r),space.id(),id,actor);
+        if(rows.isEmpty())throw new ApiFailure(404,"MESSAGE_UNAVAILABLE","This message is not available.");if(rows.getFirst().deletedAt()==null)tombstone(space,id);
+    }
+    private void tombstone(PairingService.Space space,UUID id){
+        jdbc.update("UPDATE chat_attachment SET state='DELETED' WHERE message_id=? AND space_id=? AND state='ATTACHED'",id,space.id());jdbc.update("UPDATE chat_message SET attachment_id=NULL,body='',gift_code=NULL,gift_name=NULL,gift_asset_path=NULL,reply_to_id=NULL,deleted_at=clock_timestamp(),version=version+1 WHERE id=?",id);jdbc.update("DELETE FROM chat_message_reaction WHERE message_id=?",id);changed(space,memberIds(space),"message.deleted");
     }
     @Transactional
     public Message react(UUID actor,UUID id,React request){
@@ -176,8 +195,11 @@ public class ChatService {
     }
     private List<UUID> memberIds(PairingService.Space space){return space.members().stream().map(PairingService.Member::id).toList();}
     private Message map(java.sql.ResultSet r)throws java.sql.SQLException {
-        return new Message(r.getObject("id",UUID.class),r.getLong("sequence"),r.getObject("sender_id",UUID.class),r.getObject("client_message_id",UUID.class),r.getString("body"),r.getString("type"),r.getString("gift_code"),r.getString("gift_name"),r.getString("gift_asset_path"),r.getTimestamp("created_at").toInstant(),instant(r,"delivered_at"),instant(r,"read_at"),r.getObject("reply_to_id",UUID.class),null,List.of(),instant(r,"deleted_at"),r.getLong("version"),false);
+        return new Message(r.getObject("id",UUID.class),r.getLong("sequence"),r.getObject("sender_id",UUID.class),r.getObject("client_message_id",UUID.class),r.getString("body"),r.getString("type"),r.getString("gift_code"),r.getString("gift_name"),r.getString("gift_asset_path"),r.getTimestamp("created_at").toInstant(),instant(r,"delivered_at"),instant(r,"read_at"),r.getObject("reply_to_id",UUID.class),null,List.of(),instant(r,"deleted_at"),r.getLong("version"),false,r.getObject("attachment_id",UUID.class),null);
     }
+    static void lockUpload(JdbcTemplate jdbc,UUID actor,UUID key){jdbc.execute((org.springframework.jdbc.core.ConnectionCallback<Void>)connection->{try(var statement=connection.prepareStatement("SELECT pg_advisory_xact_lock(hashtextextended(?,0))")){statement.setString(1,"chat-upload:"+actor+":"+key);statement.execute();}return null;});}
+    static void ensureNotCancelled(JdbcTemplate jdbc,UUID actor,UUID key){if(jdbc.queryForObject("SELECT count(*) FROM chat_upload_intent WHERE uploader_id=? AND client_message_id=? AND cancelled_at IS NOT NULL",Integer.class,actor,key)>0)throw new ApiFailure(409,"UPLOAD_CANCELLED","This send was cancelled. Choose a new file or record again.");}
+    static Attachment attachment(java.sql.ResultSet r)throws java.sql.SQLException{var id=r.getObject("id",UUID.class);String kind=r.getString("kind"),url="/api/chat/assets/"+id;return new Attachment(id,r.getString("name"),kind,r.getString("mime"),r.getLong("bytes"),(Double)r.getObject("duration"),(Integer)r.getObject("width"),(Integer)r.getObject("height"),url,Set.of("IMAGE","VIDEO").contains(kind)?url+"?thumbnail=true":null);}
     private static Instant instant(java.sql.ResultSet r,String field)throws java.sql.SQLException {var t=r.getTimestamp(field);return t==null?null:t.toInstant();}
     private static Instant instant(java.sql.ResultSet r,int field)throws java.sql.SQLException {var t=r.getTimestamp(field);return t==null?null:t.toInstant();}
 }

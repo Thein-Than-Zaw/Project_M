@@ -8,7 +8,7 @@ const merge=source.slice(source.indexOf('function merge('),source.indexOf('funct
 const redact=source.slice(source.indexOf('function redactReferences('),source.indexOf('function renderReplyDraft('));
 const transmit=source.slice(source.indexOf('function transmit('),source.indexOf('function flushPending('));
 function fixture({connected=true,accepted=true}={}){
- const sounds=[],context={records:new Map(),pending:new Map(),attempted:new Set(),hiddenMessages:new Set(),redactReferences(){},selfId:'self',started:true,notificationSounds:{sent:id=>sounds.push(id)},persist(){},render(){},$(){return {};},live:{connected:()=>connected,send:()=>accepted}};
+ const sounds=[],context={records:new Map(),pending:new Map(),attempted:new Set(),cancelledSends:new Set(),chatMedia:null,SEND_WAIT_MS:300000,hiddenMessages:new Set(),redactReferences(){},selfId:'self',started:true,notificationSounds:{sent:id=>sounds.push(id)},persist(){},render(){},$(){return {};},live:{connected:()=>connected,send:()=>accepted}};
  vm.createContext(context);vm.runInContext(merge+transmit+redact+';globalThis.hooks={merge,transmit};',context);
  const queued={clientMessageId:'intent',body:'hello',type:'TEXT',state:'Queued'};context.pending.set('intent',queued);
  const message={id:'committed',clientMessageId:'intent',senderId:'self',body:'hello',type:'TEXT',giftCode:null,deliveredAt:null,readAt:null};return {context,sounds,queued,message};
@@ -17,7 +17,7 @@ test('accepted transport alone stays silent; confirmed matching server response 
  const f=fixture();f.context.hooks.transmit(f.queued);assert.deepEqual(f.sounds,[]);assert.ok(f.context.attempted.has('intent'));f.context.hooks.merge(f.message);assert.deepEqual(f.sounds,['committed']);f.context.hooks.merge({...f.message,readAt:'2026-11-01T00:00:00Z'});assert.deepEqual(f.sounds,['committed']);
 });
 test('queued/offline/failed transport and historical own response never produce sent chime',()=>{
- for(const options of [{connected:false},{accepted:false}]){const f=fixture(options);f.context.hooks.transmit(f.queued);assert.equal(f.queued.state,'Queued');assert.equal(f.context.attempted.size,0);f.context.hooks.merge(f.message);assert.deepEqual(f.sounds,[]);}
+ for(const options of [{connected:false},{accepted:false}]){const f=fixture(options);f.context.hooks.transmit(f.queued);assert.equal(f.queued.state,'Sending…');assert.equal(f.context.attempted.size,0);f.context.hooks.merge(f.message);assert.deepEqual(f.sounds,[]);}
  const history=fixture();history.context.hooks.merge(history.message);assert.deepEqual(history.sounds,[]);
 });
 test('partner message or mismatched body cannot confirm an outgoing intent',()=>{
@@ -47,4 +47,16 @@ test('unavailable reply recovery keeps typed intent and only detaches after expl
  const f=fixture();f.queued.body='မင်္ဂလာပါ 🌸';f.queued.replyToId='deleted-original';f.queued.code='REPLY_UNAVAILABLE';f.queued.type='GIFT';f.queued.giftCode='safe-sticker';f.queued.giftName='Sticker';f.context.crypto={randomUUID:()=> 'new-intent'};f.context.attempted.add('intent');
  const helper=source.slice(source.indexOf('function resendWithoutReply('),source.indexOf('// CHAT-02B:'));vm.runInContext(helper+';globalThis.detach=resendWithoutReply;',f.context);
  assert.ok(f.context.pending.has('intent'));f.context.detach('intent');assert.equal(f.context.pending.has('intent'),false);const replacement=f.context.pending.get('new-intent');assert.equal(replacement.body,'မင်္ဂလာပါ 🌸');assert.equal(replacement.giftCode,'safe-sticker');assert.equal(replacement.replyToId,null);assert.ok(f.context.attempted.has('new-intent'));assert.equal(f.context.attempted.has('intent'),false);assert.deepEqual(f.sounds,[]);
+});
+
+test('sending deadline covers text and media and reconnect does not extend the five minute wait',()=>{
+ for(const type of ['TEXT','FILE','GIFT']){const f=fixture({connected:false});f.queued.type=type;if(type==='FILE')f.queued.attachmentId='asset';f.context.hooks.transmit(f.queued);const deadline=f.queued.deadlineAt;assert.ok(deadline>Date.now()+299000);f.context.hooks.transmit(f.queued);assert.equal(f.queued.deadlineAt,deadline);assert.equal(f.queued.state,'Sending…');f.queued.deadlineAt=Date.now()-1;f.context.checkSendTimeouts();assert.equal(f.queued.state,'Failed');f.context.hooks.transmit(f.queued);assert.equal(f.queued.state,'Failed');f.context.hooks.transmit(f.queued,true);assert.equal(f.queued.state,'Sending…');assert.ok(f.queued.deadlineAt>Date.now());}
+});
+
+test('media remains pending while upload resolves; cancelling prevents a late upload from sending',async()=>{
+ const f=fixture();let resolve,transportSends=0;f.context.live.send=()=>{transportSends++;return true;};f.context.chatMedia={upload:()=>new Promise(r=>resolve=r)};f.queued.type='FILE';f.context.hooks.transmit(f.queued);assert.equal(f.queued.state,'Sending…');assert.equal(transportSends,0);f.context.cancelledSends.add('intent');f.context.pending.delete('intent');resolve({id:'late'});await Promise.resolve();await Promise.resolve();assert.equal(transportSends,0);
+});
+
+test('late real server confirmation resolves a timed-out text without duplicating the send',()=>{
+ const f=fixture();f.context.hooks.transmit(f.queued);f.queued.deadlineAt=Date.now()-1;f.context.checkSendTimeouts();assert.equal(f.queued.state,'Failed');f.context.hooks.merge(f.message);assert.equal(f.context.pending.size,0);assert.equal(f.context.records.size,1);assert.deepEqual(f.sounds,['committed']);
 });

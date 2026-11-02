@@ -103,3 +103,9 @@ F03/Home/Profile and F04/Chat → owner-requested C01–C21 clauses → [CHAT-03
 # CHAT-04 notification/layout correction
 
 Owner's 2 November UI/deploy request → C1–C3 in [CHAT-04 record](CHAT-04_Notification_Layout_Fix.md) → notification-inbox.js, chat.css → notification-inbox-ui.test.mjs + existing NotificationIntegrationTest. Browser visual checks unavailable; source/API tests and deployment checks are distinct.
+
+## CHAT-05 media/mobile continuation
+
+Owner's latest seven clauses C1–C7 → [CHAT-05 local record](CHAT-05_Local_Media_And_Mobile_UX.md) → chat.html/js/css + chat-media.js + ChatService/AttachmentController/AttachmentService + shared Memory file validators/maintenance + V27–V30 → gesture/responsive/sent-sound/media Node tests and ChatMedia/ChatActions/Notification native tests. Notification list read remains distinct; actual Chat read now reads its matching inbox entries. Actual touch/layout/playback acceptance remains pending. Local preview only; deployment HOLD.
+
+CHAT-06 owner media/sending review → C1–C6 in [CHAT-06 record](CHAT-06_Sending_State_And_Compact_Media.md) → chat-media.js, chat.js/html/css and generalized ChatService/ChatAttachmentService cancellation → chat-media.test.mjs, chat-sent-sound.test.mjs, ChatMediaIntegrationTest plus Chat/ChatActions/Gift native regressions. No new schema or online operation; device UX acceptance pending.
