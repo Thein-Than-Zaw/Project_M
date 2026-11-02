@@ -111,3 +111,5 @@ Owner's latest seven clauses C1–C7 → [CHAT-05 local record](CHAT-05_Local_Me
 CHAT-06 owner media/sending review → C1–C6 in [CHAT-06 record](CHAT-06_Sending_State_And_Compact_Media.md) → chat-media.js, chat.js/html/css and generalized ChatService/ChatAttachmentService cancellation → chat-media.test.mjs, chat-sent-sound.test.mjs, ChatMediaIntegrationTest plus Chat/ChatActions/Gift native regressions. No new schema or online operation; device UX acceptance pending.
 
 CHAT-05/06 deployed application identity2d3294c → Render dep-dbjuim67bikc738jtds0 LIVE / schemaV30 → full native105, JS64 and final HTTPS/source/guest-ACL checks PASS. Release evidence and exact package identity: [Release_CHAT06](Release_CHAT06.md). Owner deployment authorization supersedes earlier local HOLD; physical device UAT and Drive sync remain separately pending.
+
+CALL-UI03 owner laptop call screenshots → C1–C6 in [laptop call layout record](CALL-UI03_Laptop_Call_Layout.md) → call-widget.js/calls.css presentation and Fit/Fill → Node64 and markup/accessibility checks PASS; actual graphical/device review pending because browser use disabled. Local only, no deployment.
