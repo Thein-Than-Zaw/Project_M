@@ -61,3 +61,5 @@ Owner adds mobile long-press actions, fixed laptop partner card, read-to-notific
 ## CHAT-06 sending/media polish — 2 November 2026
 
 Latest owner review → six UI clauses in CHAT-06_Sending_State_And_Compact_Media.md: immediate media bubble, small Sending spinner, shared five-minute budget/Failed/Retry/Cancel, free composer, hidden media filename/Download menu, compact padding. Local source and affected tests updated; schema stays V30. Previous CHAT-05 progress-panel/180s/15s behavior is superseded by this owner instruction. Deployment HOLD and human graphical/mobile review remain.
+
+CHAT-05/06 release status: owner explicitly lifted HOLD and approved deployment. App commit2d3294c is LIVE on Render (2 November 2026 08:10:31 Myanmar time), schemaV30. Full native105 and JS64 PASS; post-live readiness/source/security checks PASS. See Release_CHAT06.md. Actual production signed-in/device acceptance remains separate; source package prepared locally with DRIVE_SYNC_PENDING. Prior HOLD notes remain historical.
