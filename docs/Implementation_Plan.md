@@ -67,3 +67,5 @@ CHAT-05/06 release status: owner explicitly lifted HOLD and approved deployment.
 ## CALL-UI05 local increment
 
 Owner requests taller mobile self-preview and ephemeral flying reactions. Square phone preview + six-emoji connected-call picker + selected-session-only STOMP reaction relay implemented; no schema migration. Local build and scoped tests passed; see CALL-UI05_Mobile_Self_View_And_Reactions.md for contract, exact identity, rate/privacy/lifecycle behavior and pending physical UX review. Production remains unchanged until further deployment instruction.
+
+CALL-UI05 subsequently deployed on owner instruction: appcd4376f LIVE, eight health/source/access checks PASS, no migration/configuration change. Full evidence/source package identity in CALL-UI05_Mobile_Self_View_And_Reactions.md; prior local-only status is historical. Actual two-device UX and Drive sync remain separate pending items.
