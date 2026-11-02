@@ -115,3 +115,5 @@ CHAT-05/06 deployed application identity2d3294c → Render dep-dbjuim67bikc738jt
 CALL-UI03 owner laptop call screenshots → C1–C6 in [laptop call layout record](CALL-UI03_Laptop_Call_Layout.md) → call-widget.js/calls.css presentation and Fit/Fill → Node64 and markup/accessibility checks PASS; actual graphical/device review pending because browser use disabled. Local only, no deployment.
 
 CALL-UI03 deployment authorization received → application a6196b3 → Render dep-dbka9v2jnfac73a2dssg LIVE at 21:31 Myanmar time on 2 November 2026. JS64, markup and six live health/source/access checks PASS; schemaV30 unchanged. See CALL-UI03_Laptop_Call_Layout.md for exact source/package identity and remaining physical visual review / DRIVE_SYNC_PENDING.
+
+CALL-UI04 owner live screenshot feedback → C1 full remote frame/default Fit and C2 persistent fullscreen icon → call-widget.js plus call-presentation.test.mjs → Node66 and markup checks PASS. Root causes and remaining native-device visual review: [CALL-UI04 record](CALL-UI04_Uncropped_Video_And_Fullscreen_Icon.md). Local correction; no deployment yet.

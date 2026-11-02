@@ -1,0 +1,16 @@
+# CALL-UI04 — Uncropped partner video and fullscreen icon
+
+2 November 2026, Asia/Yangon. Owner's live laptop screenshot reports excessive partner-video cropping while self-preview is satisfactory, plus a header fullscreen control displaying wrapped text. Base main `d899796` with deployed applicationa6196b3. This local correction supersedes CALL-UI03's default laptop Fill choice.
+
+| Clause | Root cause / correction | Evidence |
+|---|---|---|
+| C1 Show full partner camera frame by default | Desktop breakpoint initialized Fill, causing object-fit:cover to crop the frame into the wide stage. Default now Fit for every device, using existing object-fit:contain. Fill remains explicit opt-in in ⋯. No capture constraints, remote stream or self-preview CSS changed. | New actual-source transition regression verifies Fit initially and explicit Fill/Fit toggle |
+| C2 Fullscreen stays an icon | Existing fullscreenchange handler replaced the SVG with textContent after entering/exiting native fullscreen. New renderFullscreenControl always builds the SVG, changes expand/contract paths and accessible label/title; no visible text replacement. | New actual-source native-event-handler regression simulates repeated enter/exit transitions and verifies SVG retention/labels |
+
+Both clauses UI_REQUIRED. Existing rounded canvas/floating dock, self-view, call Answer/End/Mute/Camera/Back semantics and browser fullscreen request/error handling remain. No backend, schema, storage, TURN or media acquisition changes. Fit can show unused side areas when camera and stage aspect ratios differ; this preserves the whole frame without stretching or camera zoom.
+
+Verification: JS syntax and diff checks PASS; **66 Node tests PASS**, zero failures/skips, including the two root-cause regressions (`.local/call-ui04-js.log`). Existing call template unique-ID/accessibility/self-muted/inline checks PASS. Local health UP at http://127.0.0.1:18083/; preview serves static source directly, so refresh before starting another call loads this correction. Controlled event tests are not native browser/fullscreen or two-device visual acceptance. Actual laptop camera/fullscreen review remains NOT_TESTED; browser use was disabled during the preceding local preview attempt and has not been bypassed.
+
+Status: IMPLEMENTED LOCALLY, scoped checks PASS, human visual review PENDING. No commit/push/deploy for this correction yet; prior deployment request covered CALL-UI03. Source package NOT_DUE for routine local work; Code Update Record DRIVE_SYNC_PENDING because existing authorized destination is unresolved. Recovery: revert this JS correction and its tests, with no data operation.
+
+Owner now explicitly requests server deployment. This supersedes local-only status above. Deploy the tested default-Fit/fullscreen-icon correction to the existing main/Render service; no schema/backend/storage/TURN/configuration change or data export/restore. Existing66 passing checks apply to the same source. A full source package is now due and will be prepared locally; Drive destination remains unresolved separately. Cloud build/deployment/public-source checks follow after execution; actual physical visual acceptance remains pending owner review.

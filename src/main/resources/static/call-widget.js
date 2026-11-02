@@ -130,11 +130,17 @@ $('call-resume').addEventListener('click',async()=>{if(busy)return;busy=true;ren
 $('call-mic').addEventListener('click',()=>{const track=localStream?.getAudioTracks()[0];if(track){track.enabled=!track.enabled;sendMedia();render();}});$('call-camera').addEventListener('click',()=>{const track=localStream?.getVideoTracks()[0];if(track){track.enabled=!track.enabled;sendMedia();render();}});$('call-play').addEventListener('click',()=>$('call-remote').play().then(()=>{$('call-play').hidden=true;}).catch(()=>failure('Audio playback is blocked. Check browser sound permissions.')));
 $('call-refresh').addEventListener('click',()=>sync().catch(failure));$('call-fullscreen').hidden=!document.fullscreenEnabled;
 // CALL-UI03: presentation only; never change capture constraints or negotiated tracks.
-let fillCallVideo=window.matchMedia('(min-width: 761px)').matches;
+let fillCallVideo=false;
 function renderVideoFit(){const button=$('call-video-fit');$('call-panel').dataset.videoFit=fillCallVideo?'fill':'fit';button.setAttribute('aria-pressed',String(fillCallVideo));button.title=fillCallVideo?'Show the whole video without cropping':'Crop the edges to fill the frame';}
 $('call-video-fit').addEventListener('click',()=>{fillCallVideo=!fillCallVideo;renderVideoFit();$('call-more').open=false;});renderVideoFit();
+function renderFullscreenControl(){
+ const button=$('call-fullscreen'),expanded=!!document.fullscreenElement,label=expanded?'Exit full screen':'Enter full screen';
+ const path=expanded?'M3 8h5V3m8 0v5h5M8 21v-5H3m18 0h-5v5':'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5';
+ button.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+path+'"/></svg>';button.setAttribute('aria-label',label);button.title=label;
+}
+renderFullscreenControl();
 $('call-fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('call-panel').requestFullscreen();}catch{failure('Browser full screen is unavailable. The full-page call remains open.');}});
-document.addEventListener('fullscreenchange',()=>{$('call-fullscreen').textContent=document.fullscreenElement?'Exit full screen':'Full screen';});
+document.addEventListener('fullscreenchange',renderFullscreenControl);
 $('call-history-toggle').addEventListener('click',async()=>{const box=$('call-history');box.hidden=!box.hidden;if(box.hidden)return;box.textContent='Loading calls…';try{const recent=await api('/api/calls/recent');box.replaceChildren();if(!recent.length)box.textContent='No calls yet.';for(const item of recent){const row=document.createElement('p');row.textContent=`${item.callerId===home.self.id?'Outgoing':'Incoming'} ${item.mode.toLowerCase()} · ${item.state.toLowerCase()} · ${new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Yangon'}).format(new Date(item.createdAt))}`;box.append(row);}}catch(error){box.textContent=error.message;}});
 for(const button of document.querySelectorAll('[data-call-mode]'))button.addEventListener('click',()=>start(button.dataset.callMode));document.getElementById('logout')?.addEventListener('click',leave,{capture:true});
 window.addEventListener('pagehide',()=>{closed=true;leave();socket?.stop();clearInterval(poll);clearInterval(beat);clearInterval(clock);hideView();$('call-history').replaceChildren();$('call-partner').textContent='';home=null;call=null;});window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
