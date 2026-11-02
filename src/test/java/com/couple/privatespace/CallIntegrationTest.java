@@ -129,4 +129,33 @@ class CallIntegrationTest {
    ok(a,"offer",ac,id,Map.of("negotiationId",UUID.randomUUID(),"sdp","v=0\r\ns=must-not-fall-back\r\n"));Thread.sleep(350);assertFalse(other.frames.stream().anyMatch(frame->frame.contains("must-not-fall-back")),"Missing selected session must never broadcast SDP to the remaining tab");
   }
  }
+ @Test void reactionsAreTransientNegotiationScopedAndReachOnlyTheSelectedPartnerTab()throws Exception{
+  assertEquals(200,f.transport.new Browser().get("/call-reactions.js").statusCode());
+  var second=f.transport.new Browser();second.login(f.prefix+"b@example.invalid");
+  try(var a=socket(f.a,f.prefix+"a@example.invalid");var b=socket(f.b,f.prefix+"b@example.invalid");var other=socket(second,f.prefix+"b@example.invalid")){
+   UUID id=invite(a,"VIDEO"),n=UUID.randomUUID(),key=UUID.randomUUID();
+   assertEquals("CALL_STATE",command(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","❤️")).path("code").asText());
+   ok(b,"accept",bc,id,Map.of());negotiate(a,b,id,n);
+   assertEquals("CALL_STATE",command(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","❤️")).path("code").asText());
+   ok(a,"connected",ac,id,Map.of());ok(b,"connected",bc,id,Map.of());
+   assertEquals("CALL_ELSEWHERE",command(other,"reaction",UUID.randomUUID(),id,Map.of("negotiationId",n,"emoji","❤️")).path("code").asText());
+   assertEquals("STALE_NEGOTIATION",command(a,"reaction",ac,id,Map.of("negotiationId",UUID.randomUUID(),"emoji","❤️")).path("code").asText());
+   assertEquals("INVALID_CALL_REACTION",command(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","<script>bad</script>")).path("code").asText());
+   long version=jdbc.queryForObject("SELECT version FROM call_session WHERE id=?",Long.class,id);
+   var data=Map.<String,Object>of("eventId",key,"negotiationId",n,"emoji","❤️");ok(a,"reaction",ac,id,data);
+   var event=f.frame(b,"call.reaction");assertEquals(id.toString(),event.path("callId").asText());assertEquals(n.toString(),event.path("negotiationId").asText());assertEquals("❤️",event.path("payload").path("emoji").asText());
+   ok(a,"reaction",ac,id,data);Thread.sleep(150);assertFalse(b.frames.stream().anyMatch(frame->frame.contains("call.reaction")),"Same reaction event must not replay");assertFalse(other.frames.stream().anyMatch(frame->frame.contains("call.reaction")),"Only the accepted partner tab sees the reaction");
+   assertEquals("CALL_RETRY_CONFLICT",command(a,"reaction",ac,id,Map.of("eventId",key,"negotiationId",n,"emoji","😂")).path("code").asText());
+   ok(b,"reaction",bc,id,Map.of("negotiationId",n,"emoji","👏"));assertEquals("👏",f.frame(a,"call.reaction").path("payload").path("emoji").asText());
+   assertEquals(version,jdbc.queryForObject("SELECT version FROM call_session WHERE id=?",Long.class,id));assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM chat_message",Integer.class));assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM call_command_receipt WHERE operation='reaction'",Integer.class));
+   ok(a,"end",ac,id,Map.of());assertEquals("ENDED",ok(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","❤️")).path("state").asText());Thread.sleep(100);assertFalse(b.frames.stream().anyMatch(frame->frame.contains("call.reaction")));
+  }
+ }
+ @Test void reactionBurstIsBoundedWithoutEndingOrMutatingTheCall()throws Exception{
+  try(var a=socket(f.a,f.prefix+"a@example.invalid");var b=socket(f.b,f.prefix+"b@example.invalid")){
+   UUID id=invite(a,"VIDEO"),n=UUID.randomUUID();ok(b,"accept",bc,id,Map.of());negotiate(a,b,id,n);ok(a,"connected",ac,id,Map.of());ok(b,"connected",bc,id,Map.of());
+   for(int i=0;i<6;i++)ok(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","🎉"));assertEquals("CALL_REACTION_LIMIT",command(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","🎉")).path("code").asText());assertEquals("ACTIVE",jdbc.queryForObject("SELECT state FROM call_session WHERE id=?",String.class,id));
+   ok(a,"disconnected",ac,id,Map.of());assertEquals("CALL_STATE",command(a,"reaction",ac,id,Map.of("negotiationId",n,"emoji","🎉")).path("code").asText());ok(a,"end",ac,id,Map.of());
+  }
+ }
 }

@@ -18,7 +18,7 @@ import org.springframework.transaction.support.*;
 @Service
 public class CallService {
     public record Command(UUID eventId,UUID callId,UUID clientId,String mode,String reason,UUID negotiationId,
-                          String sdp,String candidate,String sdpMid,Integer sdpMLineIndex,Boolean micEnabled,Boolean cameraEnabled) { }
+                          String sdp,String candidate,String sdpMid,Integer sdpMLineIndex,Boolean micEnabled,Boolean cameraEnabled,String emoji) { }
     public record View(UUID id,UUID callerId,UUID calleeId,String callerClient,String calleeClient,String mode,String state,
                        Instant createdAt,Instant ringDeadline,Instant acceptedAt,Instant connectedAt,Instant recoveryDeadline,
                        Instant endedAt,String endReason,long version,Instant serverTime) { }
@@ -31,6 +31,7 @@ public class CallService {
     private record Window(long start,int count) { }
     private static final Set<String> LIVE=Set.of("RINGING","CONNECTING","ACTIVE","RECONNECTING");
     private static final Set<String> DURABLE=Set.of("invite","accept","decline","cancel","end");
+    private static final Set<String> REACTIONS=Set.of("❤️","😂","👍","👏","🥰","🎉");
     private final JdbcTemplate jdbc;
     private final PairingService pairing;
     private final AccountStore accounts;
@@ -116,7 +117,7 @@ public class CallService {
                 if(jdbc.queryForObject("SELECT caller_connected AND callee_connected FROM call_session WHERE id=?",Boolean.class,c.callId))jdbc.update("UPDATE call_session SET state='ACTIVE',connected_at=COALESCE(connected_at,clock_timestamp()),recovery_deadline=NULL,version=version+1 WHERE id=?",c.callId);
                 changed(space,c.callId);
             }
-            case "offer","answer","ice","media" -> relay(row,actor,socket,operation,c);
+            case "offer","answer","ice","media","reaction" -> relay(row,actor,socket,operation,c);
             default -> throw error(400,"INVALID_CALL_COMMAND","This call action is not supported.");
         }
         return row(space,c.callId).view;
@@ -132,6 +133,9 @@ public class CallService {
         }else if(op.equals("ice")){
             if(c.candidate==null||!c.candidate.startsWith("candidate:")||c.candidate.length()>4000||c.candidate.indexOf(0)>=0||c.sdpMid!=null&&c.sdpMid.length()>64||c.sdpMLineIndex!=null&&(c.sdpMLineIndex<0||c.sdpMLineIndex>16))throw error(400,"INVALID_ICE","This connection candidate is invalid.");
             payload.put("candidate",c.candidate);payload.put("sdpMid",c.sdpMid);payload.put("sdpMLineIndex",c.sdpMLineIndex);
+        }else if(op.equals("reaction")){
+            if(!row.view.state.equals("ACTIVE"))throw error(409,"CALL_STATE","Reactions are available during a connected call.");
+            if(c.emoji==null||!REACTIONS.contains(c.emoji))throw error(400,"INVALID_CALL_REACTION","Choose an available call reaction.");payload.put("emoji",c.emoji);
         }else{if(c.micEnabled==null||c.cameraEnabled==null)throw error(400,"INVALID_MEDIA_STATE","Provide your current microphone and camera state.");payload.put("micEnabled",c.micEnabled);payload.put("cameraEnabled",row.view.mode.equals("VIDEO")&&c.cameraEnabled);}
         if(!op.equals("offer")&&!c.negotiationId.equals(row.negotiation))throw error(409,"STALE_NEGOTIATION","This connection attempt has been replaced.");
         long now=System.currentTimeMillis();rates.entrySet().removeIf(e->e.getValue().start<now-120000);
@@ -139,6 +143,8 @@ public class CallService {
         signals.entrySet().removeIf(e->e.getValue().at<now-120000);if(signals.size()>2048)throw error(429,"CALL_RATE_LIMIT","Call signaling is busy. Retry shortly.");
         String key=actor+":"+c.eventId,digest=RegistrationService.digest(op+"|"+c.callId+"|"+c.clientId+"|"+c.negotiationId+"|"+payload);
         Seen prior=signals.get(key);if(prior!=null){if(!prior.hash.equals(digest))throw error(409,"CALL_RETRY_CONFLICT","This signal identifier was already used.");return;}
+        // CALL-UI05: transient, selected-session-only effects; bounded independently of ICE traffic.
+        if(op.equals("reaction"))rates.compute(socket+":reaction",(id,w)->{if(w==null||now-w.start>=10000)return new Window(now,1);if(w.count>=6)throw error(429,"CALL_REACTION_LIMIT","Wait a moment before sending another reaction.");return new Window(w.start,w.count+1);});
         if(op.equals("offer"))jdbc.update("UPDATE call_session SET negotiation_id=? WHERE id=?",c.negotiationId,c.callId);
         events.publishEvent(new Relay(c.eventId,"call."+op,a?row.view.calleeId:row.view.callerId,a?row.calleeSocket:row.callerSocket,c.callId,c.negotiationId,Collections.unmodifiableMap(payload)));
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization(){public void afterCommit(){signals.put(key,new Seen(digest,now));}});

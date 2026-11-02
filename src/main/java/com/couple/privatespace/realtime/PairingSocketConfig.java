@@ -62,7 +62,7 @@ public class PairingSocketConfig implements WebSocketMessageBrokerConfigurer {
             boolean chatQueue=type==SimpMessageType.SUBSCRIBE&&"/user/queue/chat".equals(destination);
             boolean chatSend=type==SimpMessageType.MESSAGE&&Set.of("/app/chat.send","/app/chat.delivered","/app/chat.read").contains(destination==null?"":destination);
             boolean callQueue=type==SimpMessageType.SUBSCRIBE&&"/user/queue/calls".equals(destination);
-            boolean callSend=type==SimpMessageType.MESSAGE&&Set.of("/app/call.invite","/app/call.accept","/app/call.decline","/app/call.cancel","/app/call.end","/app/call.resume","/app/call.connected","/app/call.disconnected","/app/call.heartbeat","/app/call.offer","/app/call.answer","/app/call.ice","/app/call.media").contains(destination==null?"":destination);
+            boolean callSend=type==SimpMessageType.MESSAGE&&Set.of("/app/call.invite","/app/call.accept","/app/call.decline","/app/call.cancel","/app/call.end","/app/call.resume","/app/call.connected","/app/call.disconnected","/app/call.heartbeat","/app/call.offer","/app/call.answer","/app/call.ice","/app/call.media","/app/call.reaction").contains(destination==null?"":destination);
             return new AuthorizationDecision((chatQueue||chatSend||callQueue||callSend)&&sockets.validChat(id)); // No raw broker or foreign destination.
         };
     }
