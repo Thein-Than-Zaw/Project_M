@@ -119,3 +119,6 @@ V31: `chat_message.edited_at TIMESTAMPTZ NULL`, cleared by deletion; original se
 V32: `call_chat_event(call_id UUID PK FK call_session ON DELETE CASCADE, created_at TIMESTAMPTZ NOT NULL, published_at TIMESTAMPTZ NULL)`; partial pending-created_at index. Call completion persists this durable outbox; separate chat transaction consumes it.
 
 V33: `call_session UNIQUE(space_id,id)`; `chat_message.call_id UUID UNIQUE NULL` with scoped `(space_id,call_id)` FK and cascade removal. Payload constraint permits immutable nondeleted/pre-read CALL entries with empty body and no user payload, edit marker, attachment or reply. Existing text/gift/file payload constraints retained. No existing message order rewrite/backfill. See [CHAT-07 record](CHAT-07_Edit_Activity_And_Call_History.md).
+## GAME-01 local additive schema
+
+V34 `couple_connect_four`: one current game per space, scoped member FKs, board42/move/status/winner constraints, inviter/player identities, last accepted first player, version. V35 `connect_four_command`: per-actor action key, request hash, space scope, timestamp and rate-query index. No game history/public rooms/chat or call records added. See [GAME-01 schema/flow](GAME-01_Connect_Four.md). Original migrations preserved; latest local targetV35.
