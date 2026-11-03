@@ -112,3 +112,10 @@ V24 chat_message_reaction: one row PK(message_id,user_id), scoped message/member
 V26 adds nullable `app_user.avatar_jpeg bytea` (maximum 262144 normalized bytes), application-managed `avatar_version bigint DEFAULT 0`, and nullable `last_active_at timestamptz`.
 Private same-space image reads; server-derived account writes. No account/chat/memory removal or public media URL.
 Photo resource bounds and activity semantics: [CHAT-03 record](CHAT-03_Mobile_Chat_UX.md). Applied migration history remains unchanged.
+# CHAT-07 additive schema (local 2026-11-03)
+
+V31: `chat_message.edited_at TIMESTAMPTZ NULL`, cleared by deletion; original send request_hash remains unchanged on edit.
+
+V32: `call_chat_event(call_id UUID PK FK call_session ON DELETE CASCADE, created_at TIMESTAMPTZ NOT NULL, published_at TIMESTAMPTZ NULL)`; partial pending-created_at index. Call completion persists this durable outbox; separate chat transaction consumes it.
+
+V33: `call_session UNIQUE(space_id,id)`; `chat_message.call_id UUID UNIQUE NULL` with scoped `(space_id,call_id)` FK and cascade removal. Payload constraint permits immutable nondeleted/pre-read CALL entries with empty body and no user payload, edit marker, attachment or reply. Existing text/gift/file payload constraints retained. No existing message order rewrite/backfill. See [CHAT-07 record](CHAT-07_Edit_Activity_And_Call_History.md).

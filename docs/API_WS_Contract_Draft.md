@@ -222,3 +222,8 @@ GET `/api/profiles/{id}/photo?v=N` is same-active-space only, normalized JPEG, n
 GET `/api/presence` returns server-selected partner `{active,lastActiveAt,serverTime}`; POST updates own foreground activity, 204, CSRF required.
 Home self/member and Chat partner projections add nullable `avatarUrl`; Chat page also adds nullable `selfAvatarUrl`. Existing fields and STOMP contracts unchanged.
 See the record for exact limits, TTL semantics, error statuses and verification boundaries. No live deployment.
+# CHAT-07 local extension (2026-11-03)
+
+`PATCH /api/chat/messages/{id}`: authenticated same-space sender + CSRF, body `{body,version}`, returns Message with nullable `editedAt`. No edit time limit; TEXT/FILE 4,000 code points, GIFT note 500, text cannot be blank. Version conflict409 preserves client draft. CALL/deleted messages are immutable. Existing original-send idempotency fingerprint is retained after editing.
+
+Chat Page adds `activity: {messageCount,videoCallSeconds,videoCallCount}` (same calculation as Home). Message adds nullable `callId` / `call: {id,state,connectedAt,endedAt,durationSeconds}`. New `type: CALL` is server-authored, terminal VIDEO metadata only, pre-read/no normal message notification, excluded from message count. New private `message.edited` / `call.logged` invalidations use existing Changed envelope with null message; REST snapshots/paging hydrate current state. Historical pre-feature calls are not backfilled into the timeline. See [CHAT-07 record](CHAT-07_Edit_Activity_And_Call_History.md).

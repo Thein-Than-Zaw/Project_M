@@ -36,7 +36,16 @@ function route(){
   $('#page-title').textContent={home:'Your favorite place is a person.',dates:'Our dates.',profile:'Your own little corner.',notifications:'Just the way you like it.',settings:'Settings.'}[view];
   if(home)$('#welcome').textContent=`${pretty(home.calendar.today)} · Welcome home, ${home.self.displayName}`;
 }
+// HOME-05: total elapsed connected-video time; no invented chatting-time measurement.
+function formatVideoTime(seconds){
+ if(!Number.isFinite(seconds)||seconds<0)return '—';const minutes=Math.floor(seconds/60);if(seconds>0&&minutes===0)return '<1 min';if(minutes<60)return `${minutes.toLocaleString()} min`;const hours=Math.floor(minutes/60),rest=minutes%60;return `${hours.toLocaleString()}h ${rest}m`;
+}
+function renderActivity(stats){
+ const count=value=>Number.isSafeInteger(value)&&value>=0?value.toLocaleString():'—';
+ $('#activity-messages').textContent=count(stats?.messageCount);$('#activity-video-calls').textContent=count(stats?.videoCallCount);$('#activity-video-time').textContent=formatVideoTime(stats?.videoCallSeconds);
+}
 function render(){
+  renderActivity(home.activity);
   loadHomeMemories();
   for(const node of $$('[data-day]'))node.textContent=home.calendar.dayNumber.toLocaleString();
   for(const node of $$('[data-start]'))node.textContent=pretty(home.relationshipDate);

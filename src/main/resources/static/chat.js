@@ -11,6 +11,7 @@ const SEND_WAIT_MS=300000;
 let sendTimer;
 let replyTargetId=null,actionMessageId=null,actionMode=null,actionBusy=false,changeVersion=-1;
 let partnerActivity=null;
+let editTarget=null,editVersion=null,editBusy=false;
 let reactionMessageId=null,reactionAnchor=null,reactionHideTimer,contextPoint=null,reactionPersistent=false,reactionSignature=null;
 const reactionChoices=['❤️','😂','😮','😢','👍','🥰'];
 let selectedGift=null,giftOffset=0,giftBefore=null,giftDirection='browse',giftGeneration=0,giftBusy=false,giftHasMore=false,giftSearchTimer;
@@ -44,6 +45,8 @@ function restore(){
 }
 function metadata(page){
   selfId=page.selfId;partner=page.partner;timezone=page.timezone;
+  const stats=page.activity;$('#chat-activity-messages').textContent=Number.isSafeInteger(stats?.messageCount)?stats.messageCount.toLocaleString():'—';$('#chat-activity-calls').textContent=Number.isSafeInteger(stats?.videoCallCount)?stats.videoCallCount.toLocaleString():'—';$('#chat-activity-time').textContent=videoDuration(stats?.videoCallSeconds);
+
   for(const node of $$('[data-partner]'))node.textContent=partner.displayName;
   avatar($('#partner-avatar'),partner);avatar($('#about-avatar'),partner);
   $('#couple-names').textContent=`${page.selfName} & ${partner.displayName}`;
@@ -58,7 +61,7 @@ function merge(message){
   const changed=JSON.stringify(previous)!==JSON.stringify(next);records.set(message.id,next);
   const queued=pending.get(message.clientMessageId);
   if(message.senderId===selfId&&message.deletedAt&&queued){pending.delete(message.clientMessageId);attempted.delete(message.clientMessageId);chatMedia?.confirmed(message.clientMessageId);persist();}
-  if(message.senderId===selfId&&queued?.body===message.body&&(queued.type||'TEXT')===message.type&&(queued.giftCode||null)===message.giftCode&&(queued.replyToId||null)===(message.replyToId||null)&&(queued.attachmentId||null)===(message.attachmentId||null)){if(attempted.delete(message.clientMessageId))notificationSounds.sent(message.id);pending.delete(message.clientMessageId);chatMedia?.confirmed(message.clientMessageId);persist();if(message.type==='GIFT')$('#gift-notice').textContent='Your sticker was sent.';}
+  if(message.senderId===selfId&&(queued?.body===message.body||queued&&message.editedAt)&&(queued.type||'TEXT')===message.type&&(queued.giftCode||null)===message.giftCode&&(queued.replyToId||null)===(message.replyToId||null)&&(queued.attachmentId||null)===(message.attachmentId||null)){if(attempted.delete(message.clientMessageId))notificationSounds.sent(message.id);pending.delete(message.clientMessageId);chatMedia?.confirmed(message.clientMessageId);persist();if(message.type==='GIFT')$('#gift-notice').textContent='Your sticker was sent.';}
   if(message.deletedAt)redactReferences(message.id);
   return changed;
 }
@@ -71,6 +74,7 @@ function messageBubble(item){
   const bubble=document.createElement('div');bubble.className='bubble';
   if(cancelledSends.has(item.clientMessageId)&&!item.deletedAt){const text=document.createElement('p');text.textContent='Cancelling send…';bubble.append(text);return bubble;}
   if(item.deletedAt){bubble.classList.add('deleted-message');const text=document.createElement('p');text.textContent='Message deleted';bubble.append(text);return bubble;}
+  if(item.type==='CALL'){bubble.classList.add('call-history-bubble');const title=document.createElement('strong');title.textContent=(item.senderId===selfId?'Outgoing':'Incoming')+' video call';const detail=document.createElement('p');const state=item.call?.state;detail.textContent=({ENDED:'Ended',MISSED:'Missed',DECLINED:'Declined',CANCELLED:'Cancelled',FAILED:'Connection interrupted'})[state]||'Video call';if(item.call?.connectedAt)detail.textContent+=' · '+callDuration(item.call.durationSeconds);bubble.append(title,detail);return bubble;}
   const quoted=item.reply||((item.replyToId&&records.has(item.replyToId))?quoteOf(records.get(item.replyToId)):null);if(quoted)bubble.append(quoteElement(quoted));
   if(item.type==='FILE'){bubble.classList.add('attachment-bubble');if(item.localPreview)appendLocalMedia(bubble,item);else if(item.attachment)appendMedia(bubble,item.attachment);else{const text=document.createElement('p');text.textContent='Attachment unavailable locally';bubble.append(text);}}
   if(item.type==='GIFT'){
@@ -83,6 +87,12 @@ function messageBubble(item){
   if(item.body){const text=document.createElement('p');text.textContent=item.body;bubble.append(text);}
   return bubble;
 }
+function messageMetadata(item){
+  const meta=document.createElement('div');meta.className='message-meta';const stamp=document.createElement('time');stamp.dateTime=item.createdAt;stamp.textContent=time(item.createdAt);meta.append(stamp);
+  if(item.editedAt&&!item.deletedAt){const edited=document.createElement('span');edited.className='message-edited';edited.textContent='Edited';edited.title='Edited '+date(item.editedAt)+' '+time(item.editedAt);meta.append(edited);}
+  if(item.senderId===selfId&&item.type!=='CALL'){const status=document.createElement('span');status.textContent=item.deletedAt?'Deleted':item.readAt?'Read':item.deliveredAt?'Delivered':'Sent';meta.append(status);}
+  return meta;
+}
 function render(mode='normal'){
   const messages=[...records.values()].sort((a,b)=>a.sequence-b.sequence),outbox=[...pending.values()];
   const identity=JSON.stringify([messages,outbox.map(({lastAttempt,...p})=>p)]);
@@ -91,11 +101,10 @@ function render(mode='normal'){
   for(const item of messages){
     const day=date(item.createdAt);
     if(day!==lastDay){const divider=document.createElement('div');divider.className='day-divider';const span=document.createElement('span');span.textContent=day;divider.dataset.day=day;divider.append(span);fragment.append(divider);lastDay=day;}
-    const row=document.createElement('article');row.className=`message${item.senderId===selfId?' mine':''}`;row.dataset.id=item.id;messageSignatures.set(row,JSON.stringify([item.body,item.type,item.giftCode,item.replyToId,item.reply,item.deletedAt,item.attachmentId,item.attachment,cancelledSends.has(item.clientMessageId)]));
+    const row=document.createElement('article');row.className=`message${item.senderId===selfId?' mine':''}`;row.dataset.id=item.id;messageSignatures.set(row,JSON.stringify([item.body,item.type,item.giftCode,item.replyToId,item.reply,item.deletedAt,item.editedAt,item.call,item.attachmentId,item.attachment,cancelledSends.has(item.clientMessageId)]));
     const bubble=messageBubble(item);
-    const meta=document.createElement('div');meta.className='message-meta';const stamp=document.createElement('time');stamp.dateTime=item.createdAt;stamp.textContent=time(item.createdAt);meta.append(stamp);
-    if(item.senderId===selfId){const status=document.createElement('span');status.textContent=item.deletedAt?'Deleted':item.readAt?'Read':item.deliveredAt?'Delivered':'Sent';meta.append(status);}
-    const content=document.createElement('div');content.className='message-content';content.tabIndex=0;content.setAttribute('aria-label','Message. Shift+F10 opens Reply and Delete.');content.append(bubble);bindMessageInteractions(content,{onReactions:options=>showHoverReactions(item.id,content,options),onLeave:scheduleHideReactions,onContext:point=>openMessageActions(item.id,point)});if(!item.deletedAt&&item.reactions?.length){content.append(reactionBar(item));content.classList.add('has-reactions');}row.append(content,meta);fragment.append(row);
+    const meta=messageMetadata(item);
+    const content=document.createElement('div');content.className='message-content';content.tabIndex=0;content.setAttribute('aria-label','Message. Shift+F10 opens message options.');content.append(bubble);bindMessageInteractions(content,{onReactions:options=>showHoverReactions(item.id,content,options),onLeave:scheduleHideReactions,onContext:point=>openMessageActions(item.id,point)});if(!item.deletedAt&&item.reactions?.length){content.append(reactionBar(item));content.classList.add('has-reactions');}row.append(content,meta);fragment.append(row);
   }
   for(const item of outbox){
     const row=document.createElement('article');row.className=`message mine${item.state==='Failed'?' failed':''}`;row.dataset.pendingId=item.clientMessageId;
@@ -114,7 +123,7 @@ function render(mode='normal'){
   initial=false;renderReplyDraft();renderMessageActions();queueAcks();
 }
 function visibleIncoming(){
-  if(document.visibilityState!=='visible'||!document.hasFocus()||$('#gifts-dialog').open||$('#message-actions').open||$('#notification-inbox').open||document.getElementById('call-panel')?.hidden===false)return [];
+  if(document.visibilityState!=='visible'||!document.hasFocus()||$('#gifts-dialog').open||$('#message-actions').open||$('#message-editor').open||$('#notification-inbox').open||document.getElementById('call-panel')?.hidden===false)return [];
   const bounds=log.getBoundingClientRect(),top=Math.max(0,bounds.top),bottom=Math.min(innerHeight,bounds.bottom);
   if(bottom<=top)return [];
   return [...log.querySelectorAll('.message[data-id]')].filter(node=>{const message=records.get(node.dataset.id),r=node.getBoundingClientRect();return message?.senderId!==selfId&&!message?.deletedAt&&!message?.readAt&&r.bottom>top&&r.top<bottom;}).map(node=>node.dataset.id);
@@ -271,7 +280,7 @@ $('#animation-toggle').checked=!matchMedia('(prefers-reduced-motion: reduce)').m
 function animationPreference(){document.body.classList.toggle('still-stickers',!$('#animation-toggle').checked);}
 $('#animation-toggle').addEventListener('change',animationPreference);animationPreference();
 window.addEventListener('pageshow',start);
-window.addEventListener('pagehide',()=>{chatMedia?.dispose();started=false;epoch++;live?.stop();clearInterval(poll);clearInterval(sendTimer);clearInterval(ackTimer);clearTimeout(ackDebounce);clearTimeout(syncDebounce);$('#chat-content').hidden=true;hideHoverReactions();records.clear();pending.clear();attempted.clear();hiddenMessages.clear();replyTargetId=null;actionMessageId=null;$('#message-actions').close();$('#message-action-preview').textContent='';$('#message-action-error').textContent='';$('#reply-draft-text').textContent='';$('#reply-draft').hidden=true;selfId=null;renderIdentity='';});
+window.addEventListener('pagehide',()=>{chatMedia?.dispose();started=false;epoch++;live?.stop();clearInterval(poll);clearInterval(sendTimer);clearInterval(ackTimer);clearTimeout(ackDebounce);clearTimeout(syncDebounce);$('#chat-content').hidden=true;hideHoverReactions();records.clear();pending.clear();attempted.clear();hiddenMessages.clear();replyTargetId=null;actionMessageId=null;$('#message-actions').close();$('#message-editor').close();editTarget=null;$('#message-edit-body').value='';$('#message-action-preview').textContent='';$('#message-action-error').textContent='';$('#reply-draft-text').textContent='';$('#reply-draft').hidden=true;selfId=null;renderIdentity='';});
 start();
 
 // CHAT-02A: projections are server-derived; never cache another user's quote in the outbox.
@@ -287,7 +296,7 @@ async function messageAction(path,body,method='POST'){
 }
 function reactionBar(item){const bar=document.createElement('div');bar.className='message-reaction-bar';const own=item.reactions.find(r=>r.userId===selfId)?.emoji;for(const emoji of reactionChoices){const count=item.reactions.filter(r=>r.emoji===emoji).length;if(!count)continue;const button=document.createElement('button');button.type='button';button.textContent=emoji+' '+count;button.setAttribute('aria-pressed',String(own===emoji));button.setAttribute('aria-label',emoji+' reaction, '+count+' people. '+(own===emoji?'Remove your reaction':'Change your reaction'));button.addEventListener('click',()=>reactTo(item.id,own===emoji?null:emoji));bar.append(button);}return bar;}
 function openMessageActions(id,point){if(actionBusy||!records.has(id))return;hideHoverReactions();actionMessageId=id;actionMode=null;contextPoint=point||{clientX:20,clientY:80};$('#message-action-error').hidden=true;renderMessageActions();if(!$('#message-actions').open)$('#message-actions').showModal();placeMessageMenu();($('#message-reply').disabled?$('#message-hide'):$('#message-reply')).focus({preventScroll:true});}
-function renderMessageActions(){if(!actionMessageId)return;$('#message-actions').setAttribute('aria-busy',String(actionBusy));$('#message-actions-close').disabled=actionBusy;const item=records.get(actionMessageId);if(!item){$('#message-actions').close();actionMessageId=null;return;}$('#message-action-preview').textContent=item.deletedAt?'Message deleted':item.body||item.attachment?.name||item.giftName||'Attachment';$('#message-action-choices').hidden=!!actionMode;$('#message-confirmation').hidden=!actionMode;$('#message-reply').disabled=!!item.deletedAt||actionBusy;$('#message-delete').hidden=item.senderId!==selfId||!!item.deletedAt;$('#message-hide').disabled=actionBusy;$('#message-delete').disabled=actionBusy;$('#message-confirm').disabled=actionBusy;$('#message-confirm-cancel').disabled=actionBusy;
+function renderMessageActions(){if(!actionMessageId)return;$('#message-actions').setAttribute('aria-busy',String(actionBusy));$('#message-actions-close').disabled=actionBusy;const item=records.get(actionMessageId);if(!item){$('#message-actions').close();actionMessageId=null;return;}$('#message-action-preview').textContent=item.deletedAt?'Message deleted':item.body||item.attachment?.name||item.giftName||'Attachment';$('#message-action-choices').hidden=!!actionMode;$('#message-confirmation').hidden=!actionMode;$('#message-reply').disabled=!!item.deletedAt||item.type==='CALL'||actionBusy;$('#message-delete').hidden=item.senderId!==selfId||!!item.deletedAt||item.type==='CALL';$('#message-edit').hidden=item.senderId!==selfId||!!item.deletedAt||item.type==='CALL';$('#message-edit').disabled=actionBusy;$('#message-hide').disabled=actionBusy;$('#message-delete').disabled=actionBusy;$('#message-confirm').disabled=actionBusy;$('#message-confirm-cancel').disabled=actionBusy;
 }
 async function reactTo(id,emoji){if(actionBusy)return;actionBusy=true;renderMessageActions();const generation=epoch;try{const item=await messageAction('/api/chat/messages/'+id+'/reaction',{emoji},'PUT');if(generation!==epoch)return;merge(item);render();if($('#message-actions').open)$('#message-actions').close();}catch(error){if(generation!==epoch)return;$('#compose-error').textContent=error.message;requestSync();}finally{actionBusy=false;renderMessageActions();}}
 $('#message-actions-close').addEventListener('click',()=>{if(!actionBusy)$('#message-actions').close();});$('#message-actions').addEventListener('cancel',event=>{if(actionBusy)event.preventDefault();});
@@ -318,7 +327,7 @@ function bindMessageInteractions(element,{onReactions,onLeave,onContext},timers=
 }
 function hideHoverReactions(){clearTimeout(reactionHideTimer);reactionMessageId=null;reactionAnchor=null;reactionPersistent=false;reactionSignature=null;$('#hover-reactions').hidden=true;$('#hover-reactions').replaceChildren();}
 function scheduleHideReactions(){clearTimeout(reactionHideTimer);if(!reactionPersistent)reactionHideTimer=setTimeout(hideHoverReactions,180);}
-function showHoverReactions(id,anchor,options={}){clearTimeout(reactionHideTimer);const item=records.get(id);if(!item||item.deletedAt||actionBusy||$('#message-actions').open){hideHoverReactions();return;}if(reactionMessageId!==id)reactionPersistent=false;if(options.persistent!==undefined)reactionPersistent=options.persistent;reactionMessageId=id;reactionAnchor=anchor;const picker=$('#hover-reactions');const signature=JSON.stringify([id,item.reactions||[]]);if(signature!==reactionSignature){reactionSignature=signature;picker.replaceChildren();const own=item.reactions?.find(r=>r.userId===selfId)?.emoji;
+function showHoverReactions(id,anchor,options={}){clearTimeout(reactionHideTimer);const item=records.get(id);if(!item||item.deletedAt||item.type==='CALL'||actionBusy||$('#message-editor').open||$('#message-actions').open){hideHoverReactions();return;}if(reactionMessageId!==id)reactionPersistent=false;if(options.persistent!==undefined)reactionPersistent=options.persistent;reactionMessageId=id;reactionAnchor=anchor;const picker=$('#hover-reactions');const signature=JSON.stringify([id,item.reactions||[]]);if(signature!==reactionSignature){reactionSignature=signature;picker.replaceChildren();const own=item.reactions?.find(r=>r.userId===selfId)?.emoji;
  for(const emoji of reactionChoices){const button=document.createElement('button');button.type='button';button.textContent=emoji;button.setAttribute('aria-label',(own===emoji?'Remove ':'React with ')+emoji);button.setAttribute('aria-pressed',String(own===emoji));button.addEventListener('click',()=>{hideHoverReactions();reactTo(id,own===emoji?null:emoji);});picker.append(button);}
  for(const [label,glyph] of [['Reply','↩'],['More message actions','⋯']]){const button=document.createElement('button');button.type='button';button.textContent=glyph;button.setAttribute('aria-label',label);button.addEventListener('click',()=>{const rect=anchor.getBoundingClientRect();if(label==='Reply'){replyTargetId=id;renderReplyDraft();hideHoverReactions();$('#message-body').focus();}else openMessageActions(id,{clientX:rect.left,clientY:rect.bottom});});picker.append(button);}}
  picker.hidden=false;const rect=anchor.getBoundingClientRect(),width=picker.offsetWidth,height=picker.offsetHeight;picker.style.left=Math.max(8,Math.min(innerWidth-width-8,(records.get(id)?.senderId===selfId?rect.right-width:rect.left)))+'px';picker.style.top=Math.max(8,Math.min(innerHeight-height-8,rect.top-height-4>=8?rect.top-height-4:rect.bottom+4))+'px';
@@ -369,3 +378,15 @@ function reconcileMessageRows(fragment){
  const kept=new Set(desired);for(const row of [...log.children])if(!kept.has(row)){for(const player of row.querySelectorAll('audio,video')){player.pause();player.removeAttribute('src');player.load();}row.remove();}
  let cursor=log.firstChild;for(const row of desired){if(row===cursor)cursor=cursor.nextSibling;else log.insertBefore(row,cursor);}
 }
+
+// CHAT-07: plain text, ownership checked server-side; preserve draft on conflicts/errors.
+function videoDuration(seconds){if(!Number.isFinite(seconds)||seconds<0)return '—';if(seconds===0)return '0 min';if(seconds<60)return '<1 min';const minutes=Math.floor(seconds/60);return minutes<60?minutes+' min':Math.floor(minutes/60)+'h '+minutes%60+'m';}
+function callDuration(seconds){seconds=Math.max(0,Math.floor(seconds||0));return seconds>=3600?Math.floor(seconds/3600)+':'+String(Math.floor(seconds%3600/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0'):Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');}
+function editCount(){const max=records.get(editTarget)?.type==='GIFT'?500:4000;$('#message-edit-count').textContent=Array.from($('#message-edit-body').value).length.toLocaleString()+' / '+max.toLocaleString();}
+function editControls(){for(const id of ['message-edit-save','message-edit-cancel','message-edit-reload','message-edit-body'])$('#'+id).disabled=editBusy;$('#message-editor').setAttribute('aria-busy',String(editBusy));}
+$('#message-edit').addEventListener('click',()=>{const item=records.get(actionMessageId);if(!item||item.senderId!==selfId||item.deletedAt||item.type==='CALL')return;editTarget=item.id;editVersion=item.version;$('#message-edit-body').value=item.body||'';$('#message-edit-error').textContent='';$('#message-edit-reload').hidden=true;editCount();$('#message-actions').close();$('#message-editor').showModal();$('#message-edit-body').focus();});
+$('#message-edit-body').addEventListener('input',editCount);
+$('#message-edit-cancel').addEventListener('click',()=>{if(!editBusy){$('#message-editor').close();$('#message-edit-body').value='';editTarget=null;}});
+$('#message-editor').addEventListener('cancel',event=>{if(editBusy)event.preventDefault();else{$('#message-edit-body').value='';editTarget=null;}});
+$('#message-edit-reload').addEventListener('click',async()=>{if(editBusy||!editTarget)return;editBusy=true;editControls();const generation=epoch,id=editTarget;try{const snapshot=await get('/api/chat/messages?ids='+id);if(generation!==epoch)return;const item=snapshot.items.find(m=>m.id===id);if(!item||item.deletedAt)throw new Error('This message is no longer available. Cancel to close this draft.');merge(item);editVersion=item.version;$('#message-edit-body').value=item.body||'';$('#message-edit-error').textContent='Latest text loaded. Review before saving.';$('#message-edit-reload').hidden=true;editCount();render();}catch(error){if(generation===epoch)$('#message-edit-error').textContent=error.message;}finally{editBusy=false;editControls();}});
+$('#message-edit-form').addEventListener('submit',async event=>{event.preventDefault();if(editBusy||!editTarget)return;editBusy=true;editControls();const generation=epoch,id=editTarget;try{const item=await messageAction('/api/chat/messages/'+id,{body:$('#message-edit-body').value,version:editVersion},'PATCH');if(generation!==epoch)return;merge(item);$('#message-editor').close();$('#message-edit-body').value='';editTarget=null;render();requestSync();}catch(error){if(generation===epoch){$('#message-edit-error').textContent=error.message;$('#message-edit-reload').hidden=false;requestSync();}}finally{editBusy=false;editControls();}});

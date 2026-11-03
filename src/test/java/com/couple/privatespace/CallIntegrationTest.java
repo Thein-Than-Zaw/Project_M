@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class CallIntegrationTest {
  @Autowired JdbcTemplate jdbc;@Autowired PasswordEncoder encoder;@Autowired SimpUserRegistry registry;@Autowired CallMaintenance maintenance;
+ @Autowired com.couple.privatespace.chat.ChatService chat;
+ @Autowired com.couple.privatespace.chat.ChatCallHistory callHistory;
  final ChatIntegrationTest f=new ChatIntegrationTest();
  final UUID ac=UUID.randomUUID(),bc=UUID.randomUUID();
  @BeforeEach void setup()throws Exception{f.jdbc=jdbc;f.encoder=encoder;f.registry=registry;f.fixtures();}
@@ -38,6 +40,29 @@ class CallIntegrationTest {
  void negotiate(PairingIntegrationTest.Socket a,PairingIntegrationTest.Socket b,UUID id,UUID negotiation)throws Exception{
   ok(a,"offer",ac,id,Map.of("negotiationId",negotiation,"sdp","v=0\r\ns=synthetic-offer\r\n"));
   ok(b,"answer",bc,id,Map.of("negotiationId",negotiation,"sdp","v=0\r\ns=synthetic-answer\r\n"));
+ }
+ @Test void videoOutcomesAppendOnceToChatWithoutUnreadMessagesAndRetriesRecover()throws Exception{
+  try(var a=socket(f.a,f.prefix+"a@example.invalid");var b=socket(f.b,f.prefix+"b@example.invalid")){
+   UUID ended=invite(a,"VIDEO");ok(b,"accept",bc,ended,Map.of());negotiate(a,b,ended,UUID.randomUUID());ok(a,"connected",ac,ended,Map.of());ok(b,"connected",bc,ended,Map.of());ok(a,"end",ac,ended,Map.of());
+   UUID cancelled=invite(a,"VIDEO");ok(a,"cancel",ac,cancelled,Map.of());
+   UUID declined=invite(a,"VIDEO");ok(b,"decline",bc,declined,Map.of());
+   UUID missed=invite(a,"VIDEO");jdbc.update("UPDATE call_session SET created_at=clock_timestamp()-INTERVAL '31 seconds',ring_deadline=clock_timestamp()-INTERVAL '1 second' WHERE id=?",missed);maintenance.runOnce();
+   UUID failed=invite(a,"VIDEO");ok(b,"accept",bc,failed,Map.of());jdbc.update("UPDATE call_session SET connect_deadline=clock_timestamp()-INTERVAL '1 second' WHERE id=?",failed);maintenance.runOnce();
+   var page=chat.history(f.bId,null,null);assertEquals(5,page.items().size());assertEquals(Set.of("ENDED","CANCELLED","DECLINED","MISSED","FAILED"),new HashSet<>(page.items().stream().map(m->m.call().state()).toList()));
+   assertEquals(0,page.unreadCount());assertEquals(0,page.activity().messageCount());assertEquals(1,page.activity().videoCallCount());
+   var entry=page.items().getFirst();assertEquals("CALL",entry.type());assertNotNull(entry.callId());assertNotNull(entry.readAt());assertNull(entry.editedAt());
+   assertEquals(409,assertThrows(com.couple.privatespace.identity.ApiFailure.class,()->chat.edit(f.aId,entry.id(),new com.couple.privatespace.chat.ChatService.Edit("fake",0L))).status());
+   assertEquals(409,assertThrows(com.couple.privatespace.identity.ApiFailure.class,()->chat.delete(f.aId,entry.id())).status());
+   assertEquals(409,assertThrows(com.couple.privatespace.identity.ApiFailure.class,()->chat.react(f.bId,entry.id(),new com.couple.privatespace.chat.ChatService.React("❤️"))).status());
+   assertEquals(409,assertThrows(com.couple.privatespace.identity.ApiFailure.class,()->chat.send(f.bId,new com.couple.privatespace.chat.ChatService.Send(UUID.randomUUID(),"reply","TEXT",null,null,entry.id()))).status());
+   callHistory.publish(ended);callHistory.retryPending();assertEquals(5,chat.history(f.aId,null,null).items().size());assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM notification_inbox WHERE type='MESSAGE'",Integer.class));
+   // Simulate a chat insert outage: call completion must commit, outbox must retry later.
+   jdbc.execute("ALTER TABLE chat_message ADD CONSTRAINT chat07_failure CHECK(type<>'CALL') NOT VALID");UUID deferred;
+   try{deferred=invite(a,"VIDEO");assertEquals("CANCELLED",ok(a,"cancel",ac,deferred,Map.of()).path("state").asText());assertEquals(1,jdbc.queryForObject("SELECT count(*) FROM call_chat_event WHERE published_at IS NULL",Integer.class));}finally{jdbc.execute("ALTER TABLE chat_message DROP CONSTRAINT chat07_failure");}
+   callHistory.retryPending();assertEquals(6,chat.history(f.aId,null,null).items().size());assertEquals(6,chat.state(f.aId).latestSequence());assertEquals(0,jdbc.queryForObject("SELECT count(*) FROM call_chat_event WHERE published_at IS NULL",Integer.class));
+   String json=f.b.get("/api/chat").body();assertFalse(json.contains("callerSocket"));assertFalse(json.contains("callerClient"));assertFalse(json.contains("negotiationId"));
+   chat.hide(f.bId,entry.id());assertEquals(5,chat.history(f.bId,null,null).items().size());assertEquals(6,chat.history(f.aId,null,null).items().size());
+  }
  }
  @Test void voiceLifecycleOnlyActivatesAfterBothConnectedAndPreservesOutcome()throws Exception{
   assertEquals(200,f.transport.new Browser().get("/call-media.js").statusCode(),"Shared device-setup module must load before a call can be answered");

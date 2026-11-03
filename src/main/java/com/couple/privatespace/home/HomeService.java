@@ -13,10 +13,11 @@ import org.springframework.transaction.annotation.*;
 @Service
 public class HomeService {
     private final JdbcTemplate jdbc;
+    private final SharedActivityService activity;
     private final PairingService pairing;
     private final ApplicationEventPublisher events;
-    public HomeService(JdbcTemplate jdbc,PairingService pairing,ApplicationEventPublisher events) {
-        this.jdbc=jdbc;this.pairing=pairing;this.events=events;
+    public HomeService(JdbcTemplate jdbc,PairingService pairing,ApplicationEventPublisher events,SharedActivityService activity) {
+        this.jdbc=jdbc;this.pairing=pairing;this.events=events;this.activity=activity;
     }
     public record Profile(UUID id,String displayName,String email,long version,String avatarUrl) { }
     public record ProfileEdit(String displayName,Long version) { }
@@ -27,7 +28,8 @@ public class HomeService {
     public record Dates(DatePolicy.Calendar calendar,List<SpecialDate> items,boolean hasMore,int page) { }
     public record Home(String state,UUID id,LocalDate relationshipDate,String timezone,
             List<PairingService.Member> members,LocalDate signupRelationshipDate,boolean canCreate,long version,
-            Profile self,DatePolicy.Calendar calendar,SpecialDate nextEvent,long unreadMessages) { }
+            Profile self,DatePolicy.Calendar calendar,SpecialDate nextEvent,long unreadMessages,Activity activity) { }
+    public record Activity(long messageCount,long videoCallSeconds,long videoCallCount) { }
     public record Changed(List<UUID> members,String type) { }
 
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
@@ -36,7 +38,7 @@ public class HomeService {
         var next=list(space.id(),calendar.today(),0,true);
         return new Home(space.state(),space.id(),space.relationshipDate(),space.timezone(),space.members(),
             space.signupRelationshipDate(),space.canCreate(),space.version(),profile(actor),calendar,next.isEmpty()?null:next.getFirst(),
-            jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND read_at IS NULL AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)",Long.class,space.id(),actor,actor));
+            jdbc.queryForObject("SELECT count(*) FROM chat_message WHERE space_id=? AND sender_id<>? AND read_at IS NULL AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM chat_message_hidden h WHERE h.message_id=chat_message.id AND h.user_id=?)",Long.class,space.id(),actor,actor),activity.forSpace(space.id()));
     }
     @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
     public Dates dates(UUID actor,int page) {

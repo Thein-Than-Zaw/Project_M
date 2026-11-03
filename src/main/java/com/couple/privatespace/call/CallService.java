@@ -60,6 +60,7 @@ public class CallService {
     private void changed(UUID space,UUID id){events.publishEvent(new State(UUID.randomUUID(),row(space,id).view));}
     private View finish(Row row,String state,String reason){
         jdbc.update("UPDATE call_session SET state=?,end_reason=?,ended_at=clock_timestamp(),recovery_deadline=NULL,version=version+1 WHERE id=? AND ended_at IS NULL",state,reason,row.view.id);
+        if(row.view.mode.equals("VIDEO"))jdbc.update("INSERT INTO call_chat_event(call_id) VALUES (?) ON CONFLICT DO NOTHING",row.view.id);
         changed(row.space,row.view.id);return row(row.space,row.view.id).view;
     }
     private boolean expired(Row row){

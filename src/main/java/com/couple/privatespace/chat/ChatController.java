@@ -35,6 +35,8 @@ public class ChatController {
     public void hide(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id){chat.hide(actor.accountId(),id);}
     @PostMapping("/api/chat/messages/{id}/delete") @ResponseBody
     public ChatService.Message delete(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id){return chat.delete(actor.accountId(),id);}
+    @PatchMapping("/api/chat/messages/{id}") @ResponseBody
+    public ChatService.Message edit(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id,@RequestBody ChatService.Edit body){return chat.edit(actor.accountId(),id,body);}
     @PutMapping("/api/chat/messages/{id}/reaction") @ResponseBody
     public ChatService.Message react(@AuthenticationPrincipal AccountPrincipal actor,@PathVariable UUID id,@RequestBody ChatService.React body){return chat.react(actor.accountId(),id,body);}
     @MessageMapping("/chat.send") @SendToUser(value="/queue/chat",broadcast=false)

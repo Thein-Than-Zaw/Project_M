@@ -38,7 +38,7 @@ test('reply target is transmitted and mismatched confirmation cannot clear anoth
 });
 test('read receipts exclude chat obscured by dialogs or the full-page call',()=>{
  const code=source.slice(source.indexOf('function visibleIncoming('),source.indexOf('function flushAcks('));
- const dialogs={'#gifts-dialog':{open:false},'#message-actions':{open:false},'#notification-inbox':{open:false}},call={hidden:true};let inspected=0;
+ const dialogs={'#gifts-dialog':{open:false},'#message-actions':{open:false},'#message-editor':{open:false},'#notification-inbox':{open:false}},call={hidden:true};let inspected=0;
  const context={document:{visibilityState:'visible',hasFocus:()=>true,getElementById:()=>call},$:key=>dialogs[key],innerHeight:500,selfId:'self',records:new Map([['incoming',{senderId:'partner',readAt:null}]]),log:{getBoundingClientRect:()=>{inspected++;return {top:0,bottom:100};},querySelectorAll:()=>[{dataset:{id:'incoming'},getBoundingClientRect:()=>({top:10,bottom:30})}]}};
  vm.createContext(context);vm.runInContext(code+';globalThis.visible=visibleIncoming;',context);assert.deepEqual(Array.from(context.visible()),['incoming']);
  for(const dialog of Object.values(dialogs)){dialog.open=true;inspected=0;assert.equal(context.visible().length,0);assert.equal(inspected,0);dialog.open=false;}call.hidden=false;assert.equal(context.visible().length,0);
