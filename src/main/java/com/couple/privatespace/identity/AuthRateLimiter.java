@@ -27,6 +27,7 @@ public class AuthRateLimiter {
     }
     public synchronized long registration(String ip) { return hit("register:" + ip, registerLimit); }
     public synchronized long pairing(String ip) { return hit("pairing:"+ip,pairingLimit); }
+    public synchronized long passwordChange(String ip,String actor) {return Math.max(hit("password-ip:"+ip,ipLimit),hit("password-account:"+actor,accountLimit));}
     private long hit(String key, int limit) {
         Instant now = Instant.now();
         windows.entrySet().removeIf(entry -> !entry.getValue().end().isAfter(now));

@@ -33,9 +33,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").anonymous()
                 .requestMatchers(HttpMethod.GET, "/api/me", "/space.html").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/auth/partner-registration-code").authenticated()
+                .requestMatchers(HttpMethod.POST,"/api/auth/change-password").authenticated()
                 .requestMatchers(HttpMethod.GET,"/api/space").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/spaces","/api/invitations","/api/invitations/preview","/api/invitations/join").authenticated()
                 .requestMatchers(HttpMethod.GET,"/home.css","/chat.css","/chat.js","/chat-socket.js","/memories.css","/memories.js","/games.js","/games.css").permitAll()
+                .requestMatchers(HttpMethod.GET,"/account-settings.js").permitAll()
+                .requestMatchers("/api/partner-nickname").access((identity,context)->new AuthorizationDecision(
+                    identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers("/api/games/connect4","/api/games/connect4/*").access((identity,context)->new AuthorizationDecision(
                     identity.get().getPrincipal() instanceof AccountPrincipal actor && pairing.active(actor.accountId())))
                 .requestMatchers(HttpMethod.GET,"/chat-media.js","/profile-ui.js","/browser-notifications.js","/notification-inbox.js","/notifications.css","/notification-sounds.js","/call-widget.js","/call-socket.js","/call-media.js","/call-reactions.js","/calls.css").permitAll()

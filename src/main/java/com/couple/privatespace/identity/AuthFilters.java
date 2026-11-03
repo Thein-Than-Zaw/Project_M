@@ -24,19 +24,22 @@ public final class AuthFilters {
         @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
             boolean login = request.getRequestURI().equals("/api/auth/login");
             boolean register = request.getRequestURI().equals("/api/auth/register");
+            boolean passwordChange=request.getRequestURI().equals("/api/auth/change-password");
             boolean pairing=request.getRequestURI().startsWith("/api/invitations")||request.getRequestURI().equals("/api/spaces");
-            boolean homeWrite=java.util.Set.of("POST","PATCH","DELETE").contains(request.getMethod()) &&
-                (request.getRequestURI().equals("/api/profile")||request.getRequestURI().equals("/api/relationship-date")||request.getRequestURI().equals("/api/dates")||request.getRequestURI().startsWith("/api/dates/"));
-            if (("POST".equals(request.getMethod()) && (login || register || pairing)) || homeWrite) {
+            boolean homeWrite=java.util.Set.of("POST","PATCH","DELETE","PUT").contains(request.getMethod()) &&
+                (request.getRequestURI().equals("/api/partner-nickname")||request.getRequestURI().equals("/api/profile")||request.getRequestURI().equals("/api/relationship-date")||request.getRequestURI().equals("/api/dates")||request.getRequestURI().startsWith("/api/dates/"));
+            if (("POST".equals(request.getMethod()) && (login || register || pairing || passwordChange)) || homeWrite) {
                 if (request.getContentLengthLong() > 16384) {
                     ApiFailure.write(response, 413, "REQUEST_TOO_LARGE", "This request is too large."); return;
                 }
-                long retry = login ? limiter.login(request.getRemoteAddr(), request.getParameter("email")) : (pairing||homeWrite)?limiter.pairing(request.getRemoteAddr()):limiter.registration(request.getRemoteAddr());
+                var authentication=SecurityContextHolder.getContext().getAuthentication();
+                String passwordActor=authentication!=null&&authentication.getPrincipal() instanceof AccountPrincipal principal?principal.accountId().toString():"anonymous";
+                long retry = passwordChange?limiter.passwordChange(request.getRemoteAddr(),passwordActor):login ? limiter.login(request.getRemoteAddr(), request.getParameter("email")) : (pairing||homeWrite)?limiter.pairing(request.getRemoteAddr()):limiter.registration(request.getRemoteAddr());
                 if (retry > 0) {
                     response.setHeader("Retry-After", Long.toString(retry));
                     ApiFailure.write(response, 429, "TOO_MANY_ATTEMPTS", "Too many attempts. Please try again later."); return;
                 }
-                if (register || pairing || homeWrite) {
+                if (register || pairing || homeWrite || passwordChange) {
                     // Bound chunked JSON too; no body is logged or retained by the filter.
                     HttpServletRequest limited = new HttpServletRequestWrapper(request) {
                         @Override public ServletInputStream getInputStream() throws IOException {

@@ -30,10 +30,10 @@ async function api(path,method='GET',body,key){
   return response.status===204?null:response.json();
 }
 function route(){
-  const view=['dates','profile','notifications','settings'].includes(location.hash.slice(1))?location.hash.slice(1):'home';
-  for(const item of ['home','dates','profile','notifications','settings'])$(`#view-${item}`).hidden=item!==view;
-  for(const link of $$('[data-view]')){if(link.dataset.view===(['notifications','profile'].includes(view)?'settings':view))link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
-  $('#page-title').textContent={home:'Your favorite place is a person.',dates:'Our dates.',profile:'Your own little corner.',notifications:'Just the way you like it.',settings:'Settings.'}[view];
+  const view=['dates','profile','notifications','settings','security','partner'].includes(location.hash.slice(1))?location.hash.slice(1):'home';
+  for(const item of ['home','dates','profile','notifications','settings','security','partner'])$(`#view-${item}`).hidden=item!==view;
+  for(const link of $$('[data-view]')){if(link.dataset.view===(['notifications','profile','security','partner'].includes(view)?'settings':view))link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
+  $('#page-title').textContent={home:'Your favorite place is a person.',dates:'Our dates.',profile:'Your own little corner.',notifications:'Just the way you like it.',settings:'Settings.',security:'Keep your space safe.',partner:'A name just for your person.'}[view];
   if(home)$('#welcome').textContent=`${pretty(home.calendar.today)} · Welcome home, ${home.self.displayName}`;
 }
 // HOME-05: total elapsed connected-video time; no invented chatting-time measurement.
@@ -147,3 +147,5 @@ async function saveProfilePhoto(file){
  const c=await api('/api/csrf');const response=await fetch('/api/profile/photo',{method:'PUT',headers:{[c.headerName]:c.token,'Content-Type':'application/octet-stream'},body:file,signal:AbortSignal.timeout(20000)});
  if(!response.ok){const error=await response.json().catch(()=>({}));throw new Error(error.message||'Photo upload failed. Retry.');}
 }
+
+window.addEventListener('partner-nickname-updated',()=>load(false));

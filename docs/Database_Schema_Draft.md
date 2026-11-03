@@ -122,3 +122,6 @@ V33: `call_session UNIQUE(space_id,id)`; `chat_message.call_id UUID UNIQUE NULL`
 ## GAME-01 local additive schema
 
 V34 `couple_connect_four`: one current game per space, scoped member FKs, board42/move/status/winner constraints, inviter/player identities, last accepted first player, version. V35 `connect_four_command`: per-actor action key, request hash, space scope, timestamp and rate-query index. No game history/public rooms/chat or call records added. See [GAME-01 schema/flow](GAME-01_Connect_Four.md). Original migrations preserved; latest local targetV35.
+## ACCOUNT-01 local additive schema
+
+V36 creates partner_nickname with per-owner current label, owner/partner scoped membership FKs, nullable nickname, version/timestamp, owner≠partner and text checks. Clearing retains row/version. Existing app_user password_hash/security_revision reused for atomic credential change; no password schema or default credential mutation. PairingService only projects the requesting owner's alias. [ACCOUNT-01](ACCOUNT-01_Change_Password_And_Private_Nickname.md). Local targetV36.

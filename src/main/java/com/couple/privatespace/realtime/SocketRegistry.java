@@ -40,6 +40,8 @@ public class SocketRegistry {
         close(id);return false;
     }
     public void closeHttp(String httpId){entries.forEach((id,entry)->{try{if(entry.http().getId().equals(httpId)){events.publishEvent(new Revoked(java.util.Set.of(id)));close(id);}}catch(IllegalStateException invalid){events.publishEvent(new Revoked(java.util.Set.of(id)));close(id);}});}
+    /** AUTH-04: revoke all own device sockets only after the new credential commits. */
+    public void closeAccount(java.util.UUID actor){entries.forEach((id,entry)->{if(entry.actor().accountId().equals(actor)){events.publishEvent(new Revoked(java.util.Set.of(id)));close(id);}});}
     private void close(String id){var entry=entries.remove(id);if(entry!=null)try{entry.socket().close(CloseStatus.POLICY_VIOLATION);}catch(java.io.IOException ignored){ /* already closing */ }}
     @Scheduled(fixedDelay=2000)
     public void sweep(){entries.keySet().forEach(id->valid(id,false));}

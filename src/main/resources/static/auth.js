@@ -66,3 +66,5 @@ signup.addEventListener('submit',event=>{event.preventDefault();send(signup,true
 if(new URLSearchParams(location.search).has('expired')){notice.textContent='Your session has expired. Please sign in again.';notice.hidden=false;}
 if(new URLSearchParams(location.search).has('signedout')){notice.textContent='You have signed out. See you soon.';notice.hidden=false;}
 window.addEventListener('pageshow',async()=>{try{const result=await fetch('/api/me',{cache:'no-store'});if(result.ok){const account=await result.json();window.location.replace(account.paired?'/home.html':'/space.html');}}catch{/* Form remains usable. */}});
+
+if(new URLSearchParams(location.search).has('passwordChanged')){notice.textContent='Password changed. Sign in with your new password. Your other devices have been signed out.';notice.hidden=false;}
