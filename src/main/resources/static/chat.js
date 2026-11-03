@@ -96,7 +96,9 @@ function messageMetadata(item){
 function render(mode='normal'){
   const messages=[...records.values()].sort((a,b)=>a.sequence-b.sequence),outbox=[...pending.values()];
   const identity=JSON.stringify([messages,outbox.map(({lastAttempt,...p})=>p)]);
-  if(identity===renderIdentity){queueAcks();return;}renderIdentity=identity;
+  // CHAT-08: transmit() may already render the same outbox before send requests
+  // bottom alignment. An unchanged DOM must still honor that explicit action.
+  if(identity===renderIdentity){if(mode==='bottom'){log.scrollTop=log.scrollHeight;$('#new-messages').hidden=true;}queueAcks();return;}renderIdentity=identity;
   const bottom=nearBottom(),height=log.scrollHeight,top=log.scrollTop,fragment=document.createDocumentFragment();let lastDay='';
   for(const item of messages){
     const day=date(item.createdAt);
@@ -209,7 +211,7 @@ $('#composer').addEventListener('submit',event=>{
   if(chatMedia?.hasDraft()){if(pending.size>=50){$('#compose-error').textContent='Send or cancel pending messages first.';return;}chatMedia.send(body,replyTargetId);return;}
   if(!body.trim()||Array.from(body).length>4000){$('#compose-error').textContent=body.trim()?'Use up to 4,000 characters.':'Write a message first.';$('#message-body').setAttribute('aria-invalid','true');$('#message-body').focus();return;}
   if(pending.size>=50){$('#compose-error').textContent='Your tab has 50 unsent messages. Reconnect and send them before adding more.';return;}
-  const item={clientMessageId:crypto.randomUUID(),body,replyToId:replyTargetId,state:'Queued',retryable:true};pending.set(item.clientMessageId,item);persist();replyTargetId=null;renderReplyDraft();$('#message-body').value='';updateCount();transmit(item);render('bottom');$('#message-body').focus();
+  const item={clientMessageId:crypto.randomUUID(),body,replyToId:replyTargetId,state:'Queued',retryable:true};pending.set(item.clientMessageId,item);persist();replyTargetId=null;renderReplyDraft();$('#message-body').value='';updateCount();transmit(item);render('bottom');$('#message-body').focus({preventScroll:true});
 });
 function updateCount(){resizeComposer();composeControls();$('#character-count').hidden=Array.from($('#message-body').value).length<3800;$('#character-count').textContent=`${Array.from($('#message-body').value).length.toLocaleString()} / 4,000`;}
 $('#message-body').addEventListener('input',updateCount);

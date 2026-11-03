@@ -1,0 +1,9 @@
+# CALL-UI06 / CHAT-08 — Manual deployment preparation
+
+3 November 2026, Myanmar time. Owner explicitly wants to try deploying manually. Agent prepares and pushes the current camera-switch and own-send auto-scroll code to main; **no Render trigger/restart/config mutation is authorized or performed in this step**. Existing service `srv-dbjisdqjnfac7384lr50`, My Workspace / Project_M, main, autoDeploy OFF confirmed read-only before push.
+
+Base58bc3ba plus [CALL-UI06](CALL-UI06_Mobile_Camera_Switch.md) and [CHAT-08](CHAT-08_Own_Send_Scroll.md). Exact tested camera/scroll source identity verified against prior manifests/hashes. JS **94 PASS** (`.local/chat08-js.log`), reused because runtime/test source has not changed. `npm.cmd run build` **BUILD SUCCESS**,11.805s at19:59:08 Myanmar on3 November2026 (`.local/manual-camera-chat-build.log`), now including both features. Backend/API/schema unchangedV33; actual iPhone/Android media/keyboard UAT pending. Local preview restored after packaging. No production data backup/export/reset, env change or new resource.
+
+Owner steps: open the existing Render web service → Manual Deploy → Deploy latest commit → wait for **Live** → refresh app and test camera switch and own-send scrolling. Check the selected commit includes both features; no Clear build cache is needed for a normal deploy. Dashboard: https://dashboard.render.com/web/srv-dbjisdqjnfac7384lr50 . A successful Git push/build is preparation, not evidence that the server is updated.
+
+Complete source archive/manifest is prepared locally and verified against the application commit. Required authorized Drive destination is still unresolved: PREPARED_LOCAL / DRIVE_SYNC_PENDING, not SAVED_VERIFIED. Device acceptance pending; production deployment/health verification is OWNER_MANUAL_PENDING. Recovery uses frontend revert/rebuild, no database rollback. See the two Code Update Records for detailed safeguards/test coverage/limits.

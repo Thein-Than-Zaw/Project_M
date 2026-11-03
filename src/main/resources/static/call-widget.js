@@ -3,7 +3,7 @@ import {avatar} from '/profile-ui.js';
 import {browserNotifications} from '/browser-notifications.js';
 import {notificationSounds} from '/notification-sounds.js';
 import {callSocket} from '/call-socket.js';
-import {requestCallMedia} from '/call-media.js';
+import {requestCallMedia,canSwitchCallCamera,switchCallCamera} from '/call-media.js';
 
 // Shared Home/Chat/Memories widget. Static template only; all user content uses textContent.
 const template=document.createElement('template');template.innerHTML=`
@@ -13,7 +13,7 @@ const template=document.createElement('template');template.innerHTML=`
  <p id="call-error" class="field-error" role="alert" tabindex="-1"></p>
  <div id="call-stage" class="call-stage" hidden><video id="call-remote" autoplay playsinline aria-label="Your partner's call"></video><div id="call-person" class="call-person"><span id="call-avatar" class="avatar">♡</span><strong id="call-partner"></strong><p id="call-peer-state"></p></div><video id="call-local" autoplay muted playsinline aria-label="Your camera preview"></video><span id="call-duration" class="call-duration"></span><div id="call-reaction-layer" class="call-reaction-layer" aria-hidden="true"></div></div><p id="call-reaction-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
  <div id="call-idle-actions" class="call-actions"><button id="call-voice" type="button" class="secondary" disabled>☎ Voice call</button><button id="call-video" type="button" class="primary" disabled><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="12" height="14" rx="3"/><path d="m15 10 6-4v12l-6-4z"/></svg> Video call</button></div>
- <div class="call-toolbar"><section id="call-reaction-picker" class="call-reaction-picker" aria-label="Call reactions" hidden><div id="call-reaction-choices"></div><p id="call-reaction-note" role="status"></p></section><div class="call-actions call-controls"><button id="call-answer" class="primary" type="button" hidden>Answer</button><button id="call-stop-setup" class="secondary" type="button" hidden>Cancel device setup</button><button id="call-decline" class="call-danger" type="button" hidden>Decline</button><button id="call-cancel" class="call-danger" type="button" hidden>Cancel call</button><button id="call-resume" class="secondary" type="button" hidden>Reconnect call</button><button id="call-mic" class="secondary" type="button" hidden>Mute microphone</button><button id="call-camera" class="secondary" type="button" hidden>Turn camera off</button><button id="call-react" class="secondary" type="button" aria-label="Send a call reaction" title="Reactions" aria-controls="call-reaction-picker" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14a4 4 0 0 0 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg></button><button id="call-end" class="call-danger" type="button" hidden>End call</button><button id="call-play" class="secondary" type="button" hidden>Play partner audio</button></div>
+ <div class="call-toolbar"><section id="call-reaction-picker" class="call-reaction-picker" aria-label="Call reactions" hidden><div id="call-reaction-choices"></div><p id="call-reaction-note" role="status"></p></section><div class="call-actions call-controls"><button id="call-answer" class="primary" type="button" hidden>Answer</button><button id="call-stop-setup" class="secondary" type="button" hidden>Cancel device setup</button><button id="call-decline" class="call-danger" type="button" hidden>Decline</button><button id="call-cancel" class="call-danger" type="button" hidden>Cancel call</button><button id="call-resume" class="secondary" type="button" hidden>Reconnect call</button><button id="call-mic" class="secondary" type="button" hidden>Mute microphone</button><button id="call-camera" class="secondary" type="button" hidden>Turn camera off</button><button id="call-switch-camera" class="secondary" type="button" aria-label="Switch to back camera" title="Switch to back camera" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5 9 3h6l2 2h3v14H4V5z"/><path d="M8 12a4 4 0 0 1 7-2l1 1M16 8v3h-3M16 14a4 4 0 0 1-7 2l-1-1M8 18v-3h3"/></svg></button><button id="call-react" class="secondary" type="button" aria-label="Send a call reaction" title="Reactions" aria-controls="call-reaction-picker" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14a4 4 0 0 0 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg></button><button id="call-end" class="call-danger" type="button" hidden>End call</button><button id="call-play" class="secondary" type="button" hidden>Play partner audio</button></div>
  <div class="call-footer"><details id="call-more" class="call-more"><summary aria-label="More call options" title="More call options">⋯</summary><div class="call-more-menu">
  <button id="call-video-fit" type="button" aria-pressed="false">Fill video frame</button><button id="call-history-toggle" type="button">Recent calls</button><button id="call-refresh" type="button">Check connection</button>
  <p id="call-connectivity" class="fine-print"></p><p class="fine-print">Stay on this page to keep your call connected.</p><div id="call-history" class="call-history" hidden></div>
@@ -23,6 +23,7 @@ const $=id=>document.getElementById(id),live=new Set(['RINGING','CONNECTING','AC
 const secure=window.isSecureContext&&typeof crypto?.randomUUID==='function'&&crypto.subtle;
 const clientId=secure?crypto.randomUUID():null;let clientHash;
 let home,call,socket,csrf,rtc,localStream,remoteStream,pc,negotiationId,announced=false,outgoingIce=[],incomingIce=[],seenSignals=new Set(),mediaEpoch=0,offering=false,busy=false,poll,beat,clock,closed=false,clockOffset=0,lastRestart='',eventChain=Promise.resolve(),reported=false,peerCamera=true,peerMic=true,endingId=null,mediaController=null,setupSequence=0;
+let cameraController=null,cameraAvailable=false,cameraFacing='user';
 const own=(v=call)=>v&&home&&(v.callerId===home.self.id?v.callerClient:v.calleeClient)===clientHash;
 const isCaller=(v=call)=>v&&home&&v.callerId===home.self.id;
 const active=()=>call&&live.has(call.state);
@@ -47,17 +48,21 @@ function render(){
   $('call-stop-setup').hidden=!mediaController;$('call-answer').textContent=mediaController?(call?.mode==='VIDEO'?'Opening camera/microphone…':'Opening microphone…'):'Answer';
   $('call-mic').hidden=!media||call.state==='RINGING';$('call-camera').hidden=!media||call.mode==='VOICE'||call.state==='RINGING';
   const audio=localStream?.getAudioTracks()[0],video=localStream?.getVideoTracks()[0];control('call-mic','mic',audio?.enabled?'Mute microphone':'Unmute microphone',!audio?.enabled);$('call-mic').setAttribute('aria-pressed',String(audio?!audio.enabled:false));control('call-camera','camera',video?.enabled?'Turn camera off':'Turn camera on',!video?.enabled);$('call-camera').setAttribute('aria-pressed',String(video?!video.enabled:false));
-  $('call-local').hidden=!running||call.mode==='VOICE'||!video?.enabled;$('call-person').hidden=!!(running&&call.mode==='VIDEO'&&peerCamera&&remoteStream?.getVideoTracks().length);$('call-peer-state').textContent=running?(call.mode==='VOICE'?'Voice call':!peerCamera?'Your partner’s camera is off':'Waiting for your person…')+(peerMic?'':' · Microphone muted'):'';
+  const videoOn=!!video?.enabled&&video.readyState!=='ended';$('call-camera').disabled=!!cameraController;if(video&&!videoOn){control('call-camera','camera','Turn camera on',true);$('call-camera').setAttribute('aria-pressed','true');}
+  const switchButton=$('call-switch-camera');switchButton.hidden=!(selected&&call.mode==='VIDEO'&&call.state==='ACTIVE'&&video&&cameraAvailable);switchButton.disabled=!!cameraController||busy||!socket?.connected()||!pc;switchButton.setAttribute('aria-busy',String(!!cameraController));const switchLabel=cameraController?'Switching camera…':cameraFacing==='environment'?'Switch to front camera':'Switch to back camera';switchButton.setAttribute('aria-label',switchLabel);switchButton.title=switchLabel;$('call-local').dataset.facing=cameraFacing;
+  $('call-local').hidden=!running||call.mode==='VOICE'||!videoOn;$('call-person').hidden=!!(running&&call.mode==='VIDEO'&&peerCamera&&remoteStream?.getVideoTracks().length);$('call-peer-state').textContent=running?(call.mode==='VOICE'?'Voice call':!peerCamera?'Your partner’s camera is off':'Waiting for your person…')+(peerMic?'':' · Microphone muted'):'';
   for(const id of ['call-voice','call-video'])$(id).disabled=busy||!home||!socket?.connected();for(const id of ['call-answer','call-decline','call-resume'])$(id).disabled=busy||!socket?.connected();for(const id of ['call-cancel','call-end'])$(id).disabled=busy;
   if(running&&!busy){const states={RINGING:incoming?'Your person is calling…':selected?'Calling your person…':'An outgoing call is active in another tab.',CONNECTING:selected?'Connecting your call…':'Answered in another tab.',ACTIVE:selected?'Connected · Just the two of you':'Call active in another tab.',RECONNECTING:selected?'Connection interrupted. Trying again for up to 15 seconds…':'Call reconnecting in another tab.'};message(states[call.state]);}
   if(!running&&call)message(({MISSED:'Call was not answered.',DECLINED:'Call declined.',CANCELLED:'Call cancelled.',ENDED:'Call ended.',FAILED:call.endReason==='SESSION_ENDED'?'Call ended because a session closed.':'The call could not stay connected. Try again.'})[call.state]||'Call ended.');
+  if(cameraController&&selected)message('Switching camera… Audio stays connected.');
   if(running&&endingId===call.id){message('Ending call… Your microphone and camera are off.');$('call-resume').hidden=true;}
 }
 function stopPeer(){
+  cameraController?.abort();cameraController=null;
   if(pc){pc.ontrack=null;pc.onicecandidate=null;pc.onconnectionstatechange=null;pc.oniceconnectionstatechange=null;pc.close();pc=null;}
   if(remoteStream)for(const track of remoteStream.getTracks())track.stop();remoteStream=null;$('call-remote').srcObject=null;negotiationId=null;announced=false;outgoingIce=[];incomingIce=[];reported=false;offering=false;
 }
-function stopMedia(){closeCallReactions();reactionEffects.clear();mediaEpoch++;mediaController?.abort();mediaController=null;stopPeer();if(localStream)for(const track of localStream.getTracks())track.stop();localStream=null;$('call-local').srcObject=null;$('call-play').hidden=true;ring(false);}
+function stopMedia(){cameraAvailable=false;cameraFacing='user';closeCallReactions();reactionEffects.clear();mediaEpoch++;mediaController?.abort();mediaController=null;stopPeer();if(localStream)for(const track of localStream.getTracks())track.stop();localStream=null;$('call-local').srcObject=null;$('call-play').hidden=true;ring(false);}
 async function api(path,method='GET',body){
   const headers={};if(method!=='GET'){if(!csrf)throw new Error('Session token unavailable. Refresh and retry.');headers[csrf.headerName]=csrf.token;headers['Content-Type']='application/json';}
   const response=await fetch(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body),cache:'no-store',signal:AbortSignal.timeout(10000)});
@@ -82,7 +87,7 @@ async function acquire(mode){
   const remaining=call?.state==='RINGING'&&!isCaller()?Date.parse(call.ringDeadline)-(Date.now()+clockOffset):30000;
   try{stream=await requestCallMedia({mediaDevices:navigator.mediaDevices,mode,signal:controller.signal,timeoutMs:Math.min(30000,remaining),onWaiting:()=>{if(mediaController===controller)message('Still opening the device. Check the browser permission icon. You can cancel device setup and retry.');}});}
   finally{if(mediaController===controller)mediaController=null;render();}
-  if(epoch!==mediaEpoch||closed){stream.getTracks().forEach(t=>t.stop());throw new Error('Call setup was cancelled.');}localStream=stream;$('call-local').srcObject=stream;$('call-local').play().catch(()=>{});return stream;
+  if(epoch!==mediaEpoch||closed){stream.getTracks().forEach(t=>t.stop());throw new Error('Call setup was cancelled.');}localStream=stream;cameraFacing=stream.getVideoTracks()[0]?.getSettings?.().facingMode||'user';cameraAvailable=false;refreshCameras();$('call-local').srcObject=stream;$('call-local').play().catch(()=>{});return stream;
 }
 async function start(mode){
   show();if(!secure)return failure('Microphone/camera calls need localhost or trusted HTTPS in a supported browser.');if(busy||!socket?.connected())return failure('Calls are connecting. Try again shortly.');if(active())return render();
@@ -120,7 +125,7 @@ async function receive(event){
     if(pc?.remoteDescription&&event.negotiationId===negotiationId)await pc.addIceCandidate(event.payload);else if(incomingIce.length<100)incomingIce.push({negotiation:event.negotiationId,payload:event.payload});
   }else if(event.type==='call.media'&&event.negotiationId===negotiationId){peerCamera=event.payload.cameraEnabled;peerMic=event.payload.micEnabled;render();}
 }
-function sendMedia(){if(negotiationId&&active()&&own())send('media',{negotiationId,micEnabled:!!localStream?.getAudioTracks()[0]?.enabled,cameraEnabled:!!localStream?.getVideoTracks()[0]?.enabled}).catch(failure);}
+function sendMedia(){if(negotiationId&&active()&&own())send('media',{negotiationId,micEnabled:!!localStream?.getAudioTracks()[0]?.enabled,cameraEnabled:!!localStream?.getVideoTracks()[0]?.enabled&&localStream?.getVideoTracks()[0]?.readyState!=='ended'}).catch(failure);}
 async function action(op){if(busy||!active())return;const ending=op==='end'||op==='cancel';if(ending){endingId=call.id;stopMedia();}busy=true;render();try{if(ending&&!socket?.connected())apply(await api(`/api/calls/${call.id}/leave`,'POST',{clientId,eventId:crypto.randomUUID()}));else apply(await send(op));}catch(error){failure(error);try{await sync();}catch{}}finally{busy=false;render();}}
 function leave(){
   if(active()&&own()&&csrf){fetch(`/api/calls/${call.id}/leave`,{method:'POST',headers:{[csrf.headerName]:csrf.token,'Content-Type':'application/json'},body:JSON.stringify({clientId,eventId:crypto.randomUUID()}),keepalive:true}).catch(()=>{});}
@@ -143,7 +148,7 @@ $('call-reaction-picker').addEventListener('keydown',event=>{if(event.key==='Esc
 $('call-launcher').addEventListener('click',show);$('call-close').addEventListener('click',()=>hideView());document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('call-panel').hidden)hideView();});$('call-voice').addEventListener('click',()=>start('VOICE'));$('call-video').addEventListener('click',()=>start('VIDEO'));$('call-answer').addEventListener('click',answer);$('call-decline').addEventListener('click',()=>action('decline'));$('call-cancel').addEventListener('click',()=>action('cancel'));$('call-end').addEventListener('click',()=>action('end'));
 $('call-stop-setup').addEventListener('click',()=>{setupSequence++;stopMedia();busy=false;failure('Device setup cancelled. You can retry or decline the incoming call.');render();});
 $('call-resume').addEventListener('click',async()=>{if(busy)return;busy=true;render();try{await acquire(call.mode);apply(await send('resume'));if(isCaller())await offer(true);}catch(error){stopMedia();failure(error);}finally{busy=false;render();}});
-$('call-mic').addEventListener('click',()=>{const track=localStream?.getAudioTracks()[0];if(track){track.enabled=!track.enabled;sendMedia();render();}});$('call-camera').addEventListener('click',()=>{const track=localStream?.getVideoTracks()[0];if(track){track.enabled=!track.enabled;sendMedia();render();}});$('call-play').addEventListener('click',()=>$('call-remote').play().then(()=>{$('call-play').hidden=true;}).catch(()=>failure('Audio playback is blocked. Check browser sound permissions.')));
+$('call-mic').addEventListener('click',()=>{const track=localStream?.getAudioTracks()[0];if(track){track.enabled=!track.enabled;sendMedia();render();}});$('call-camera').addEventListener('click',()=>{if(cameraController)return;const track=localStream?.getVideoTracks()[0];if(track?.readyState==='ended'){track.enabled=true;changeCamera(cameraFacing);return;}if(track){track.enabled=!track.enabled;sendMedia();render();}});$('call-play').addEventListener('click',()=>$('call-remote').play().then(()=>{$('call-play').hidden=true;}).catch(()=>failure('Audio playback is blocked. Check browser sound permissions.')));
 $('call-refresh').addEventListener('click',()=>sync().catch(failure));$('call-fullscreen').hidden=!document.fullscreenEnabled;
 // CALL-UI03: presentation only; never change capture constraints or negotiated tracks.
 let fillCallVideo=false;
@@ -169,3 +174,18 @@ function openHistory(){if(!home||closed)return;show();if($('call-history').hidde
 window.addEventListener('open-call-history',openHistory);
 window.addEventListener('hashchange',()=>{if(location.hash==='#calls')openHistory();});
 init();
+
+// CALL-UI06: scoped device changes, no new call/signaling negotiation or microphone request.
+async function refreshCameras(){const stream=localStream,epoch=mediaEpoch;if(!stream?.getVideoTracks().length)return;const available=await canSwitchCallCamera(navigator.mediaDevices,stream.getVideoTracks()[0]);if(stream!==localStream||epoch!==mediaEpoch||closed)return;cameraAvailable=available;render();}
+async function changeCamera(facing){
+ if(cameraController||busy||!active()||!own()||call.mode!=='VIDEO'||call.state!=='ACTIVE'||endingId||!pc||!localStream)return;
+ const peer=pc,stream=localStream,epoch=mediaEpoch,id=call.id,sender=peer.getSenders().find(s=>s.track?.kind==='video');if(!sender)return failure('Camera switching is unavailable for this call.');
+ const controller=new AbortController();cameraController=controller;closeCallReactions();$('call-error').textContent='';render();
+ const current=()=>!closed&&call?.id===id&&!endingId&&active()&&own()&&pc===peer&&localStream===stream&&mediaEpoch===epoch;
+ try{const track=await switchCallCamera({mediaDevices:navigator.mediaDevices,stream,sender,facingMode:facing,signal:controller.signal,isCurrent:current});if(current())cameraFacing=track.getSettings?.().facingMode||facing;}
+ catch(error){if(current()&&error.code!=='MEDIA_CANCELLED')failure(error);}
+ finally{if(cameraController===controller)cameraController=null;if(current()){cameraFacing=stream.getVideoTracks()[0]?.getSettings?.().facingMode||cameraFacing;$('call-local').srcObject=stream;$('call-local').play().catch(()=>{});sendMedia();render();refreshCameras();}}
+}
+$('call-switch-camera').addEventListener('click',()=>changeCamera(cameraFacing==='environment'?'user':'environment'));
+navigator.mediaDevices?.addEventListener?.('devicechange',refreshCameras);
+window.addEventListener('pagehide',()=>navigator.mediaDevices?.removeEventListener?.('devicechange',refreshCameras));

@@ -123,3 +123,11 @@
 @media(max-width:760px){.call-stage>video#call-local{width:31%;height:auto;aspect-ratio:1/1;max-width:150px;max-height:150px}.call-reaction-picker{bottom:calc(100% + 12px)}}
 @media(max-width:760px) and (max-height:450px){.call-stage>video#call-local{width:24%;aspect-ratio:4/3;max-height:96px}}
 @media(prefers-reduced-motion:reduce){.call-floating-reaction{animation:none;opacity:1;bottom:25%;left:calc(50% - 22px);will-change:auto}}
+
+/* CALL-UI06: rear camera is not mirrored; compact switch control stays in the call dock. */
+.call-stage>video#call-local[data-facing=environment]{transform:none}
+.call-controls #call-switch-camera{width:44px;min-width:44px;height:44px;min-height:44px;padding:10px;border-radius:50%}
+.call-controls #call-switch-camera[aria-busy=true]{opacity:.55;cursor:progress}
+@media(min-width:761px){.call-panel[data-running=true] .call-controls #call-switch-camera{border-color:transparent;background:#ffffff17;padding:11px}}
+@media(max-width:760px){.call-controls{gap:6px;flex-wrap:nowrap}.call-controls #call-mic,.call-controls #call-camera,.call-controls #call-end,.call-controls #call-switch-camera,.call-controls #call-react{box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;padding:9px}.call-toolbar{gap:6px}}
+@media(max-width:380px){.call-controls,.call-toolbar{gap:4px}}
