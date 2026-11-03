@@ -42,3 +42,16 @@ Local Chat → own message long press → More (desktop right click) → Edit �
 - Source/test/scripts manifest `.local/chat07-source-manifest.json`: **532 files**, SHA256 `f1958472bb9d8236f20dbbb9027004a2c3fc824d9ef655a643e47897e6a2d234`. Uncommitted HOME-05 + CHAT-07, no Git push.
 - Existing local PostgreSQL app migrated **V30→V33** and running **PID6340** on **http://127.0.0.1:18083/**, `.local/chat07-app.log`. Existing local users/content retained; JVM restart may require sign-in. **7 HTTP checks PASS**: root/health, Chat JS+CSS source equality, protected Chat HTML302 and guest Chat/Home API401 (`.local/chat07-http.log`). Unique Chat IDs, labelled edit dialog and metric semantics PASS (`.local/chat07-identity.log`). `git diff --check` PASS.
 - Current local checkpoint supersedes HOME-05's earlier run identity. Production stays at application `cd4376f`; no Render operations, push, production migrations or database backup/export in this update. IMPLEMENTED LOCALLY / scoped tests PASS / device visual UAT PENDING / DRIVE_SYNC_PENDING.
+
+
+## Authorized production deployment — 3 November 2026
+
+Owner explicitly requested server update. Application commit `3e2865e3c3c88f6f70d850b5a0946a6ba28d9b82` pushed to main, exact tested 532-file source identity verified before publication. Render workspace My Workspace / Project_M, service `srv-dbjisdqjnfac7384lr50`, existing autoDeploy OFF and runtime/environment preserved.
+
+Deploy `dep-dbkmeuec6qcc73as6q20` accepted at04:47:53UTC, **LIVE at11:21:07 Myanmar time** (04:51:07UTC), 3 November 2026. Neon application schema `couple_private_space` successfully migrated V30→V33 (three migrations, no old timeline backfill). Old runtime drained after replacement readiness. No user-data export/backup/reset or infrastructure plan/config change.
+
+**10 post-live HTTP checks PASS** (`.local/chat07-live.log`): root200, healthUP200, readinessUP200, Home JS/CSS200 and Chat JS/CSS200 with deployed/source normalized equality, protected Chat HTML302, guest Chat/Home API401. Actual account/device edit/call UI acceptance remains owner review; production test messages/calls were not created. Native58 scoped/JS76 results above apply to deployed application source.
+
+Complete source package `.local/source-packages/Project_M_Source_CHAT07_3e2865e3c3c8.zip`: **821 files / 12,595,923 bytes**, SHA256 `dd31f9e398b0eb7d12a14d0b574288490beb1c58c166e6b292b91d05717f87d6`. Archive CRC, full Git inventory/blob identity and credential exclusion verified. Manifest alongside archive. Current runtime tests/fresh-plus-upgrade migration rehearsal reused; independent extracted-folder reinstall not rerun. Drive destination unresolved: PREPARED_LOCAL / DRIVE_SYNC_PENDING, not SAVED_VERIFIED. Source package is not a database backup.
+
+Deployment status LIVE / HTTP smoke PASS / human UAT PENDING / Drive source delivery PENDING. Recovery must account for CALL entries introduced after this deployment: do not blindly revert to a pre-CALL UI that cannot render them; retain V31–V33 and use a compatible forward fix. No rollback performed. Follow-up documentation commit does not require another deploy because autoDeploy remains OFF.
