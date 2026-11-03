@@ -131,3 +131,7 @@
 @media(min-width:761px){.call-panel[data-running=true] .call-controls #call-switch-camera{border-color:transparent;background:#ffffff17;padding:11px}}
 @media(max-width:760px){.call-controls{gap:6px;flex-wrap:nowrap}.call-controls #call-mic,.call-controls #call-camera,.call-controls #call-end,.call-controls #call-switch-camera,.call-controls #call-react{box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;padding:9px}.call-toolbar{gap:6px}}
 @media(max-width:380px){.call-controls,.call-toolbar{gap:4px}}
+
+/* CALL-UI07: visible peer mute state even while the remote video covers the avatar. */
+.call-peer-mute{position:absolute;left:16px;bottom:56px;z-index:5;display:flex;align-items:center;gap:7px;max-width:calc(100% - 32px);padding:7px 10px;border-radius:20px;background:#181e2be8;color:#fff;font-size:11px;pointer-events:none;box-shadow:0 2px 8px #0003}.call-peer-mute svg{width:18px;height:18px;flex-shrink:0}
+@media(min-width:761px){.call-panel[data-running=true] .call-peer-mute{left:24px;bottom:64px}}

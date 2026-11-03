@@ -37,3 +37,21 @@ test('sent acknowledgement chime deduplicates, respects mute and does not interr
 test('preview honors mute/zero volume and never consumes a real message event',async()=>{
  const f=fixture();await f.engine.enable();f.engine.preview();assert.equal(f.notes.length,2);f.engine.mute(true);f.engine.preview();assert.equal(f.notes.length,2);f.engine.mute(false);f.engine.setVolume(0);f.engine.preview();assert.equal(f.notes.length,2);f.engine.setVolume(50);f.engine.message('real');assert.equal(f.notes.length,4);
 });
+test('outgoing ringback repeats once per call and stops when answered/cancelled',async()=>{
+ const f=fixture();await f.engine.enable();f.engine.ringback('outgoing');assert.equal(f.notes.length,4);assert.deepEqual(f.notes.map(n=>n.frequency.value),[440,480,440,480]);assert.equal(f.timers.size,1);f.engine.ringback('outgoing');assert.equal(f.notes.length,4);for(const timer of f.timers)timer();assert.equal(f.notes.length,8);f.engine.ring(null);assert.equal(f.timers.size,0);assert.ok(f.notes.every(n=>n.stops===2));
+});
+test('ended/cancelled tone and unanswered/failed tone differ and deduplicate across tabs',async()=>{
+ const shared=new Map(),a=fixture(shared),b=fixture(shared);await a.engine.enable();await b.engine.enable();
+ a.engine.callEnded('ended','ENDED');assert.deepEqual(a.notes.map(n=>n.frequency.value),[659.25,440]);a.engine.callEnded('ended','ENDED');b.engine.callEnded('ended','ENDED');assert.equal(a.notes.length,2);assert.equal(b.notes.length,0);
+ a.engine.callEnded('missed','MISSED');assert.deepEqual(a.notes.slice(2).map(n=>n.frequency.value),[330,330,262]);a.engine.callEnded('declined','DECLINED');assert.equal(a.notes.length,8);
+});
+test('outgoing/end sounds respect mute/zero volume and do not replay old terminal events',async()=>{
+ const f=fixture();await f.engine.enable();f.engine.mute(true);f.engine.ringback('ring');assert.equal(f.notes.length,0);f.engine.ring(null);f.engine.callEnded('muted','CANCELLED');f.engine.mute(false);f.engine.callEnded('muted','CANCELLED');assert.equal(f.notes.length,0);
+ f.engine.setVolume(0);f.engine.ringback('zero');for(const timer of f.timers)timer();assert.equal(f.notes.length,0);f.engine.ring(null);f.engine.callEnded('zero','FAILED');f.engine.setVolume(60);f.engine.callEnded('zero','FAILED');assert.equal(f.notes.length,0);f.engine.callEnded('fresh','ENDED');assert.equal(f.notes.length,2);assert.equal(f.gains[0].values.at(-1),.6);
+});
+test('terminal sound does not interrupt a newer incoming call and dispose stops ringback timer',async()=>{
+ const f=fixture();await f.engine.enable();f.engine.ring('incoming');f.engine.callEnded('older','MISSED');assert.equal(f.notes.length,3);assert.equal(f.timers.size,1);f.engine.ringback('outgoing');assert.equal(f.timers.size,1);f.engine.dispose();assert.equal(f.timers.size,0);assert.equal(f.context.state,'closed');
+});
+test('gesture unlock starts pending outgoing ringback without replaying ended history',async()=>{
+ const f=fixture();f.engine.ringback('pending');assert.equal(f.notes.length,0);await f.engine.enable();assert.equal(f.notes.length,4);await f.engine.enable();assert.equal(f.notes.length,4);f.engine.ring(null);f.engine.callEnded('once','ENDED');await f.engine.enable();assert.equal(f.notes.length,6);
+});
